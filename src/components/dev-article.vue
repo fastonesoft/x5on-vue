@@ -5,15 +5,15 @@
                <i-col span="4" offset="1">
                    <img src="../assets/logo.png" alt="" class="logo">
                </i-col>
-               <i-col span="14">
+               <i-col span="16">
                    <Menu mode="horizontal" :active-name="activeName" class="head-menu">
                        <MenuItem name="/home" to="/home" class="title" replace>税收合作</MenuItem>
                        <MenuItem name="/about" to="/about" class="title" replace>合作共赢</MenuItem>
                    </Menu>
                </i-col>
-               <i-col span="4">
+               <i-col span="2">
                    <Row>
-                       <i-col span="8">
+                       <i-col span="12">
                            <Dropdown>
                                <Avatar icon="ios-person" />
                                <DropdownMenu slot="list">
@@ -25,11 +25,10 @@
                                </DropdownMenu>
                            </Dropdown>
                        </i-col>
-                       <i-col span="8">
+                       <i-col span="12">
                            <Badge :count="count" :offset="[20,4]">
                                <Icon type="md-notifications-outline" size="24" />
                            </Badge>
-
                        </i-col>
                    </Row>
 
@@ -37,7 +36,26 @@
            </Row>
        </Header>
        <Layout>
-           <Sider></Sider>
+           <Sider class="sider" width="240" collapsible v-model="isCollapsibled" :class="{'sider-hide': isCollapsibled}">
+               <Menu class="sider-menu" theme="dark" active-name="data" width="240">
+                   <MenuItem name="system">
+                       <Icon type="md-apps" />
+                       <span>系统设置</span>
+                   </MenuItem>
+                   <MenuItem name="data">
+                       <Icon type="ios-calendar" />
+                       <span>数据采集</span>
+                   </MenuItem>
+                   <MenuItem name="count">
+                       <Icon type="md-analytics" />
+                       <span>税费测算</span>
+                   </MenuItem>
+                   <MenuItem name="result">
+                       <Icon type="md-barcode" />
+                       <span>协作成果</span>
+                   </MenuItem>
+               </Menu>
+           </Sider>
            <Content></Content>
        </Layout>
    </Layout>
@@ -49,6 +67,7 @@
            return {
                activeName: this.$route.path,
                count: 62,
+               isCollapsibled: false,
            };
        },
        created () {
@@ -80,6 +99,19 @@
         overflow: hidden;
     }
     .ivu-menu-horizontal.ivu-menu-light:after{
+        display: none;
+    }
+    .sider{
+        position: fixed;
+        height: 100%;
+        left: 0;
+        overflow: auto;
+        z-index: 1;
+    }
+    .sider-menu{
+        margin-top: 60px;
+    }
+    .sider-hide .ivu-menu-item span{
         display: none;
     }
 
