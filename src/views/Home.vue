@@ -1,5 +1,7 @@
 <template>
-    <dev-article></dev-article>
+    <dev-article>
+        这是首页ss
+    </dev-article>
 </template>
 
 <script>

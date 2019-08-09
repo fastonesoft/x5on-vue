@@ -1,5 +1,7 @@
 <template>
-    <dev-article></dev-article>
+    <dev-article>
+        这是介绍页
+    </dev-article>
 </template>
 
 <script>

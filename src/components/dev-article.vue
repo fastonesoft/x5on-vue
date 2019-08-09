@@ -36,27 +36,51 @@
            </Row>
        </Header>
        <Layout>
-           <Sider class="sider" width="240" collapsible v-model="isCollapsibled" :class="{'sider-hide': isCollapsibled}">
-               <Menu class="sider-menu" theme="dark" active-name="data" width="240">
-                   <MenuItem name="system">
-                       <Icon type="md-apps" />
-                       <span>系统设置</span>
-                   </MenuItem>
-                   <MenuItem name="data">
-                       <Icon type="ios-calendar" />
-                       <span>数据采集</span>
-                   </MenuItem>
-                   <MenuItem name="count">
-                       <Icon type="md-analytics" />
-                       <span>税费测算</span>
-                   </MenuItem>
-                   <MenuItem name="result">
-                       <Icon type="md-barcode" />
-                       <span>协作成果</span>
-                   </MenuItem>
+           <Sider class="sider" width="200" collapsible v-model="isCollapsibled" :class="{'sider-hide': isCollapsibled}">
+               <Menu class="sider-menu" theme="dark" active-name="data" width="200">
+                   <Submenu name="item1">
+                       <template slot="title">
+                           <Icon type="md-apps" />
+                           <span>系统设置</span>
+                       </template>
+                       <MenuItem name="role">权限分配</MenuItem>
+                       <MenuItem name="form">表单设计</MenuItem>
+                   </Submenu>
+                   <Submenu name="item2">
+                       <template slot="title">
+                           <Icon type="md-calendar" />
+                           <span>数据采集</span>
+                       </template>
+                       <MenuItem name="data">数据列表</MenuItem>
+                   </Submenu>
+                   <Submenu name="item3">
+                       <template slot="title">
+                           <Icon type="md-analytics" />
+                           <span>税费测算</span>
+                       </template>
+                       <MenuItem name="count">测算列表</MenuItem>
+                   </Submenu>
+
+                   <Submenu name="item4">
+                       <template slot="title">
+                           <Icon type="md-barcode" />
+                           <span>协作成果</span>
+                       </template>
+                       <MenuItem name="result">协作成果</MenuItem>
+
+                   </Submenu>
                </Menu>
            </Sider>
-           <Content></Content>
+           <Content class="content" :class="{'content-expand': isCollapsibled}">
+               <Breadcrumb>
+                   <BreadcrumbItem to="/">首页</BreadcrumbItem>
+                   <BreadcrumbItem to="/about">数据采集</BreadcrumbItem>
+                   <BreadcrumbItem>数据列表</BreadcrumbItem>
+               </Breadcrumb>
+               <Card style="margin-top: 16px">
+                   <Slot></Slot>
+               </Card>
+           </Content>
        </Layout>
    </Layout>
 </template>
@@ -95,7 +119,7 @@
         margin-top: 5px;
     }
     .title{
-        font-size: 30px;
+        font-size: 24px;
         overflow: hidden;
     }
     .ivu-menu-horizontal.ivu-menu-light:after{
@@ -111,8 +135,23 @@
     .sider-menu{
         margin-top: 60px;
     }
-    .sider-hide .ivu-menu-item span{
+    .sider-hide .ivu-menu-submenu-title span{
         display: none;
+    }
+    .sider-hide .ivu-menu-submenu-title-icon{
+        display: none;
+    }
+    .sider-hide .ivu-menu-item{
+        display: none;
+    }
+    .content{
+        margin-left: 200px;
+        margin-top: 60px;
+        padding: 16px;
+        transition: all .2s ease-in-out;
+    }
+    .content-expand{
+        margin-left: 64px;
     }
 
 </style>
