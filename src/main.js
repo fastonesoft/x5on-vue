@@ -4,7 +4,11 @@ import router from './router'
 import store from './store'
 import './plugins/iview.js'
 
+import devArticle from './components/dev-article.vue'
+
 Vue.config.productionTip = false
+
+Vue.component('dev-article', devArticle)
 
 new Vue({
   router,
