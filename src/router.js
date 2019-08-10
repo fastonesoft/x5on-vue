@@ -16,6 +16,11 @@ export default new Router({
       component: () => import('./views/About.vue')
     },
     {
+        path: '/data',
+        name: 'data',
+        component: () => import('./views/Data.vue')
+    },
+    {
       path: '/',
       redirect: '/home'
     },

@@ -1,85 +1,75 @@
 <template>
    <Layout>
-       <Header class="header">
-           <Row>
-               <i-col span="4" offset="1">
+       <Header class="header header-height">
+           <Row class="header-margin-top">
+               <i-col span="4" style="height: 64px; text-align: center;">
                    <img src="../assets/logo.png" alt="" class="logo">
                </i-col>
-               <i-col span="16">
-                   <Menu mode="horizontal" :active-name="activeName" class="head-menu">
-                       <MenuItem name="/home" to="/home" class="title" replace>税收合作</MenuItem>
-                       <MenuItem name="/about" to="/about" class="title" replace>合作共赢</MenuItem>
-                   </Menu>
-               </i-col>
-               <i-col span="2">
+               <i-col span="20">
                    <Row>
-                       <i-col span="12">
-                           <Dropdown>
-                               <Avatar icon="ios-person" />
-                               <DropdownMenu slot="list">
-                                   <DropdownItem>
-                                       设置
-                                       <Badge status="error"></Badge>
-                                   </DropdownItem>
-                                   <DropdownItem divided>退出登录</DropdownItem>
-                               </DropdownMenu>
-                           </Dropdown>
+                       <i-col span="21" class="title">
+                           税收合作 合作共赢（Tax Coperation）
                        </i-col>
-                       <i-col span="12">
-                           <Badge :count="count" :offset="[20,4]">
-                               <Icon type="md-notifications-outline" size="24" />
-                           </Badge>
+                       <i-col span="3">
+                           <Row>
+                               <i-col span="12">
+                                   <Dropdown>
+                                       <Avatar icon="ios-person" />
+                                       <DropdownMenu slot="list">
+                                           <DropdownItem>
+                                               设置
+                                               <Badge status="error"></Badge>
+                                           </DropdownItem>
+                                           <DropdownItem divided>退出登录</DropdownItem>
+                                       </DropdownMenu>
+                                   </Dropdown>
+                               </i-col>
+                               <i-col span="12">
+                                   <Badge :count="count" :offset="[20,4]">
+                                       <Icon type="md-notifications-outline" size="24" />
+                                   </Badge>
+                               </i-col>
+                           </Row>
                        </i-col>
                    </Row>
-
                </i-col>
            </Row>
        </Header>
        <Layout>
-           <Sider class="sider" width="200" collapsible v-model="isCollapsibled" :class="{'sider-hide': isCollapsibled}">
-               <Menu class="sider-menu" theme="dark" active-name="data" width="200">
-                   <Submenu name="item1">
-                       <template slot="title">
-                           <Icon type="md-apps" />
-                           <span>系统设置</span>
-                       </template>
-                       <MenuItem name="role">权限分配</MenuItem>
-                       <MenuItem name="form">表单设计</MenuItem>
-                   </Submenu>
-                   <Submenu name="item2">
-                       <template slot="title">
+           <Sider class="sider" :width="leftWidth" collapsible v-model="isCollaped" :class="{'sider-hide': isCollaped}">
+               <Menu class="sider-menu" theme="dark" :active-name="activeName" :width="leftWidth">
+                   <MenuGroup title="系统设置">
+                       <MenuItem name="/home" to="/home" replace>
+                           <Icon type="md-document" />
+                           <span>权限分配</span>
+                       </MenuItem>
+                       <MenuItem name="/about" to="/about" replace>
+                           <Icon type="md-chatbubbles" />
+                           <span>表单设计</span>
+                       </MenuItem>
+                   </MenuGroup>
+                   <MenuGroup title="数据采集">
+                       <MenuItem name="/data" to="/data" replace>
                            <Icon type="md-calendar" />
-                           <span>数据采集</span>
-                       </template>
-                       <MenuItem name="data">数据列表</MenuItem>
-                   </Submenu>
-                   <Submenu name="item3">
-                       <template slot="title">
+                           <span>数据列表</span>
+                       </MenuItem>
+                   </MenuGroup>
+                   <MenuGroup title="税费测算">
+                       <MenuItem name="/count" to="/count" replace>
                            <Icon type="md-analytics" />
-                           <span>税费测算</span>
-                       </template>
-                       <MenuItem name="count">测算列表</MenuItem>
-                   </Submenu>
-
-                   <Submenu name="item4">
-                       <template slot="title">
+                           <span>测算列表</span>
+                       </MenuItem>
+                   </MenuGroup>
+                   <MenuGroup title="协作成果">
+                       <MenuItem name="/result" to="/result" replace>
                            <Icon type="md-barcode" />
-                           <span>协作成果</span>
-                       </template>
-                       <MenuItem name="result">协作成果</MenuItem>
-
-                   </Submenu>
+                           <span>成果列表</span>
+                       </MenuItem>
+                   </MenuGroup>
                </Menu>
            </Sider>
-           <Content class="content" :class="{'content-expand': isCollapsibled}">
-               <Breadcrumb>
-                   <BreadcrumbItem to="/">首页</BreadcrumbItem>
-                   <BreadcrumbItem to="/about">数据采集</BreadcrumbItem>
-                   <BreadcrumbItem>数据列表</BreadcrumbItem>
-               </Breadcrumb>
-               <Card style="margin-top: 16px">
-                   <Slot></Slot>
-               </Card>
+           <Content class="content" :class="{'content-expand': isCollaped}">
+               <slot></slot>
            </Content>
        </Layout>
    </Layout>
@@ -91,7 +81,9 @@
            return {
                activeName: this.$route.path,
                count: 62,
-               isCollapsibled: false,
+               isCollaped: false,
+               menuDark: false,
+               leftWidth: '200',
            };
        },
        created () {
@@ -101,30 +93,39 @@
 </script>
 
 <style>
+    body{
+        background: #f8f8f9;
+    }
     .header{
         width: 100%;
-        height: 60px;
         position: fixed;
         background: #fff;
         box-shadow: 0 1px 1px rgba(0,0,0,.05);
+        padding: 0;
         top: 0;
         left: 0;
         z-index: 2;
     }
-    .head-menu{
-        overflow: hidden;
+    .header-height{
+        height: 80px;
     }
     .logo{
-        height: 50px;
-        margin-top: 5px;
+        height: 60px;
     }
     .title{
         font-size: 24px;
-        overflow: hidden;
+        white-space: nowrap;
     }
-    .ivu-menu-horizontal.ivu-menu-light:after{
-        display: none;
+    .header-margin-top {
+        margin-top: 8px;
     }
+    /*.ivu-menu-horizontal {*/
+        /*height: 80px;*/
+        /*line-height: 80px;*/
+    /*}*/
+    /*.ivu-menu-horizontal.ivu-menu-light:after{*/
+        /*display: none;*/
+    /*}*/
     .sider{
         position: fixed;
         height: 100%;
@@ -133,20 +134,23 @@
         z-index: 1;
     }
     .sider-menu{
-        margin-top: 60px;
+        margin-top: 80px;
     }
     .sider-hide .ivu-menu-submenu-title span{
+        display: none;
+    }
+    .sider-hide .ivu-menu-item-group-title{
         display: none;
     }
     .sider-hide .ivu-menu-submenu-title-icon{
         display: none;
     }
-    .sider-hide .ivu-menu-item{
+    .sider-hide .ivu-menu-item span{
         display: none;
     }
     .content{
         margin-left: 200px;
-        margin-top: 60px;
+        margin-top: 80px;
         padding: 16px;
         transition: all .2s ease-in-out;
     }

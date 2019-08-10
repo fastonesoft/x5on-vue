@@ -1,6 +1,8 @@
 <template>
     <dev-article>
-        这是首页ss
+        <template>
+            这是首页ss
+        </template>
     </dev-article>
 </template>
 
