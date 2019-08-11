@@ -157,5 +157,38 @@
     .content-expand{
         margin-left: 64px;
     }
-
+    .hidden-nowrap{
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .align-left{
+        text-align: left;
+    }
+    .align-right{
+        text-align: right;
+    }
+    .align-center{
+        text-align: center;
+    }
+    .margin-left8{
+        margin-left: 8px;
+    }
+    .margin-left16{
+        margin-left: 16px;
+    }
+    .margin-top16{
+        margin-top: 16px;
+    }
+    .margin-bottom8{
+        margin-bottom: 8px;
+    }
+    .margin-bottom16{
+        margin-bottom: 16px;
+    }
+    .margin-bottom24{
+        margin-bottom: 24px;
+    }
+    .margin-bottom32{
+        margin-bottom: 32px;
+    }
 </style>
