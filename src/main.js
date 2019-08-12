@@ -6,12 +6,12 @@ import './plugins/iview.js'
 
 import devArticle from './components/dev-article.vue'
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
-Vue.component('dev-article', devArticle)
+Vue.component('dev-article', devArticle);
 
 new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');

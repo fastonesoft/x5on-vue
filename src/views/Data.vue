@@ -6,35 +6,35 @@
                     <Card title="采集总数">
                         <!--数据采集完毕的数据 confirmed-->
                         <Tag color="green" slot="extra">数</Tag>
-                        <Row class="data-collect">{{ collect.num }}%</Row>
+                        <Row class="data-collect">{{ count.collect.num }}%</Row>
                         <Divider size="small" dashed></Divider>
-                        <Row class="data-collect_not">剩余总数 {{ collect.not }}</Row>
+                        <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
                     </Card>
                 </i-col>
                 <i-col span="6">
                     <Card title="税率测算">
                         <Tooltip content="税率测算说明" slot="extra" placement="top" transfer>
-                            <Icon type="ios-alert-outline" size="18" />
+                            <Icon type="ios-alert-outline" size="18"/>
                         </Tooltip>
-                        <Row class="data-collect">{{ count.num }}%</Row>
+                        <Row class="data-collect">{{ count.count.num }}%</Row>
                         <Divider size="small" dashed></Divider>
-                        <Progress status="success" :percent="count.num" hide-info></Progress>
+                        <Progress status="success" :percent="count.count.num" hide-info></Progress>
                     </Card>
                 </i-col>
                 <i-col span="6">
                     <Card title="协作成果">
                         <Tooltip content="协作成果说明" slot="extra" placement="top" transfer>
-                            <Icon type="ios-alert-outline" size="18" />
+                            <Icon type="ios-alert-outline" size="18"/>
                         </Tooltip>
-                        <Row class="data-collect">{{ result.num }}%</Row>
+                        <Row class="data-collect">{{ count.result.num }}%</Row>
                         <Divider size="small" dashed></Divider>
-                        <Progress status="wrong" :percent="result.num" hide-info></Progress>
+                        <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
                     </Card>
                 </i-col>
                 <i-col span="6">
                     <Card title="快捷操作">
-                        <Row class="data-collect align-center" style="margin-bottom: 22px;">添加采集数据</Row>
-                        <Button type="primary" icon="ios-add" long>添加</Button>
+                        <Row class="data-collect align-center margin-bottom22">添加采集数据</Row>
+                        <Button type="primary" icon="ios-add" @click="formAdd=true" long>添加</Button>
                     </Card>
                 </i-col>
             </Row>
@@ -42,15 +42,21 @@
                 <Card>
                     <Tabs value="table">
                         <TabPane label="数据列表" name="table">
-                            <Table :columns="cols" :data="datas" ref="selection" :loading="tableLoading" border stripe></Table>
+                            <Table
+                                :columns="cols"
+                                :data="datas"
+                                :loading="tableLoading"
+                                ref="selection"
+                                size="small"
+                                border stripe>
+                            </Table>
                             <Row class="margin-top16">
                                 <i-col span="12" class="hidden-nowrap align-left">
-                                    <Checkbox v-model="checkAll" @on-change="checkAllChange">全选</Checkbox>
-                                    <Button type="primary" class="margin-left8">提交测算</Button>
+                                    <Button type="primary">提交测算</Button>
                                     <Button type="error" class="margin-left16">删除记录</Button>
                                 </i-col>
                                 <i-col span="12" class="hidden-nowrap align-right">
-                                    <Page :total="datas.length" show-sizer transfer />
+                                    <Page :total="datas.length" show-sizer transfer/>
                                 </i-col>
                             </Row>
                         </TabPane>
@@ -63,45 +69,83 @@
                                     <Radio label="month">月</Radio>
                                     <Radio label="year">年</Radio>
                                 </RadioGroup>
-                                <DatePicker v-model="countDate" type="daterange" style="width: 180px" transfer>
+                                <DatePicker
+                                    v-model="countDate"
+                                    type="daterange"
+                                    style="width: 180px"
+                                    @on-change="dateChange"
+                                    transfer>
                                 </DatePicker>
-                                <Button type="primary" style="margin-left: 8px;">查询</Button>
+                                <Button class="margin-left8" type="primary" @click="countDateClick">查询</Button>
                             </Row>
                         </template>
                     </Tabs>
                 </Card>
             </Row>
         </template>
+        <Modal
+            title="数据采集"
+            v-model="formAdd"
+            :mask-closable="false"
+            :loading="formLoading"
+            @on-ok="formOk"
+            @on-cancel="formCancel"
+        >
+            <Form label-position="top">
+                <FormItem label="姓名">
+                    <Input v-model="form.name" placeholder="输入学生姓名，2-4个中文字符"/>
+                </FormItem>
+                <FormItem label="性别">
+                    <i-col></i-col>
+                    <Input v-model="form.sex"/>
+                </FormItem>
+                <FormItem label="身份证号">
+                    <Input v-model="form.idc"/>
+                </FormItem>
+                <FormItem label="父亲姓名">
+                    <Input v-model="form.father_name"/>
+                </FormItem>
+                <FormItem label="母亲姓名">
+                    <Input v-model="form.mother_name"/>
+                </FormItem>
+            </Form>
+        </Modal>
     </dev-article>
 </template>
 
 <script>
     export default {
         name: "Data",
-        data () {
+        data() {
             return {
-                collect: {
-                    num: 30,
-                    not: 20
-                },
                 count: {
-                    num: 60,
-                    not: 10
+                    collect: {num: 30, not: 20},
+                    count: {num: 60, not: 10},
+                    result: {num: 90, not: 20}
                 },
-                result: {
-                    num: 90,
-                    not: 20
-                },
+                formAdd: false,
                 dateType: 'day',
-                countDate: [],     // 统计日期
-                checkAll: false,   // 全选状态
+                countDate: [new Date(), new Date()],     // 统计日期，默认：今日
+                tableAllSelected: false,   // 全选状态
                 tableLoading: true,  // 表格数据加载中
+                formLoading: true,  // 表单加载中
+                form: {
+                    name: '',
+                    sex: '',
+                    idc: '',
+                    father_name: '',
+                    mother_name: '',
+                },
                 cols: [
                     {
-                        key: 'index',
-                        width: 60,
+                        width: 50,
+                        type: 'selection',
                         align: 'center',
-                        type: 'selection'
+                    },
+                    {
+                        width: 50,
+                        type: 'index',
+                        align: 'center',
                     },
                     {
                         title: '名称',
@@ -114,11 +158,15 @@
                 ],
                 datas: [
                     {
-                        name: 'adfasdf',
-                        value: 'adfa12123123123'
+                        name: '第一行',
+                        value: '数据是什么东西'
                     },
                     {
                         name: '第二行',
+                        value: '数据是什么东西'
+                    },
+                    {
+                        name: '第三行',
                         value: '数据是什么东西'
                     },
                     {
@@ -129,23 +177,44 @@
             }
         },
         methods: {
-            dateTypeChange (val) {
+            countDateClick() {
+                this.$Message.success('test！');
+                window.console.log(this.countDate)
+            },
+            dateChange() {
+                this.dateType = ''
+                // 自定义日期列表，清除radio选项
+            },
+            dateTypeChange(val) {
                 const today = (new Date()).getTime();
                 let date;
                 switch (val) {
-                    case 'day': date = today; break;
-                    case 'week': date = today - 86400000 * 7; break;
-                    case 'month': date = today - 86400000 * 30; break;
-                    case 'year': date = today - 86400000 * 365; break;
+                    case 'day':
+                        date = today;
+                        break;
+                    case 'week':
+                        date = today - 86400000 * 7;
+                        break;
+                    case 'month':
+                        date = today - 86400000 * 30;
+                        break;
+                    case 'year':
+                        date = today - 86400000 * 365;
+                        break;
                 }
                 this.countDate = [new Date(date), new Date(today)]
             },
-            checkAllChange (val) {
-                this.$refs.selection.selectAll(val);
-            }
+            formOk() {
+                this.formLoading = false;
+                this.formAdd = false;
+                this.$Message.success('表单数据添加成功！');
+            },
+            formCancel() {
+                this.$Message.warning('表单添加取消！');
+            },
         },
-        created () {
-            setTimeout(()=>{
+        created() {
+            setTimeout(() => {
                 this.tableLoading = false
             }, 3000)
         }
@@ -153,15 +222,17 @@
 </script>
 
 <style scoped>
-    .data-collect{
+    .data-collect {
         font-size: 24px;
         font-weight: bold;
     }
-    .data-collect_not{
+
+    .data-collect_not {
         overflow: hidden;
         white-space: nowrap;
     }
-    .ivu-divider-horizontal{
+
+    .ivu-divider-horizontal {
         margin: 16px 0;
     }
 </style>
