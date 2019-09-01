@@ -6,7 +6,7 @@
                     <Card title="采集总数">
                         <!--数据采集完毕的数据 confirmed-->
                         <Tag color="green" slot="extra">数</Tag>
-                        <Row class="data-collect">{{ count.collect.num }}%</Row>
+                        <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
                         <Divider size="small" dashed></Divider>
                         <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
                     </Card>
@@ -16,7 +16,7 @@
                         <Tooltip content="税率测算说明" slot="extra" placement="top" transfer>
                             <Icon type="ios-alert-outline" size="18"/>
                         </Tooltip>
-                        <Row class="data-collect">{{ count.count.num }}%</Row>
+                        <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
                         <Divider size="small" dashed></Divider>
                         <Progress status="success" :percent="count.count.num" hide-info></Progress>
                     </Card>
@@ -26,14 +26,14 @@
                         <Tooltip content="协作成果说明" slot="extra" placement="top" transfer>
                             <Icon type="ios-alert-outline" size="18"/>
                         </Tooltip>
-                        <Row class="data-collect">{{ count.result.num }}%</Row>
+                        <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
                         <Divider size="small" dashed></Divider>
                         <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
                     </Card>
                 </i-col>
                 <i-col span="6">
                     <Card title="快捷操作">
-                        <Row class="data-collect align-center margin-bottom22">添加采集数据</Row>
+                        <Row class="data-collect align-center margin-bottom22 hidden-nowrap">添加采集数据</Row>
                         <Button type="primary" icon="ios-add" @click="formAdd=true" long>添加</Button>
                     </Card>
                 </i-col>

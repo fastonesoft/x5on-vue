@@ -124,7 +124,11 @@
     }
 
     .logo {
+        width: 66px;
         height: 60px;
+        position: fixed;
+        left: 67px;
+        top: 10px;
     }
 
     .title {
