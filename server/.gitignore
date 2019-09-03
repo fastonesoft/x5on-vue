@@ -29,3 +29,8 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 /tests/tests/
 /tests/results/
+
+# phpMyAdmin
+phpMyAdmin4.8.5
+error
+nginx.htaccess
