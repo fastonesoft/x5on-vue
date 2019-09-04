@@ -11,7 +11,7 @@ class XcBase_Controller extends CI_Controller
     {
         parent::__construct();
 
-//        $this->userinfor = $this->session->userdata('XcSession');
+        $this->userinfor = $this->session->userdata('XcSession');
     }
 
 }
