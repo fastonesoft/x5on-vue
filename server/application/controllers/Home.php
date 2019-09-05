@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+class Home extends XC_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -22,13 +22,14 @@ class Home extends CI_Controller {
 	{
         $this->session->set_userdata('XcSession');
 
-        $this->json(['code' => 0, 'data' => 'logout']);
+        $this->json(1, 'asdfasdfasdfasdf');
 //		$this->load->view('home_view');
 	}
 
 	public function logout() {
 //        $this->session->sess_destroy();
-//        $this->json(['code' => 0, 'data' => 'logout']);
-        echo "asdfasdf";
+
+        $arr = array("porsche","BMW","Volvo");
+        $this->json(1, $arr);
     }
 }
