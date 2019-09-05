@@ -20,16 +20,12 @@ class Home extends XC_Controller {
 	 */
 	public function index()
 	{
-        $this->session->set_userdata('XcSession');
-
-        $this->json(1, 'asdfasdfasdfasdf');
-//		$this->load->view('home_view');
+        $this->json(1, $this->userinfor);
 	}
 
 	public function logout() {
-//        $this->session->sess_destroy();
-
-        $arr = array("porsche","BMW","Volvo");
-        $this->json(1, $arr);
+        $this->session->sess_destroy();
+        // 刷新
+        $this->load->view('js_to_home');
     }
 }
