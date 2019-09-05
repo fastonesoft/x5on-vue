@@ -25,7 +25,7 @@ class Home extends XC_Controller {
 
 	public function logout() {
         $this->session->sess_destroy();
-        // 刷新
+        // 刷新到首页
         $this->load->view('js_to_home');
     }
 }

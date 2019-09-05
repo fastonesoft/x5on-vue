@@ -30,6 +30,7 @@ class XC_Controller extends XBASE_Controller {
     {
         parent::__construct();
 
+        // 没有用户信息，跳转“登录”
         if ($this->userinfor === null) {
             redirect('/auth', 'refresh');
         }
@@ -42,6 +43,7 @@ class XC_TOHOME_Controller extends XBASE_Controller {
     {
         parent::__construct();
 
+        // 有用户信息，跳转“首页”
         if ($this->userinfor !== null) {
             redirect('/', 'refresh');
         }

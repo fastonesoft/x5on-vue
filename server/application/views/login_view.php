@@ -25,6 +25,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
   <style type="text/css">
 
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       background-color: #1c77ac;
       background-image: url(/content/images/light.png);
@@ -63,10 +70,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       position: fixed;
       left: 50%;
       top: 50%;
-      width: 360px;
-      height: 360px;
-      margin-top: -180px;
-      margin-left: -180px;
+      width: 586px;
+      height: 322px;
+      margin-left: -293px;
+      margin-top: -161px;
+      background: url("/content/images/auth_bg1.png");
       background-color: white;
       border-radius: 5px;
       box-shadow: 1px 1px 5px #333333, -1px -1px 5px #333333;
@@ -82,7 +90,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <div id="cloud2" class="login-cloud"></div>
 </div>
 <div class="login-body">
-  <div class="login-code" id="login_code">
+  <div class="login-code">
   </div>
 </div>
 

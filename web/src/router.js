@@ -8,18 +8,23 @@ export default new Router({
     routes: [
         {
             path: '/home',
-            name: 'home',
+            name: '/home',
             component: () => import('./views/Home.vue')
         },
         {
             path: '/about',
-            name: 'about',
+            name: '/about',
             component: () => import('./views/About.vue')
         },
         {
             path: '/data',
-            name: 'data',
+            name: '/data',
             component: () => import('./views/Data.vue')
+        },
+                {
+            path: '/login',
+            name: '/login',
+            component: () => import('./views/Login.vue')
         },
         {
             path: '/',
