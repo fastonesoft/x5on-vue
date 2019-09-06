@@ -2,9 +2,9 @@
   <dev-article>
     <Row :gutter="16">
       <i-col span="8">
-        <Card title="采集总数">
+        <Card title="标的清单">
           <!--数据采集完毕的数据 confirmed-->
-          <Tag color="green" slot="extra">数</Tag>
+          <Tag color="green" slot="extra">的</Tag>
           <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
           <Divider size="small" dashed></Divider>
           <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
@@ -12,7 +12,7 @@
       </i-col>
       <i-col span="8">
         <Card title="税率测算">
-          <Tooltip content="税率测算说明" slot="extra" placement="top" transfer>
+          <Tooltip content="完成税率测算的数据占比" slot="extra" placement="top" transfer>
             <Icon type="ios-alert-outline" size="18"/>
           </Tooltip>
           <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
@@ -22,9 +22,7 @@
       </i-col>
       <i-col span="8">
         <Card title="协作成果">
-          <Tooltip content="协作成果说明" slot="extra" placement="top" transfer>
-            <Icon type="ios-alert-outline" size="18"/>
-          </Tooltip>
+          <Tag color="blue" slot="extra">果</Tag>
           <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
           <Divider size="small" dashed></Divider>
           <Progress status="wrong" :percent="count.result.num" hide-info></Progress>

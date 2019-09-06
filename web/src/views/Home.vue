@@ -2,26 +2,26 @@
   <dev-article>
     <div class="home-body">
       <div class="home-items">
-        <div class="home-item hidden-nowrap">
+        <router-link class="home-item hidden-nowrap" to="/vueuser" replace>
           <img class="image" src="../assets/head1.png" alt=""/>
           <div class="text">权限分配</div>
-        </div>
-        <div class="home-item hidden-nowrap">
+        </router-link>
+        <router-link class="home-item hidden-nowrap" to="/vuegrid" replace>
           <img class="image" src="../assets/head2.png" alt=""/>
           <div class="text">数据表单</div>
-        </div>
-        <div class="home-item hidden-nowrap">
+        </router-link>
+        <router-link class="home-item hidden-nowrap" to="/vuedata" replace>
           <img class="image" src="../assets/head3.png" alt=""/>
           <div class="text">标的清单</div>
-        </div>
-        <div class="home-item hidden-nowrap">
+        </router-link>
+        <router-link class="home-item hidden-nowrap" to="/vuecount" replace>
           <img class="image" src="../assets/head4.png" alt=""/>
           <div class="text">税费测算</div>
-        </div>
-        <div class="home-item hidden-nowrap">
+        </router-link>
+        <router-link class="home-item hidden-nowrap" to="/vueresult" replace>
           <img class="image" src="../assets/head5.png" alt=""/>
           <div class="text">协作成果</div>
-        </div>
+        </router-link>
         <div class="home-item hidden-nowrap">
           <img class="image" src="../assets/head6.png" alt=""/>
           <div class="text">测试图标</div>
