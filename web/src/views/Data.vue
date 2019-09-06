@@ -1,9 +1,8 @@
 <template>
     <dev-article>
-        <template>
             <Row :gutter="16">
                 <i-col span="6">
-                    <Card title="采集总数">
+                    <Card title="标的清单">
                         <!--数据采集完毕的数据 confirmed-->
                         <Tag color="green" slot="extra">数</Tag>
                         <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
@@ -33,7 +32,7 @@
                 </i-col>
                 <i-col span="6">
                     <Card title="快捷操作">
-                        <Row class="data-collect align-center margin-bottom22 hidden-nowrap">添加采集数据</Row>
+                        <Row class="data-collect align-center margin-bottom22 hidden-nowrap">添加标的数据</Row>
                         <Button type="primary" icon="ios-add" @click="formAdd=true" long>添加</Button>
                     </Card>
                 </i-col>
@@ -41,7 +40,7 @@
             <Row class="margin-top16">
                 <Card>
                     <Tabs value="table">
-                        <TabPane label="数据列表" name="table">
+                        <TabPane label="标的清单" name="table">
                             <Table
                                     :columns="cols"
                                     :data="datas"
@@ -82,7 +81,6 @@
                     </Tabs>
                 </Card>
             </Row>
-        </template>
         <Modal
                 title="数据采集"
                 v-model="formAdd"
@@ -216,21 +214,12 @@
         created() {
             setTimeout(() => {
                 this.tableLoading = false
-            }, 3000)
+            }, 1000)
         }
     }
 </script>
 
 <style scoped>
-    .data-collect {
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    .data-collect_not {
-        overflow: hidden;
-        white-space: nowrap;
-    }
 
     .ivu-divider-horizontal {
         margin: 16px 0;

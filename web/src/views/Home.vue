@@ -1,25 +1,78 @@
 <template>
-    <dev-article>
-        这是首页ss
-    </dev-article>
+  <dev-article>
+    <div class="home-body">
+      <div class="home-items">
+        <div class="home-item hidden-nowrap">
+          <img class="image" src="../assets/head1.png" alt=""/>
+          <div class="text">权限分配</div>
+        </div>
+        <div class="home-item hidden-nowrap">
+          <img class="image" src="../assets/head2.png" alt=""/>
+          <div class="text">数据表单</div>
+        </div>
+        <div class="home-item hidden-nowrap">
+          <img class="image" src="../assets/head3.png" alt=""/>
+          <div class="text">标的清单</div>
+        </div>
+        <div class="home-item hidden-nowrap">
+          <img class="image" src="../assets/head4.png" alt=""/>
+          <div class="text">税费测算</div>
+        </div>
+        <div class="home-item hidden-nowrap">
+          <img class="image" src="../assets/head5.png" alt=""/>
+          <div class="text">协作成果</div>
+        </div>
+        <div class="home-item hidden-nowrap">
+          <img class="image" src="../assets/head6.png" alt=""/>
+          <div class="text">测试图标</div>
+        </div>
+        <div class="home-item hidden-nowrap">
+          <img class="image" src="../assets/head7.png" alt=""/>
+          <div class="text">测试图标</div>
+        </div>
+      </div>
+    </div>
+  </dev-article>
 </template>
 
 <script>
     export default {
-        name: "Home",
-        mounted () {
-            const that = this
-            window.onresize = () => {
-                return (() => {
-                    window.screenWidth = document.body.clientWidth
-                    that.screenWidth = window.screenWidth
-                })()
-            }
-        }
-
+        name: "Home"
     }
 </script>
 
 <style scoped>
+
+  .home-body {
+
+  }
+
+  .home-items {
+    padding: 50px;
+    display: flex;
+    flex-flow: row wrap;
+
+  }
+
+  .home-item {
+    width: 20%;
+    height: 120px;
+    text-align: center;
+
+    align-items: center;
+    align-content: space-around;
+    justify-content: center;
+  }
+
+  .home-item .image {
+    width: 57px;
+    height: 57px;
+    margin-bottom: 8px;
+    border: none;
+  }
+
+  .home-item .text {
+    font-size: 14px;
+  }
 
 </style>
