@@ -1,26 +1,35 @@
 <template>
-  <div class="cloudBody">
-    <div id="cloud1" class="login-cloud"></div>
-    <div id="cloud2" class="login-cloud"></div>
+    <div class="login">
+        <div class="cloudBody">
+            <div id="cloud1" class="login-cloud"></div>
+            <div id="cloud2" class="login-cloud"></div>
 
-    <div class="login-body">
-      <div class="login-code">
-        <div class="login-form">
-          <i-col class="login-form-title">用户登录</i-col>
-          <Form label-position="top">
-            <FormItem>
-              <Input v-model="form.id" placeholder="输入帐号，5-20字符"/>
-            </FormItem>
-            <FormItem>
-              <Input v-model="form.pass" placeholder="输入密码，6-20个字符"/>
-            </FormItem>
-          </Form>
-          <Button type="primary" size="large" long>登录</Button>
+            <div class="login-body">
+                <div class="login-code">
+                    <div class="login-form">
+                        <i-col class="login-form-title">用户登录</i-col>
+                        <Form ref="form" :model="form" :rules="rule">
+                            <FormItem prop="id">
+                                <Input type="text" prefix="md-contact" v-model="form.id" size="large" :maxlength="20"
+                                       placeholder="输入帐号，5-20个字符"/>
+                            </FormItem>
+                            <FormItem prop="pass">
+                                <Input type="password" prefix="ios-eye" v-model="form.pass" size="large" :maxlength="20"
+                                       placeholder="输入密码，6-20个字符"/>
+                            </FormItem>
+                            <FormItem>
+                                <Button type="primary" size="large" @click="loginClick('form')" long
+                                        style="background-color: #378CBE;">登录
+                                </Button>
+                            </FormItem>
+                        </Form>
 
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+
 </template>
 
 <script>
@@ -29,91 +38,144 @@
         data() {
             return {
                 form: {
-                    id: '',
-                    pass: '',
-                }
+                    id: 'admin',
+                    pass: 'stone',
+                },
+                rule: {
+                    id: [
+                        {
+                            required: true, message: '请输入用户账号', trigger: 'blur'
+                        },
+                        {
+                            type: 'string',
+                            min: 5,
+                            max: 20,
+                            message: '帐号长度最小5位，最大20位',
+                            trigger: 'blur'
+                        }
+                    ],
+                    pass: [
+                        {
+                            required: true, message: '请输入用户密码', trigger: 'blur'
+                        },
+                        {
+                            type: 'string',
+                            min: 6,
+                            max: 20,
+                            message: '密码长度最小6位，最大20位',
+                            trigger: 'blur'
+                        }
+                    ]
+                },
             }
 
+
+        },
+        methods:
+            {
+                loginClick(name) {
+
+                    this.$refs[name].validate((valid) => {
+                        if (valid) {
+                            // 提交this.form服务器端认证
+                            window.console.log(this.form);
+                            if (this.form.id === 'admin' && this.form.pass === 'stone.2') {
+                                // 成功不提示
+                                this.$router.replace('/vuehome');
+                            } else {
+                                this.$Message.error('帐号密码有误，请重新输入');
+                            }
+
+
+                        } else {
+                            this.$Message.error('登录信息无法通过验证，请重新输入');
+                        }
+                    })
+
+                }
+            },
+        mounted() {
+            window.onresize = function () {
+                var awid = document.body.clientWidth;
+                var ahei = document.body.clientHeight;
+                var left1 = awid / 4 * Math.random();
+                var top1 = ahei / 4 * Math.random();
+                var left2 = awid / 2 + awid / 4 * Math.random();
+                var top2 = ahei / 4 * Math.random();
+
+                document.getElementById('cloud1').style.left = left1 + 'px';
+                document.getElementById('cloud1').style.top = top1 + 'px';
+                document.getElementById('cloud2').style.left = left2 + 'px';
+                document.getElementById('cloud2').style.top = top2 + 'px';
+            };
+            window.onresize();
         }
     }
 </script>
 
-<style>
+<style scoped>
 
-  html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
+    .login {
+        height: 100%;
+        background: #1c77ac;
+        overflow: hidden;
+    }
 
-  body {
-    background-color: #1c77ac;
-    background-image: url("../assets/login_light.png");
-    background-repeat: no-repeat;
-    background-position: center top;
-    overflow: hidden;
-  }
+    .cloudBody {
+        width: 100%;
+        height: 100%;
+        backgroupd: url(../assets/login_light.png) no-repeat center center;
+        position: relative;
+        overflow: hidden;
+    }
 
-  #app {
-    width: 100%;
-    height: 100%;
-  }
+    .login-cloud {
+        top: 0px;
+        left: 0px;
+        width: 405px;
+        height: 165px;
+        position: absolute;
+        background: url("../assets/login_cloud.png") no-repeat;
+        z-index: 1;
+        opacity: 0.5;
+    }
 
-  .cloudBody {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    z-index: -1;
-  }
+    .login-body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: absolute;
+        background: url("../assets/login_bg.png") no-repeat center center;
+        z-index: 2;
+    }
 
-  .login-cloud {
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    background: url("../assets/login_cloud.png") no-repeat;
-    z-index: 1;
-    opacity: 0.5;
-  }
+    .login-code {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        width: 586px;
+        height: 322px;
+        margin-left: -293px;
+        margin-top: -161px;
+        background: url("../assets/login_auth.png");
+        border-radius: 5px;
+        box-shadow: 1px 1px 5px #333333, -1px -1px 5px #333333;
+    }
 
-  .login-body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    position: absolute;
-    background: url("../assets/login_bg.png") no-repeat center center;
-  }
+    .login-form {
+        margin-left: 206px;
+        width: 380px;
+        height: 322px;
+        padding: 30px 40px;
+    }
 
-  .login-code {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    width: 586px;
-    height: 322px;
-    margin-left: -293px;
-    margin-top: -161px;
-    background: url("../assets/login_auth.png");
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 1px 1px 5px #333333, -1px -1px 5px #333333;
-  }
-
-  .login-form {
-    margin-left: 206px;
-    width: 380px;
-    height: 322px;
-    padding: 20px 40px;
-  }
-
-  .login-form-title {
-    height: 70px;
-    text-align: center;
-    letter-spacing: 8px;
-    text-shadow: 2px 2px 3px #666;
-    color: #1c77ac;
-    font-size: 24px;
-  }
+    .login-form-title {
+        height: 70px;
+        text-align: center;
+        letter-spacing: 8px;
+        text-shadow: 1px 1px 3px #666;
+        color: #378CBE;
+        font-size: 24px;
+    }
 
 </style>

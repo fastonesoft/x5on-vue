@@ -1,116 +1,116 @@
 <template>
-  <dev-article>
-    <template>
-      <Row :gutter="16">
-        <i-col span="6">
-          <Card title="采集总数">
-            <!--数据采集完毕的数据 confirmed-->
-            <Tag color="green" slot="extra">数</Tag>
-            <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
-            <Divider size="small" dashed></Divider>
-            <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
-          </Card>
-        </i-col>
-        <i-col span="6">
-          <Card title="税率测算">
-            <Tooltip content="税率测算说明" slot="extra" placement="top" transfer>
-              <Icon type="ios-alert-outline" size="18"/>
-            </Tooltip>
-            <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
-            <Divider size="small" dashed></Divider>
-            <Progress status="success" :percent="count.count.num" hide-info></Progress>
-          </Card>
-        </i-col>
-        <i-col span="6">
-          <Card title="协作成果">
-            <Tooltip content="协作成果说明" slot="extra" placement="top" transfer>
-              <Icon type="ios-alert-outline" size="18"/>
-            </Tooltip>
-            <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
-            <Divider size="small" dashed></Divider>
-            <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
-          </Card>
-        </i-col>
-        <i-col span="6">
-          <Card title="快捷操作">
-            <Row class="data-collect align-center margin-bottom22 hidden-nowrap">添加采集数据</Row>
-            <Button type="primary" icon="ios-add" @click="formAdd=true" long>添加</Button>
-          </Card>
-        </i-col>
-      </Row>
-      <Row class="margin-top16">
-        <Card>
-          <Tabs value="table">
-            <TabPane label="数据列表" name="table">
-              <Table
-                :columns="cols"
-                :data="datas"
-                :loading="tableLoading"
-                ref="selection"
-                size="small"
-                border stripe>
-              </Table>
-              <Row class="margin-top16">
-                <i-col span="12" class="hidden-nowrap align-left">
-                  <Button type="primary">提交测算</Button>
-                  <Button type="error" class="margin-left16">删除记录</Button>
+    <dev-article>
+        <template>
+            <Row :gutter="16">
+                <i-col span="6">
+                    <Card title="采集总数">
+                        <!--数据采集完毕的数据 confirmed-->
+                        <Tag color="green" slot="extra">数</Tag>
+                        <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
+                        <Divider size="small" dashed></Divider>
+                        <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
+                    </Card>
                 </i-col>
-                <i-col span="12" class="hidden-nowrap align-right">
-                  <Page :total="datas.length" show-sizer transfer/>
+                <i-col span="6">
+                    <Card title="税率测算">
+                        <Tooltip content="税率测算说明" slot="extra" placement="top" transfer>
+                            <Icon type="ios-alert-outline" size="18"/>
+                        </Tooltip>
+                        <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
+                        <Divider size="small" dashed></Divider>
+                        <Progress status="success" :percent="count.count.num" hide-info></Progress>
+                    </Card>
                 </i-col>
-              </Row>
-            </TabPane>
-            <!--表头附加相关操作：-->
-            <template slot="extra">
-              <Row class="hidden-nowrap">
-                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
-                  <Radio label="day">今日</Radio>
-                  <Radio label="week">周</Radio>
-                  <Radio label="month">月</Radio>
-                  <Radio label="year">年</Radio>
-                </RadioGroup>
-                <DatePicker
-                  v-model="countDate"
-                  type="daterange"
-                  style="width: 180px"
-                  @on-change="dateChange"
-                  transfer>
-                </DatePicker>
-                <Button class="margin-left8" type="primary" @click="countDateClick">查询</Button>
-              </Row>
-            </template>
-          </Tabs>
-        </Card>
-      </Row>
-    </template>
-    <Modal
-      title="数据采集"
-      v-model="formAdd"
-      :mask-closable="false"
-      :loading="formLoading"
-      @on-ok="formOk"
-      @on-cancel="formCancel"
-    >
-      <Form label-position="top">
-        <FormItem label="姓名">
-          <Input v-model="form.name" placeholder="输入学生姓名，2-4个中文字符"/>
-        </FormItem>
-        <FormItem label="性别">
-          <i-col></i-col>
-          <Input v-model="form.sex" placeholder="输入学生姓名，2-4个中文字符"/>
-        </FormItem>
-        <FormItem label="身份证号">
-          <Input v-model="form.idc" placeholder="输入学生姓名，2-4个中文字符"/>
-        </FormItem>
-        <FormItem label="父亲姓名">
-          <Input v-model="form.father_name" placeholder="输入学生姓名，2-4个中文字符"/>
-        </FormItem>
-        <FormItem label="母亲姓名">
-          <Input v-model="form.mother_name" placeholder="输入学生姓名，2-4个中文字符"/>
-        </FormItem>
-      </Form>
-    </Modal>
-  </dev-article>
+                <i-col span="6">
+                    <Card title="协作成果">
+                        <Tooltip content="协作成果说明" slot="extra" placement="top" transfer>
+                            <Icon type="ios-alert-outline" size="18"/>
+                        </Tooltip>
+                        <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
+                        <Divider size="small" dashed></Divider>
+                        <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
+                    </Card>
+                </i-col>
+                <i-col span="6">
+                    <Card title="快捷操作">
+                        <Row class="data-collect align-center margin-bottom22 hidden-nowrap">添加采集数据</Row>
+                        <Button type="primary" icon="ios-add" @click="formAdd=true" long>添加</Button>
+                    </Card>
+                </i-col>
+            </Row>
+            <Row class="margin-top16">
+                <Card>
+                    <Tabs value="table">
+                        <TabPane label="数据列表" name="table">
+                            <Table
+                                    :columns="cols"
+                                    :data="datas"
+                                    :loading="tableLoading"
+                                    ref="selection"
+                                    size="small"
+                                    border stripe>
+                            </Table>
+                            <Row class="margin-top16">
+                                <i-col span="12" class="hidden-nowrap align-left">
+                                    <Button type="primary">提交测算</Button>
+                                    <Button type="error" class="margin-left16">删除记录</Button>
+                                </i-col>
+                                <i-col span="12" class="hidden-nowrap align-right">
+                                    <Page :total="datas.length" show-sizer transfer/>
+                                </i-col>
+                            </Row>
+                        </TabPane>
+                        <!--表头附加相关操作：-->
+                        <template slot="extra">
+                            <Row class="hidden-nowrap">
+                                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
+                                    <Radio label="day">今日</Radio>
+                                    <Radio label="week">周</Radio>
+                                    <Radio label="month">月</Radio>
+                                    <Radio label="year">年</Radio>
+                                </RadioGroup>
+                                <DatePicker
+                                        v-model="countDate"
+                                        type="daterange"
+                                        style="width: 180px"
+                                        @on-change="dateChange"
+                                        transfer>
+                                </DatePicker>
+                                <Button class="margin-left8" type="primary" @click="countDateClick">查询</Button>
+                            </Row>
+                        </template>
+                    </Tabs>
+                </Card>
+            </Row>
+        </template>
+        <Modal
+                title="数据采集"
+                v-model="formAdd"
+                :mask-closable="false"
+                :loading="formLoading"
+                @on-ok="formOk"
+                @on-cancel="formCancel"
+        >
+            <Form label-position="top">
+                <FormItem label="姓名">
+                    <Input v-model="form.name" placeholder="输入学生姓名，2-4个中文字符"/>
+                </FormItem>
+                <FormItem label="性别">
+                    <i-col></i-col>
+                    <Input v-model="form.sex" placeholder="输入学生姓名，2-4个中文字符"/>
+                </FormItem>
+                <FormItem label="身份证号">
+                    <Input v-model="form.idc" placeholder="输入学生姓名，2-4个中文字符"/>
+                </FormItem>
+                <FormItem label="父亲姓名">
+                    <Input v-model="form.father_name" placeholder="输入学生姓名，2-4个中文字符"/>
+                </FormItem>
+                <FormItem label="母亲姓名">
+                    <Input v-model="form.mother_name" placeholder="输入学生姓名，2-4个中文字符"/>
+                </FormItem>
+            </Form>
+        </Modal>
+    </dev-article>
 </template>
 
 <script>
@@ -222,17 +222,17 @@
 </script>
 
 <style scoped>
-  .data-collect {
-    font-size: 24px;
-    font-weight: bold;
-  }
+    .data-collect {
+        font-size: 24px;
+        font-weight: bold;
+    }
 
-  .data-collect_not {
-    overflow: hidden;
-    white-space: nowrap;
-  }
+    .data-collect_not {
+        overflow: hidden;
+        white-space: nowrap;
+    }
 
-  .ivu-divider-horizontal {
-    margin: 16px 0;
-  }
+    .ivu-divider-horizontal {
+        margin: 16px 0;
+    }
 </style>

@@ -4,6 +4,13 @@ import router from './router'
 import store from './store'
 import './plugins/iview.js'
 
+import axios from './libs/axios'
+
+// 跨域
+Vue.prototype.$ = axios.ajax;
+Vue.prototype.$.all = axios.all;
+Vue.prototype.$.spread = axios.spread;
+
 import devArticle from './components/dev-article.vue'
 
 Vue.config.productionTip = false;
