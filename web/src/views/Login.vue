@@ -51,7 +51,7 @@
                             min: 5,
                             max: 20,
                             message: '帐号长度最小5位，最大20位',
-                            trigger: 'blur'
+                            trigger: 'change'
                         }
                     ],
                     pass: [
@@ -63,7 +63,7 @@
                             min: 6,
                             max: 20,
                             message: '密码长度最小6位，最大20位',
-                            trigger: 'blur'
+                            trigger: 'change'
                         }
                     ]
                 },

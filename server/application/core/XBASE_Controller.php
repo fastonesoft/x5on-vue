@@ -45,8 +45,7 @@ class XC_Controller extends XBASE_Controller
     public function __construct()
     {
         parent::__construct();
-
-
+        
         // 没有用户信息，跳转“登录”
         if ($this->userinfor === null) {
             $this->json(-1, '没有登录，无法操作！');
