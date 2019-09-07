@@ -1,51 +1,47 @@
 <template>
   <dev-article>
     <div class="user-body">
-      <Row :gutter="16">
-        <i-col span="19">
-          <Card>
-            <Tabs value="table">
-              <TabPane label="用户列表" name="table">
-                <Table
-                  :columns="cols"
-                  :data="datas"
-                  :loading="tableLoading"
-                  ref="users"
-                  size="small"
-                  border stripe>
-                </Table>
-                <Row class="margin-top16">
-                  <i-col span="12" class="hidden-nowrap align-left">
-                    <Button type="primary" @click="userDown">用户导出</Button>
-                  </i-col>
-                  <i-col span="12" class="hidden-nowrap align-right">
-                    <Page :total="datas.length" show-sizer transfer/>
-                  </i-col>
-                </Row>
-              </TabPane>
-              <!--表头附加相关操作：-->
-              <template slot="extra">
-                <Row class="hidden-nowrap">
-                  <Select v-model="part_id" placeholder="部门选择..." style="width:160px" transfer>
-                    <Option
-                      v-for="item in parts"
-                      :value="item.part_id"
-                      :key="item.part_id">{{ item.part_name }}
-                    </Option>
-                  </Select>
-                </Row>
-              </template>
-            </Tabs>
-          </Card>
-        </i-col>
-        <i-col span="5">
-          <Card title="用户添加">
-            <Row class="user-collect margin-bottom22 text-indent">根据所属部门、权限分组，添加不同用户帐号。</Row>
-            <Button class="hidden-nowrap" type="primary" icon="ios-add" @click="userAdd" size="large" long>添加
-            </Button>
-          </Card>
-        </i-col>
-      </Row>
+      <Card>
+        <Tabs value="table">
+          <TabPane label="用户列表" name="table">
+            <Table
+              :columns="cols"
+              :data="datas"
+              :loading="tableLoading"
+              ref="users"
+              size="small"
+              border stripe>
+            </Table>
+            <Row class="margin-top16 hidden-nowrap align-right">
+              <Page :total="datas.length" show-sizer transfer/>
+            </Row>
+          </TabPane>
+          <!--表头附加相关操作：-->
+          <template slot="extra">
+            <Row class="hidden-nowrap">
+              <Select v-model="part_id" placeholder="部门选择..." style="width:160px" transfer>
+                <Option
+                  v-for="item in parts"
+                  :value="item.part_id"
+                  :key="item.part_id">{{ item.part_name }}
+                </Option>
+              </Select>
+              <Dropdown style="margin-left: 16px" @on-click="userDown" transfer>
+                <Button>
+                  用户菜单
+                  <Icon type="ios-arrow-down"></Icon>
+                </Button>
+                <DropdownMenu slot="list">
+                  <DropdownItem name="add">用户添加</DropdownItem>
+                  <DropdownItem name="down" divided>用户数据导出</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </Row>
+
+
+          </template>
+        </Tabs>
+      </Card>
     </div>
     <Modal
       title="用户添加"
@@ -305,10 +301,19 @@
             }
         },
         methods: {
-            userDown() {
-                this.$refs.users.exportCsv({
-                    filename: '用户信息'
-                });
+            userDown(name) {
+                switch (name) {
+                    case 'add': {
+                        this.formAdd = true;
+                        break;
+                    }
+                    case 'down': {
+                        this.$refs.users.exportCsv({
+                            filename: '用户信息'
+                        });
+                        break;
+                    }
+                }
             },
             userDel(index) {
                 this.datas.splice(index, 1);
@@ -318,9 +323,6 @@
                     title: '用户信息',
                     content: `帐号：${this.datas[index].id}<br>名称：${this.datas[index].name}<br>部门信息：${this.datas[index].part_name}<br>权限分组：${this.datas[index].role_name}`
                 })
-            },
-            userAdd() {
-                this.formAdd = true;
             },
             formOk(name) {
                 this.$refs[name].validate((valid) => {

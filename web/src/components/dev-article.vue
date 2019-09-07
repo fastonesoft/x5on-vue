@@ -2,36 +2,30 @@
   <Layout class="layout-body">
     <Header class="header header-height">
       <Row class="header-margin-top">
-        <i-col span="4" style="height: 64px; text-align: center;">
+        <i-col style="height: 64px; text-align: center;">
           <img src="../assets/logo.png" alt="" class="logo" @click="logoClick">
-        </i-col>
-        <i-col span="20">
-          <Row>
-            <i-col span="21" class="title">
-              税收合作 合作共赢（Tax Coperation）
-            </i-col>
-            <i-col span="3">
-              <Row>
-                <i-col span="12">
-                  <Dropdown @on-click="downMenuClick">
-                    <Avatar icon="ios-person"/>
-                    <DropdownMenu slot="list">
-                      <!--<DropdownItem name="set">-->
-                        <!--设置-->
-                        <!--<Badge status="error"></Badge>-->
-                      <!--</DropdownItem>-->
-                      <DropdownItem name="logout">退出登录</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </i-col>
-                <i-col span="12">
-                  <Badge :count="count" :offset="[20,4]">
-                    <Icon type="md-notifications-outline" size="24"/>
-                  </Badge>
-                </i-col>
-              </Row>
-            </i-col>
-          </Row>
+          <i-col span="21" class="title">
+            税收合作 合作共赢（Tax Coperation）
+          </i-col>
+          <i-col span="3">
+            <Row>
+              <i-col class="hidden-nowrap">
+                <Dropdown @on-click="downMenuClick">
+                  <Avatar icon="ios-person"/>
+                  <DropdownMenu slot="list">
+                    <!--<DropdownItem name="set">-->
+                    <!--设置-->
+                    <!--<Badge status="error"></Badge>-->
+                    <!--</DropdownItem>-->
+                    <DropdownItem name="logout">退出登录</DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+                <Badge :count="count" :offset="[20,4]" class="margin-left24">
+                  <Icon type="md-notifications-outline" size="24"/>
+                </Badge>
+              </i-col>
+            </Row>
+          </i-col>
         </i-col>
       </Row>
     </Header>
@@ -159,6 +153,8 @@
   .title {
     font-size: 24px;
     white-space: nowrap;
+    padding-left: 216px;
+    text-align: left;
   }
 
   .header-margin-top {
@@ -246,6 +242,10 @@
     margin-left: 16px;
   }
 
+  .margin-left24 {
+    margin-left: 24px;
+  }
+
   .margin-top16 {
     margin-top: 16px;
   }
@@ -268,5 +268,9 @@
 
   .margin-bottom32 {
     margin-bottom: 32px;
+  }
+
+  .ivu-divider-horizontal {
+    margin: 16px 0;
   }
 </style>

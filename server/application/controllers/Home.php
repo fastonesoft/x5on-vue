@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+class Home extends XBASE_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -20,12 +20,27 @@ class Home extends CI_Controller {
 	 */
 	public function index()
 	{
-        $this->load->view('ddd.html');
+        $this->load->view('home.html');
 	}
 
 	public function logout() {
         $this->session->sess_destroy();
-        // 刷新到首页
-        $this->load->view('js_to_home');
+    }
+
+    public function login()
+    {
+        $this->xcon->cros();
+
+        $id = $this->param('id');
+        $pass = $this->param('pass');
+
+        $result = $this->params();
+
+        // 记录登录 用户信息
+        $this->session->set_userdata('XcSession', $id);
+
+
+        // 返回数据
+        $this->json(0, $result);
     }
 }

@@ -29,7 +29,7 @@
       <i-col span="6">
         <Card title="快捷操作">
           <Row class="data-collect align-center margin-bottom22 hidden-nowrap">添加标的数据</Row>
-          <Button type="primary" icon="ios-add" @click="formAdd=true" long>添加</Button>
+          <Button type="primary" icon="md-add" @click="formAdd=true" long>添加</Button>
         </Card>
       </i-col>
     </Row>
@@ -217,7 +217,4 @@
 
 <style scoped>
 
-  .ivu-divider-horizontal {
-    margin: 16px 0;
-  }
 </style>
