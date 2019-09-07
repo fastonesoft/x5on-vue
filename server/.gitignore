@@ -34,3 +34,11 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 phpMyAdmin4.8.5
 error
 nginx.htaccess
+
+# vue client
+css
+fonts
+img
+js
+favicon.ico
+index.html

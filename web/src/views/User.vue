@@ -2,7 +2,7 @@
   <dev-article>
     <div class="user-body">
       <Row :gutter="16">
-        <i-col span="20">
+        <i-col span="19">
           <Card>
             <Tabs value="table">
               <TabPane label="用户列表" name="table">
@@ -38,7 +38,7 @@
             </Tabs>
           </Card>
         </i-col>
-        <i-col span="4">
+        <i-col span="5">
           <Card title="用户添加">
             <Row class="user-collect margin-bottom22 text-indent">根据所属部门、权限分组，添加不同用户帐号。</Row>
             <Button class="hidden-nowrap" type="primary" icon="ios-add" @click="userAdd" size="large" long>添加

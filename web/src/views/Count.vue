@@ -1,75 +1,76 @@
 <template>
-  <dev-article>
-    <Row :gutter="16">
-      <i-col span="8">
-        <Card title="标的清单">
-          <!--数据采集完毕的数据 confirmed-->
-          <Tag color="green" slot="extra">的</Tag>
-          <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
-          <Divider size="small" dashed></Divider>
-          <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
-        </Card>
-      </i-col>
-      <i-col span="8">
-        <Card title="税率测算">
-          <Tooltip content="完成税率测算的数据占比" slot="extra" placement="top" transfer>
-            <Icon type="ios-alert-outline" size="18"/>
-          </Tooltip>
-          <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
-          <Divider size="small" dashed></Divider>
-          <Progress status="success" :percent="count.count.num" hide-info></Progress>
-        </Card>
-      </i-col>
-      <i-col span="8">
-        <Card title="协作成果">
-          <Tag color="blue" slot="extra">果</Tag>
-          <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
-          <Divider size="small" dashed></Divider>
-          <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
-        </Card>
-      </i-col>
-    </Row>
-    <Row class="margin-top16">
-      <Card>
-        <Tabs value="table">
-          <TabPane label="测算列表" name="table">
-            <Table
-              :columns="cols"
-              :data="datas"
-              :loading="tableLoading"
-              ref="selection"
-              size="small"
-              border stripe>
-            </Table>
-            <Row class="margin-top16">
-              <i-col class="hidden-nowrap align-right">
-                <Page :total="datas.length" show-sizer transfer/>
-              </i-col>
-            </Row>
-          </TabPane>
-          <!--表头附加相关操作：-->
-          <template slot="extra">
-            <Row class="hidden-nowrap">
-              <RadioGroup v-model="dateType" @on-change="dateTypeChange">
-                <Radio label="day">今日</Radio>
-                <Radio label="week">周</Radio>
-                <Radio label="month">月</Radio>
-                <Radio label="year">年</Radio>
-              </RadioGroup>
-              <DatePicker
-                v-model="countDate"
-                type="daterange"
-                style="width: 180px"
-                @on-change="dateChange"
-                transfer>
-              </DatePicker>
-              <Button class="margin-left8" type="primary" @click="countDateClick">查询</Button>
-            </Row>
-          </template>
-        </Tabs>
-      </Card>
-    </Row>
-  </dev-article>
+    <dev-article>
+        <Row :gutter="16">
+            <i-col span="8">
+                <Card title="标的清单">
+                    <!--数据采集完毕的数据 confirmed-->
+                    <Tag color="green" slot="extra">的</Tag>
+                    <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
+                    <Divider size="small" dashed></Divider>
+                    <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
+                </Card>
+            </i-col>
+            <i-col span="8">
+                <Card title="税率测算">
+                    <!--<Tooltip content="完成税率测算的数据占比" slot="extra" placement="top" transfer>-->
+                    <!--<Icon type="ios-alert-outline" size="18"/>-->
+                    <!--</Tooltip>-->
+                    <Tag color="red" slot="extra">算</Tag>
+                    <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
+                    <Divider size="small" dashed></Divider>
+                    <Progress status="success" :percent="count.count.num" hide-info></Progress>
+                </Card>
+            </i-col>
+            <i-col span="8">
+                <Card title="协作成果">
+                    <Tag color="blue" slot="extra">果</Tag>
+                    <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
+                    <Divider size="small" dashed></Divider>
+                    <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
+                </Card>
+            </i-col>
+        </Row>
+        <Row class="margin-top16">
+            <Card>
+                <Tabs value="table">
+                    <TabPane label="测算列表" name="table">
+                        <Table
+                                :columns="cols"
+                                :data="datas"
+                                :loading="tableLoading"
+                                ref="selection"
+                                size="small"
+                                border stripe>
+                        </Table>
+                        <Row class="margin-top16">
+                            <i-col class="hidden-nowrap align-right">
+                                <Page :total="datas.length" show-sizer transfer/>
+                            </i-col>
+                        </Row>
+                    </TabPane>
+                    <!--表头附加相关操作：-->
+                    <template slot="extra">
+                        <Row class="hidden-nowrap">
+                            <RadioGroup v-model="dateType" @on-change="dateTypeChange">
+                                <Radio label="day">今日</Radio>
+                                <Radio label="week">周</Radio>
+                                <Radio label="month">月</Radio>
+                                <Radio label="year">年</Radio>
+                            </RadioGroup>
+                            <DatePicker
+                                    v-model="countDate"
+                                    type="daterange"
+                                    style="width: 180px"
+                                    @on-change="dateChange"
+                                    transfer>
+                            </DatePicker>
+                            <Button class="margin-left8" type="primary" @click="countDateClick">查询</Button>
+                        </Row>
+                    </template>
+                </Tabs>
+            </Card>
+        </Row>
+    </dev-article>
 </template>
 
 <script>

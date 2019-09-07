@@ -16,11 +16,11 @@
                   <Dropdown @on-click="downMenuClick">
                     <Avatar icon="ios-person"/>
                     <DropdownMenu slot="list">
-                      <DropdownItem name="set">
-                        设置
-                        <Badge status="error"></Badge>
-                      </DropdownItem>
-                      <DropdownItem name="logout" divided>退出登录</DropdownItem>
+                      <!--<DropdownItem name="set">-->
+                        <!--设置-->
+                        <!--<Badge status="error"></Badge>-->
+                      <!--</DropdownItem>-->
+                      <DropdownItem name="logout">退出登录</DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
                 </i-col>
@@ -106,9 +106,6 @@
             },
             downMenuClick(name) {
                 switch (name) {
-                    case 'set':
-                        this.$Message.info('系统设置');
-                        break;
                     case 'logout': {
                         this.$Message.info('退出登录');
                         setTimeout(() => {

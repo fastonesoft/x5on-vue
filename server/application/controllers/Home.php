@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends XC_Controller {
+class Home extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -20,7 +20,7 @@ class Home extends XC_Controller {
 	 */
 	public function index()
 	{
-        $this->json(1, $this->userinfor);
+        $this->load->view('ddd.html');
 	}
 
 	public function logout() {

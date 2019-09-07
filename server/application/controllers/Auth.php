@@ -5,7 +5,8 @@ class Auth extends XC_TOHOME_Controller {
 
 	public function index()
 	{
-		$this->load->view('login_view');
+//		$this->load->view('login_view');
+        $this->load->view('index.html');
 	}
 
     public function login()

@@ -12,9 +12,7 @@
       </i-col>
       <i-col span="6">
         <Card title="税率测算">
-          <Tooltip content="完成税率测算的数据占比" slot="extra" placement="top" transfer>
-            <Icon type="ios-alert-outline" size="18"/>
-          </Tooltip>
+          <Tag color="red" slot="extra">算</Tag>
           <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
           <Divider size="small" dashed></Divider>
           <Progress status="success" :percent="count.count.num" hide-info></Progress>
