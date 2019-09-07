@@ -10,7 +10,7 @@
           <i-col span="3">
             <Row>
               <i-col class="hidden-nowrap">
-                <Dropdown @on-click="downMenuClick">
+                <Dropdown @on-click="downMenuClick" transfer>
                   <Avatar icon="ios-person"/>
                   <DropdownMenu slot="list">
                     <!--<DropdownItem name="set">-->
