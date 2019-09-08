@@ -13,4 +13,24 @@ class Xcon
         }
     }
 
+    public static function login($that, $success, $fail) {
+        // 登录 检测
+//        if ($that.$userinfor !== null) {
+//            // 权限检测
+//        } else {
+//
+//        }
+//
+//
+//
+//        try {
+//
+//            // 成功
+//            call_user_func($success, $userinfor);
+//        } catch (Exception $e) {
+//            // 检测异常
+//            call_user_func($fail, ['code' => -1, 'data' => $e->getMessage()]);
+//        }
+    }
+
 }

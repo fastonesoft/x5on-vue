@@ -6,6 +6,15 @@ class Auth extends XC_Controller {
 	public function index()
 	{
 
+    echo '---------------';
+
 	}
+
+    public function add()
+    {
+
+        echo '---------------';
+
+    }
 
 }

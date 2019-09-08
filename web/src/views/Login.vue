@@ -78,10 +78,14 @@
                     this.$refs[name].validate((valid) => {
                         if (valid) {
                             // 提交this.form服务器端认证
-                            this.$.posts('/home/login', {id: this.form.id, pass: this.form.pass})
+                            this.$.posts('/home/login', {
+                                id: this.form.id,
+                                pass: this.$md5(this.form.pass),
+                                token: this.$md5(this.$store.state.token + this.$md5(this.form.pass))
+                            })
                                 .then(res => {
                                     // 记录用户信息
-                                    this.$store.user = res;
+                                    this.$store.state.user = res;
 
                                     this.$router.replace('/vuehome');
                                 })
@@ -114,6 +118,16 @@
                 document.getElementById('cloud2').style.top = top2 + 'px';
             };
             window.onresize();
+        },
+        created() {
+            this.$.gets('/home/token')
+                .then(res => {
+                    // token
+                    this.$store.state.token = res;
+                })
+                .catch(error => {
+                    this.$Message.error(error);
+                });
         }
     }
 </script>

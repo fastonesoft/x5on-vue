@@ -122,10 +122,19 @@ class XC_Controller extends XBASE_Controller
 
         // 没有用户信息，跳转“登录”
         if ($this->userinfor === null) {
-            $this->json(-1, '没有登录，无法操作！');
+            $this->json(-1, 'not logged');
         } else {
             // 检测用户有没有操作权限
-            $a = 1;
+            $this->json(0, 'logged');
         }
+
+//        $con = $this->router->fetch_class();//获取控制器名
+//        $func = $this->router->fetch_method();//获取方法
+//
+//        echo $con;
+//        echo $func;
+
+
     }
+
 }
