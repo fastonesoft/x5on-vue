@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class xcon
+class Xcon
 {
     // 跨域支持，上传的时候要禁用
     const CROS = 1;

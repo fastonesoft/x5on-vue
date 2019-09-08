@@ -77,7 +77,7 @@ $db['default'] = array(
 	'dsn'	=> 'mysql:host=localhost;port=3306;dbname=xcAuth',
 	'hostname' => 'localhost',
 	'username' => 'root',
-	'password' => 'root',
+	'password' => 'stone.2',
 	'database' => 'xcAuth',
 	'dbdriver' => 'pdo',
 	'dbprefix' => '',
