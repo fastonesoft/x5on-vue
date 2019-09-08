@@ -34,7 +34,7 @@ class Home extends XBASE_Controller
 
     public function token()
     {
-        $this->xcon->cros();
+        $this->Xcon->cros();
 
         $token = md5(session_id());
         $this->json(0, $token);
