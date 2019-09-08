@@ -80,8 +80,9 @@
                             // 提交this.form服务器端认证
                             this.$.posts('/home/login', {id: this.form.id, pass: this.form.pass})
                                 .then(res => {
-                                    window.console.log(res);
-                                    // 成功不提示
+                                    // 记录用户信息
+                                    this.$store.user = res;
+
                                     this.$router.replace('/vuehome');
                                 })
                                 .catch(error => {

@@ -89,6 +89,8 @@
                 isCollaped: false,
                 menuDark: false,
                 leftWidth: '200',
+                // userName: this.$store.user.name,
+                // groupName: this.$store.user.group_name,
             };
         },
         created() {

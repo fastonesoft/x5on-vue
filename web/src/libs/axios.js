@@ -45,13 +45,19 @@ ajax.posts = function (url, data) {
     let param = data || {};
     return new Promise(function (resolve, reject) {
         ajax.post(url, param).then(res => {
+            // 输出请求结果，调试用
+            window.console.log(res);
             if (res && res.data && res.data.code) {
                 // code != 0 => error
                 reject(res.data.data)
             } else {
                 resolve(res.data.data)
             }
-        }).catch(() => {
+        }).catch((error) => {
+            // 输出请求结果，调试用
+            window.console.log(error);
+
+            // 正常的结果提示
             reject('数据提交失败')
         })
     })
