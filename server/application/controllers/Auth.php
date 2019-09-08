@@ -30,7 +30,7 @@ class Auth extends XC_Controller
 
     public function find()
     {
-        echo '  --------find ---------';
+        echo '  --------find -------------';
     }
 
 }
