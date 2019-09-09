@@ -6,37 +6,32 @@ class Xcon
     // 跨域支持，上传的时候要禁用
     const CROS = 1;
 
-    public static function cros() {
+    public static function cros()
+    {
         if (self::CROS) {
             header('Access-Control-Allow-Credentials: true');
             header('Access-Control-Allow-Origin: http://localhost:8080');
         }
     }
 
-    public static function login($that, $success, $fail) {
+    public static function loginCheck($success)
+    {
         // 登录 检测
-//        if ($that.$userinfor !== null) {
-//            // 权限检测
-//        } else {
-//
-//        }
-//
-//
-//
-//        try {
-//
-//            // 成功
-//            call_user_func($success, $userinfor);
-//        } catch (Exception $e) {
-//            // 检测异常
-//            call_user_func($fail, ['code' => -1, 'data' => $e->getMessage()]);
-//        }
+        $CI =& get_instance();
+        $userinfor = $CI->userinfor;
+
+        if ($userinfor !== null) {
+            call_user_func($success, $userinfor);
+        } else {
+            $CI->xcon->json(-1, '没有登录，或登录状态已过期！');
+        }
     }
 
 
-    public static function json($that, $code, $data)
+    public static function json($code, $data)
     {
-        return $that->output
+        $CI =& get_instance();
+        return $CI->output
             ->set_content_type('application/json')
             ->set_output(
                 json_encode(['code' => $code, 'data' => $data])
@@ -47,14 +42,15 @@ class Xcon
      * @return mixed
      * 这种方式可以解决axios提交的数据无法用$_POST接收的问题
      */
-    public static function params($that)
+    public static function params()
     {
-        return json_decode($that->input->raw_input_stream, true);
+        $CI =& get_instance();
+        return json_decode($CI->input->raw_input_stream, true);
     }
 
-    public static function param($that, $key)
+    public static function param($key)
     {
-        $params = $that->params();
+        $params = self::params();
         return $params[$key];
     }
 
@@ -63,70 +59,74 @@ class Xcon
      * @return mixed
      * 数据库查询
      */
-    public static function gets($that, $tableName)
+    public static function gets($tableName)
     {
-        $query = $that->db->get($tableName);
+        $CI =& get_instance();
+        $query = $CI->db->get($tableName);
         return $query->result();
     }
 
-    public static function gets_as_array($that, $tableName)
+    public static function gets_as_array($tableName)
     {
-        $query = $that->db->get($tableName);
+        $CI =& get_instance();
+        $query = $CI->db->get($tableName);
         return $query->result_array();
     }
 
     /**
-     * @param $tableName
-     * @param $condition  array('name !=' => $name, 'id <' => $id, 'date >' => $date);
+     * @param        $tableName
+     * @param        $condition  array('name !=' => $name, 'id <' => $id, 'date >' => $date);
      * @param string $orderby
-     * @param null $limit
+     * @param null   $limit
      * @return mixed
      * 条件查询
      */
-    public static function wheres_query($that, $tableName, $condition, $orderby = '', $limit = null)
+    public static function wheres_query($tableName, $condition, $orderby = '', $limit = null)
     {
-        $that->db->order_by($orderby);
-        return $that->db->get_where($tableName, $condition, $limit);
+        $CI =& get_instance();
+        $CI->db->order_by($orderby);
+        return $CI->db->get_where($tableName, $condition, $limit);
     }
 
     // 查询结果
-    public static function wheres($that, $tableName, $condition, $orderby = '', $limit = null)
+    public static function wheres($tableName, $condition, $orderby = '', $limit = null)
     {
-        $query = self::wheres_query($that, $tableName, $condition, $orderby, $limit);
+        $query = self::wheres_query($tableName, $condition, $orderby, $limit);
         return $query->result();
     }
 
-    public static function get($that, $tableName, $condition)
+    public static function get($tableName, $condition)
     {
-        $query = self::wheres_query($that, $tableName, $condition);
+        $query = self::wheres_query($tableName, $condition);
         return $query->row();
     }
 
-    public static function getById($that, $tableName, $id)
+    public static function getById($tableName, $id)
     {
-        $query = self::wheres_query($that, $tableName, compact('id'));
+        $query = self::wheres_query($tableName, compact('id'));
         return $query->row();
     }
 
-    public static function getByUid($that, $tableName, $uid)
+    public static function getByUid($tableName, $uid)
     {
-        $query = self::wheres_query($that, $tableName, compact('uid'));
+        $query = self::wheres_query($tableName, compact('uid'));
         return $query->row();
     }
 
     /**
-     * @param $tableName
-     * @param $condition
-     * @param $likes
+     * @param        $tableName
+     * @param        $condition
+     * @param        $likes
      * @param string $orderby
-     * @param null $limit
+     * @param null   $limit
      * @return mixed
      * 模糊查询
      */
-    public static function likes($that, $tableName, $condition, $likes, $orderby = '', $limit = null)
+    public static function likes($tableName, $condition, $likes, $orderby = '', $limit = null)
     {
-        $that->db->like($likes);
-        $query = self::wheres_query($that, $tableName, $condition, $orderby, $limit);
+        $CI =& get_instance();
+        $CI->db->like($likes);
+        $query = self::wheres_query($tableName, $condition, $orderby, $limit);
         return $query->result();
     }
 
@@ -134,9 +134,10 @@ class Xcon
      * @return mixed
      * 获取 uuid
      */
-    public static function uid($that)
+    public static function uid()
     {
-        $query = $that->db->query('SELECT uuid() as uid');
+        $CI =& get_instance();
+        $query = $CI->db->query('SELECT uuid() as uid');
         $row = $query->row_array();
         $uid = $row['uid'];
         return str_replace('-', '', $uid);
@@ -147,9 +148,10 @@ class Xcon
      * @param $values
      * 存储数据记录
      */
-    public static function addTo($that, $tableName, $values)
+    public static function add($tableName, $values)
     {
-        $that->db->insert($tableName, $values);
+        $CI =& get_instance();
+        $CI->db->insert($tableName, $values);
     }
 
     /**
@@ -159,20 +161,25 @@ class Xcon
      * @return mixed
      * 更新数据记录
      */
-    public static function setBy($that, $tableName, $cols, $by)
+    public static function setBy($tableName, $cols, $by)
     {
-        $that->db->update($tableName, $cols, $by);
-        return $that->db->affected_rows();
+        $CI =& get_instance();
+        $CI->db->update($tableName, $cols, $by);
+        return $CI->db->affected_rows();
     }
 
-    public static function setById($that, $tableName, $cols, $id) {
-        self::setBy($that, $tableName, $cols, compact('id'));
-        return $that->db->affected_rows();
+    public static function setById($tableName, $cols, $id)
+    {
+        $CI =& get_instance();
+        self::setBy($tableName, $cols, compact('id'));
+        return $CI->db->affected_rows();
     }
 
-    public static function setByUid($that, $tableName, $cols, $uid) {
-        self::setBy($that, $tableName, $cols, compact('uid'));
-        return $that->db->affected_rows();
+    public static function setByUid($tableName, $cols, $uid)
+    {
+        $CI =& get_instance();
+        self::setBy($tableName, $cols, compact('uid'));
+        return $CI->db->affected_rows();
     }
 
 }

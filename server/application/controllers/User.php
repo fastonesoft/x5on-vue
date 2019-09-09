@@ -1,14 +1,19 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Auth extends XC_Controller
+class User extends XC_Controller
 {
 
     public function index()
     {
-
-        echo '---------------';
-
+        $this->xcon->loginCheck(function ($userinfor) {
+            try {
+                // 标准格式
+                throw new Exception('出错 测试');
+            } catch (Exception $e) {
+                $this->xcon->json(2, $e->getMessage());
+            }
+        });
     }
 
     public function add()
