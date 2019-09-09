@@ -90,7 +90,7 @@
                                     this.$router.replace('/vuehome');
                                 })
                                 .catch(error => {
-                                    this.$Message.error(error);
+                                    this.$Message.error(error.data);
                                 });
 
                         } else {
@@ -126,7 +126,7 @@
                     this.$store.state.token = res;
                 })
                 .catch(error => {
-                    this.$Message.error(error);
+                    this.$Message.error(error.data);
                 });
         }
     }

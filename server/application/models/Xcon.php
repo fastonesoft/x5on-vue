@@ -48,6 +48,12 @@ class Xcon
         return json_decode($CI->input->raw_input_stream, true);
     }
 
+    public static function params_obj()
+    {
+        $CI =& get_instance();
+        return json_decode($CI->input->raw_input_stream);
+    }
+
     public static function param($key)
     {
         $params = self::params();
@@ -89,7 +95,7 @@ class Xcon
     }
 
     // 查询结果
-    public static function wheres($tableName, $condition, $orderby = '', $limit = null)
+    public static function getsBy($tableName, $condition, $orderby = '', $limit = null)
     {
         $query = self::wheres_query($tableName, $condition, $orderby, $limit);
         return $query->result();

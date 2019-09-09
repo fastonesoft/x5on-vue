@@ -41,14 +41,14 @@
               :columns="cols"
               :data="datas"
               :loading="tableLoading"
-              ref="selection"
+              ref="table"
               size="small"
               border stripe>
             </Table>
             <Row class="margin-top16">
               <i-col span="12" class="hidden-nowrap align-left">
-                <Button type="primary">提交测算</Button>
-                <Button type="error" class="margin-left16">删除记录</Button>
+                <Button type="primary" @click="updateCount">提交测算</Button>
+                <Button type="error" class="margin-left16" @click="delRecord">删除记录</Button>
               </i-col>
               <i-col span="12" class="hidden-nowrap align-right">
                 <Page :total="datas.length" show-sizer transfer/>
@@ -78,29 +78,56 @@
       </Card>
     </Row>
     <Modal
-      title="数据采集"
+      title="标的添加"
       v-model="formAdd"
       :mask-closable="false"
       :loading="formLoading"
-      @on-ok="formOk"
+      @on-ok="formOk('form')"
       @on-cancel="formCancel"
+      width="550"
     >
-      <Form label-position="top">
-        <FormItem label="姓名">
-          <Input v-model="form.name" placeholder="输入学生姓名，2-4个中文字符"/>
+      <Form ref="form" :model="form" :rules="rule" label-position="top" inline>
+        <FormItem prop="id" label="编号">
+          <Input v-model="form.id" placeholder="输入标的编号"/>
         </FormItem>
-        <FormItem label="性别">
+        <FormItem prop="name" label="拍卖标的" style="width: 330px;">
           <i-col></i-col>
-          <Input v-model="form.sex" placeholder="输入学生姓名，2-4个中文字符"/>
+          <Input v-model="form.name" placeholder="输入拍卖标的相关说明"/>
         </FormItem>
-        <FormItem label="身份证号">
-          <Input v-model="form.idc" placeholder="输入学生姓名，2-4个中文字符"/>
+        <br>
+        <FormItem prop="owner" label="产权人">
+          <Input v-model="form.owner" placeholder="输入产权人姓名"/>
         </FormItem>
-        <FormItem label="父亲姓名">
-          <Input v-model="form.father_name" placeholder="输入学生姓名，2-4个中文字符"/>
+        <FormItem prop="type_name" label="产权性质">
+          <Select v-model="form.type_name" placeholder="产权性质选择..." style="width: 162px;" transfer>
+            <Option value="国有" key="国有">国有</Option>
+            <Option value="集体" key="集体">集体</Option>
+          </Select>
         </FormItem>
-        <FormItem label="母亲姓名">
-          <Input v-model="form.mother_name" placeholder="输入学生姓名，2-4个中文字符"/>
+        <FormItem prop="area_id" label="所属地区">
+          <Select v-model="form.area_id" placeholder="地区选择..." style="width: 162px;" transfer>
+            <Option value="321204" key="321204">姜堰区</Option>
+            <Option value="999999" key="999999">其他地区</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="area_build" label="建筑面积">
+          <Input v-model="form.area_build" placeholder="输入建筑面积"/>
+        </FormItem>
+        <FormItem prop="area_soil" label="土地面积">
+          <Input v-model="form.area_soil" placeholder="输入土地面积"/>
+        </FormItem>
+        <FormItem prop="use_year" label="使用年限">
+          <Input v-model="form.use_year" placeholder="输入使用年限"/>
+        </FormItem>
+        <br>
+        <FormItem prop="price_begin" label="初始价格">
+          <Input v-model="form.price_begin" placeholder="输入标的初始价格"/>
+        </FormItem>
+        <FormItem prop="price_ass" label="评估价格">
+          <Input v-model="form.price_ass" placeholder="输入标的评估价格"/>
+        </FormItem>
+        <FormItem prop="price_shoot" label="起拍价格">
+          <Input v-model="form.price_shoot" placeholder="输入标的起拍价格"/>
         </FormItem>
       </Form>
     </Modal>
@@ -123,11 +150,17 @@
                 tableLoading: true,  // 表格数据加载中
                 formLoading: true,  // 表单加载中
                 form: {
+                    id: '',
                     name: '',
-                    sex: '',
-                    idc: '',
-                    father_name: '',
-                    mother_name: '',
+                    owner: '',
+                    type_name: '',
+                    area_build: '',
+                    area_soil: '',
+                    use_year: '',
+                    price_begin: '',
+                    price_ass: '',
+                    price_shoot: '',
+                    area_id: ''
                 },
                 cols: [
                     {
@@ -141,42 +174,195 @@
                         align: 'center',
                     },
                     {
-                        title: '名称',
+                        title: '编号',
+                        key: 'id',
+                    },
+                    {
+                        title: '标的名称',
                         key: 'name',
                     },
                     {
-                        title: '测试',
-                        key: 'value'
-                    }
+                        title: '产权人',
+                        key: 'owner',
+                    },
+                    {
+                        title: '产权性质',
+                        key: 'type_name',
+                    },
+                    {
+                        title: '所属地区',
+                        key: 'area_name',
+                    },
+                    {
+                        title: '建筑面积',
+                        key: 'area_build',
+                    },
+                    {
+                        title: '土地面积',
+                        key: 'area_soil',
+                    },
+                    {
+                        title: '使用年限',
+                        key: 'use_year',
+                    },
+                    {
+                        title: '初始价格',
+                        key: 'price_begin',
+                    },
+                    {
+                        title: '评价价格',
+                        key: 'price_ass',
+                    },
+                    {
+                        title: '起拍价格',
+                        key: 'price_shoot',
+                    },
                 ],
-                datas: [
-                    {
-                        name: '第一行',
-                        value: '数据是什么东西'
-                    },
-                    {
-                        name: '第二行',
-                        value: '数据是什么东西'
-                    },
-                    {
-                        name: '第三行',
-                        value: '数据是什么东西'
-                    },
-                    {
-                        name: '第二行',
-                        value: '数据是什么东西'
-                    },
-                ]
+                datas: [],
+                rule: {
+                    id: [
+                        {
+                            required: true, message: '编号不得为空，且为数字', trigger: 'blur'
+                        },
+                        {
+                            min: 4,
+                            max: 20,
+                            message: '编号长度最少4位，最多20位',
+                            trigger: 'change'
+                        },
+                        {
+                            pattern: /^\d+$/,
+                            message: '必须以数字编号',
+                            trigger: 'change'
+                        },
+                    ],
+                    name: [
+                        {
+                            required: true, message: '拍卖标的名称不得为空', trigger: 'blur'
+                        },
+                        {
+                            min: 6,
+                            max: 50,
+                            message: '标的名称最少6位，最多50位',
+                            trigger: 'change'
+                        },
+                        {
+                            pattern: /^[\x21-\x7f\u4e00-\u9fa5]+$/,
+                            message: '可以用字母、数学、汉字',
+                            trigger: 'change'
+                        },
+                    ],
+                    owner: [
+                        {
+                            required: true, message: '产权人姓名不得为空', trigger: 'blur'
+                        },
+                        {
+                            min: 2,
+                            max: 4,
+                            message: '产权人名称最少2位，最多4位',
+                            trigger: 'change'
+                        },
+                        {
+                            pattern: /^[\u4e00-\u9fa5]+$/,
+                            message: '必须是汉字，不得有空格',
+                            trigger: 'change'
+                        },
+
+                    ],
+                    type_name: [
+                        {
+                            required: true, message: '请选择相应的产权性质', trigger: 'change'
+                        }
+                    ],
+                    area_id: [
+                        {
+                            required: true, message: '请选择产权所属地区', trigger: 'change'
+                        }
+                    ],
+                    area_build: [
+                        {
+                            required: true, message: '建筑面积不得为空', trigger: 'blur'
+                        },
+                        {
+                            pattern: /^\d+(\.\d{1,2})?$/,
+                            message: '数值型，可以带两位小数',
+                            trigger: 'change'
+                        }
+                    ],
+                    area_soil: [
+                        {
+                            required: true, message: '土地面积不得为空', trigger: 'blur'
+                        },
+                        {
+                            pattern: /^\d+(\.\d{1,2})?$/,
+                            message: '数值型，可以带两位小数',
+                            trigger: 'change'
+                        }
+                    ],
+                    use_year: [
+                        {
+                            required: true, message: '使用年限不得为空', trigger: 'blur'
+                        },
+                        {
+                            pattern: /^\d{1,2}$/,
+                            message: '最少1年，最多99年',
+                            trigger: 'change'
+                        }
+                    ],
+                    price_begin: [
+                        {
+                            required: true, message: '初始价格不得为空', trigger: 'blur'
+                        },
+                        {
+                            pattern: /^\d+(\.\d{1,2})?$/,
+                            message: '数值型，可以带两位小数',
+                            trigger: 'change'
+                        }
+                    ],
+                    price_ass: [
+                        {
+                            required: true, message: '评估价格不得为空', trigger: 'blur'
+                        },
+                        {
+                            pattern: /^\d+(\.\d{1,2})?$/,
+                            message: '数值型，可以带两位小数',
+                            trigger: 'change'
+                        }
+                    ],
+                    price_shoot: [
+                        {
+                            required: true, message: '起拍价格不得为空', trigger: 'blur'
+                        },
+                        {
+                            pattern: /^\d+(\.\d{1,2})?$/,
+                            message: '数值型，可以带两位小数',
+                            trigger: 'change'
+                        }
+                    ],
+                },
             }
         },
         methods: {
             countDateClick() {
-                this.$Message.success('日期查询');
-                window.console.log(this.countDate)
+                this.tableLoading = true;
+                let begin = this.countDate[0] instanceof Date ? this.countDate[0].format('yyyy-MM-dd') : this.countDate[0];
+                let end = this.countDate[1] instanceof Date ? this.countDate[1].format('yyyy-MM-dd') : this.countDate[1];
+
+                this.$.posts('/data/find', {begin, end})
+                    .then(res => {
+                        this.datas = res;
+                        this.tableLoading = false;
+                    })
+                    .catch(error => {
+                        this.$Message.error(error.data);
+                        error.code === -1 && setTimeout(() => {
+                            this.$router.replace('/vuelogin');
+                        }, 1000)
+                    })
             },
-            dateChange() {
-                this.dateType = ''
-                // 自定义日期列表，清除radio选项
+            dateChange(val) {
+                this.dateType = '';   // 自定义日期列表，清除radio选项
+                this.countDate = val;
             },
             dateTypeChange(val) {
                 const today = (new Date()).getTime();
@@ -195,22 +381,60 @@
                         date = today - 86400000 * 365;
                         break;
                 }
-                this.countDate = [new Date(date), new Date(today)]
+                this.countDate = [new Date(date), new Date(today)];
             },
-            formOk() {
-                this.formLoading = false;
-                this.formAdd = false;
-                this.$Message.success('表单数据添加成功！');
+            formOk(name) {
+                this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        // 提交this.form服务器端认证
+                        this.$.posts('/data/add', this.form)
+                            .then(res => {
+                                this.datas.push(res);
+
+                                this.formAdd = false;
+                                // 重置表单
+                                this.$refs['form'].resetFields();
+                                this.$Message.success('标的添加成功！');
+                            })
+                            .catch(error => {
+                                this.$Message.error(error.data);
+                                error.code === -1 && setTimeout(() => {
+                                    this.$router.replace('/vuelogin');
+                                }, 1000)
+                            });
+                    } else {
+                        this.formLoading = false;
+                        this.$nextTick(() => {
+                            this.formLoading = true;
+                        });
+
+                        this.$Message.error('表单验证无法通过，请重新输入');
+                    }
+                });
             },
             formCancel() {
                 this.$refs['form'].resetFields();
                 this.$Message.warning('表单添加取消！');
             },
+            updateCount() {
+                let select = this.$refs.table.getSelection();
+            },
+            delRecord() {
+
+            },
         },
         created() {
-            setTimeout(() => {
-                this.tableLoading = false
-            }, 1000)
+            this.$.gets('/data/index')
+                .then(res => {
+                    this.datas = res;
+                    this.tableLoading = false
+                })
+                .catch(error => {
+                    this.$Message.error(error.data);
+                    error.code === -1 && setTimeout(() => {
+                        this.$router.replace('/vuelogin');
+                    }, 1000)
+                })
         }
     }
 </script>

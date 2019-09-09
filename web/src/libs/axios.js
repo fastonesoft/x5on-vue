@@ -17,7 +17,7 @@ ajax.gets = function (url, data) {
             ajax.get(url).then(res => {
                 if (res && res.data && res.data.code) {
                     // code != 0 => error
-                    reject(res.data.data)
+                    reject(res.data)
                 } else {
                     resolve(res.data.data)
                 }
@@ -30,7 +30,7 @@ ajax.gets = function (url, data) {
             ajax.get(url, {params: data}).then(res => {
                 if (res && res.data && res.data.code) {
                     // code != 0 => error
-                    reject(res.data.data)
+                    reject(res.data)
                 } else {
                     resolve(res.data.data)
                 }
@@ -47,9 +47,10 @@ ajax.posts = function (url, data) {
         ajax.post(url, param).then(res => {
             // 输出请求结果，调试用
             window.console.log(res);
+            window.console.log(res.data.data);
             if (res && res.data && res.data.code) {
                 // code != 0 => error
-                reject(res.data.data)
+                reject(res.data)
             } else {
                 resolve(res.data.data)
             }

@@ -70,12 +70,12 @@
             </Option>
           </Select>
         </FormItem>
-        <FormItem prop="role_name" label="权限分组">
-          <Select v-model="form.role_name" placeholder="权限组选择..." transfer>
+        <FormItem prop="group_name" label="权限分组">
+          <Select v-model="form.group_name" placeholder="权限组选择..." transfer>
             <Option
               v-for="item in roles"
-              :value="item.role_name"
-              :key="item.role_id">{{ item.role_name }}
+              :value="item.group_name"
+              :key="item.role_id">{{ item.group_name }}
             </Option>
           </Select>
         </FormItem>
@@ -112,7 +112,7 @@
                     },
                     {
                         title: '权限分组',
-                        key: 'role_name',
+                        key: 'group_name',
                     },
                     {
                         title: '操作',
@@ -150,74 +150,7 @@
                         }
                     }
                 ],
-                datas: [
-                    {
-                        id: 'wanger',
-                        name: '王二',
-                        part_name: '税务局',
-                        role_name: '员工组'
-                    },
-                    {
-                        id: 'qiansan',
-                        name: '钱三',
-                        part_name: '工商局',
-                        role_name: '员工组'
-                    },
-                    {
-                        id: 'zhaowu',
-                        name: '赵五',
-                        part_name: '法院',
-                        role_name: '管理组'
-                    },
-                    {
-                        id: 'zhaowu',
-                        name: '赵五',
-                        part_name: '法院',
-                        role_name: '管理组'
-                    },
-                    {
-                        id: 'zhaowu',
-                        name: '赵五',
-                        part_name: '法院',
-                        role_name: '管理组'
-                    },
-                    {
-                        id: 'zhaowu',
-                        name: '赵五',
-                        part_name: '法院',
-                        role_name: '管理组'
-                    },
-                    {
-                        id: 'zhaowu',
-                        name: '赵五',
-                        part_name: '法院',
-                        role_name: '管理组'
-                    },
-                    {
-                        id: 'zhaowu',
-                        name: '赵五',
-                        part_name: '法院',
-                        role_name: '管理组'
-                    },
-                    {
-                        id: 'zhaowu',
-                        name: '赵五',
-                        part_name: '法院',
-                        role_name: '管理组'
-                    },
-                    {
-                        id: 'zhaowu',
-                        name: '赵五',
-                        part_name: '法院',
-                        role_name: '管理组'
-                    },
-                    {
-                        id: 'zhaowu',
-                        name: '赵五',
-                        part_name: '法院',
-                        role_name: '管理组'
-                    },
-                ],
+                datas: [],
                 part_id: '02',
                 parts: [
                     {
@@ -237,11 +170,11 @@
                 roles: [
                     {
                         role_id: '01',
-                        role_name: '员工组',
+                        group_name: '员工组',
                     },
                     {
                         role_id: '99',
-                        role_name: '管理组',
+                        group_name: '管理组',
                     },
                 ],
                 formAdd: false,
@@ -251,7 +184,7 @@
                     name: '',
                     pass: '',
                     part_name: '',
-                    role_name: '',
+                    group_name: '',
                 },
                 rule: {
                     id: [
@@ -262,7 +195,7 @@
                             min: 5,
                             max: 20,
                             message: '帐号长度最小5位，最大20位',
-                            trigger: 'blur'
+                            trigger: 'change'
                         }
                     ],
                     name: [
@@ -273,7 +206,7 @@
                             min: 5,
                             max: 20,
                             message: '帐号长度最小5位，最大20位',
-                            trigger: 'blur'
+                            trigger: 'change'
                         }
                     ],
                     pass: [
@@ -284,7 +217,7 @@
                             min: 6,
                             max: 20,
                             message: '帐号长度最小6位，最大20位',
-                            trigger: 'blur'
+                            trigger: 'change'
                         }
                     ],
                     part_name: [
@@ -292,7 +225,7 @@
                             required: true, message: '请选择相应的部门', trigger: 'blur'
                         }
                     ],
-                    role_name: [
+                    group_name: [
                         {
                             required: true, message: '请选择相应的权限分组', trigger: 'blur'
                         }
@@ -321,7 +254,7 @@
             userEdit(index) {
                 this.$Modal.info({
                     title: '用户信息',
-                    content: `帐号：${this.datas[index].id}<br>名称：${this.datas[index].name}<br>部门信息：${this.datas[index].part_name}<br>权限分组：${this.datas[index].role_name}`
+                    content: `帐号：${this.datas[index].id}<br>名称：${this.datas[index].name}<br>部门信息：${this.datas[index].part_name}<br>权限分组：${this.datas[index].group_name}`
                 })
             },
             formOk(name) {
@@ -335,16 +268,13 @@
                         this.$Message.success('用户帐号添加成功！');
                     } else {
                         this.formLoading = false;
-                        setTimeout(() => {
-                            this.$nextTick(() => {
-                                this.formLoading = true;
-                            });
-                        }, 100);
+                        this.$nextTick(() => {
+                            this.formLoading = true;
+                        });
 
                         this.$Message.error('用户帐号无法通过验证，请重新输入');
                     }
                 });
-
             },
             formCancel() {
                 this.$refs['form'].resetFields();
@@ -352,9 +282,18 @@
             },
         },
         created() {
-            setTimeout(() => {
-                this.tableLoading = false;
-            }, 1000)
+
+            this.$.gets('/user/')
+                .then(res => {
+                    this.datas = res;
+                    this.tableLoading = false;
+                })
+                .catch(error => {
+                    this.$Message.error(error.data);
+                    error.code === -1 && setTimeout(() => {
+                        this.$router.replace('/vuelogin');
+                    }, 1000)
+                })
         }
     }
 </script>
@@ -363,14 +302,6 @@
 
   .user-body {
 
-  }
-
-  .user-collect {
-    font-size: 16px;
-  }
-
-  .text-indent {
-    text-indent: 30px;
   }
 
 </style>

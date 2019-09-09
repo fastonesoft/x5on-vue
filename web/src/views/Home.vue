@@ -4,7 +4,7 @@
       <div class="home-items">
         <router-link class="home-item hidden-nowrap" to="/vueuser" replace>
           <img class="image" src="../assets/head1.png" alt=""/>
-          <div class="text">权限分配</div>
+          <div class="text">用户权限</div>
         </router-link>
         <router-link class="home-item hidden-nowrap" to="/vuegrid" replace>
           <img class="image" src="../assets/head2.png" alt=""/>

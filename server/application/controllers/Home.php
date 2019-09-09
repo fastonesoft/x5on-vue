@@ -4,17 +4,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Home extends XBASE_Controller
 {
 
+    // 首页内容
     public function index()
     {
         $this->load->view('home.html');
     }
 
+    // 返回当前页面的状态编号
     public function token()
     {
         $token = md5(session_id());
         $this->xcon->json(0, $token);
     }
 
+    // 登录
     public function login()
     {
         $id = $this->xcon->param('id');
@@ -46,6 +49,12 @@ class Home extends XBASE_Controller
 
     }
 
+    // 登录状态
+    public function logstatus() {
+        return $this->userinfor !== null;
+    }
+
+    // 退出
     public function logout()
     {
         $this->session->sess_destroy();

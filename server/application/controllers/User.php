@@ -8,8 +8,8 @@ class User extends XC_Controller
     {
         $this->xcon->loginCheck(function ($userinfor) {
             try {
-                // 标准格式
-                throw new Exception('出错 测试');
+                $result = $this->xcon->gets('xvUser');
+                $this->xcon->json(0, $result);
             } catch (Exception $e) {
                 $this->xcon->json(2, $e->getMessage());
             }

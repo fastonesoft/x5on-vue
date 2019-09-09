@@ -8,8 +8,9 @@ class A extends XC_Controller
     {
         $this->xcon->loginCheck(function ($userinfor) {
             try {
-                // 标准格式
-                throw new Exception('出错 测试');
+                // 模板
+                $result = 0;
+                $this->xcon->json(0, $result);
             } catch (Exception $e) {
                 $this->xcon->json(2, $e->getMessage());
             }
