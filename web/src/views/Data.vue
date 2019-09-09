@@ -344,10 +344,10 @@
         },
         methods: {
             countDateClick() {
-                this.tableLoading = true;
                 let begin = this.countDate[0] instanceof Date ? this.countDate[0].format('yyyy-MM-dd') : this.countDate[0];
                 let end = this.countDate[1] instanceof Date ? this.countDate[1].format('yyyy-MM-dd') : this.countDate[1];
 
+                this.tableLoading = true;
                 this.$.posts('/data/find', {begin, end})
                     .then(res => {
                         this.datas = res;
@@ -361,7 +361,8 @@
                     })
             },
             dateChange(val) {
-                this.dateType = '';   // 自定义日期列表，清除radio选项
+                // 自定义日期列表，清除radio选项
+                this.dateType = '';
                 this.countDate = val;
             },
             dateTypeChange(val) {
@@ -389,7 +390,7 @@
                         // 提交this.form服务器端认证
                         this.$.posts('/data/add', this.form)
                             .then(res => {
-                                this.datas.push(res);
+                                !res && this.datas.push(res);
 
                                 this.formAdd = false;
                                 // 重置表单
@@ -418,9 +419,47 @@
             },
             updateCount() {
                 let select = this.$refs.table.getSelection();
+                let arrs = [];
+                select.forEach(function (item) {
+                    arrs.push(item.uid)
+                });
+                let uids = arrs.join(',');
+
+                // 提交测算
+                this.tableLoading = true;
+                this.$.posts('/data/upto', {uids})
+                    .then(res => {
+                        this.datas = res;
+                        this.tableLoading = false;
+                    })
+                    .catch(error => {
+                        this.$Message.error(error.data);
+                        error.code === -1 && setTimeout(() => {
+                            this.$router.replace('/vuelogin');
+                        }, 1000)
+                    });
             },
             delRecord() {
+                let select = this.$refs.table.getSelection();
+                let arrs = [];
+                select.forEach(function (item) {
+                    arrs.push(item.uid)
+                });
+                let uids = arrs.join(',');
 
+                // 删除数据
+                this.tableLoading = true;
+                this.$.posts('/data/del', {uids})
+                    .then(res => {
+                        this.datas = res;
+                        this.tableLoading = false;
+                    })
+                    .catch(error => {
+                        this.$Message.error(error.data);
+                        error.code === -1 && setTimeout(() => {
+                            this.$router.replace('/vuelogin');
+                        }, 1000)
+                    });
             },
         },
         created() {

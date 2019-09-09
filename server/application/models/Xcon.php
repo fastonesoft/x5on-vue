@@ -158,6 +158,8 @@ class Xcon
     {
         $CI =& get_instance();
         $CI->db->insert($tableName, $values);
+        $error_msg = $CI->db->_error_message();
+        if ($error_msg) throw new Exception($error_msg);
     }
 
     /**
@@ -186,6 +188,20 @@ class Xcon
         $CI =& get_instance();
         self::setBy($tableName, $cols, compact('uid'));
         return $CI->db->affected_rows();
+    }
+
+    public static function delBy($tableName, $condition) {
+        $CI =& get_instance();
+        $CI->db->delete($tableName, $condition);
+        return $CI->db->affected_rows();
+    }
+
+    public static function delById($tableName, $id) {
+        return self::delBy($tableName, compact('id'));
+    }
+
+    public static function delByUid($tableName, $uid) {
+        return self::delBy($tableName, compact('uid'));
     }
 
 }

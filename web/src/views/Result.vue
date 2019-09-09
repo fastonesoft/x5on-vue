@@ -84,33 +84,52 @@
                         align: 'center',
                     },
                     {
-                        title: '名称',
+                        title: '编号',
+                        key: 'id',
+                    },
+                    {
+                        title: '标的名称',
                         key: 'name',
                     },
                     {
-                        title: '测试',
-                        key: 'value'
-                    }
+                        title: '产权人',
+                        key: 'owner',
+                    },
+                    {
+                        title: '产权性质',
+                        key: 'type_name',
+                    },
+                    {
+                        title: '所属地区',
+                        key: 'area_name',
+                    },
+                    {
+                        title: '建筑面积',
+                        key: 'area_build',
+                    },
+                    {
+                        title: '土地面积',
+                        key: 'area_soil',
+                    },
+                    {
+                        title: '使用年限',
+                        key: 'use_year',
+                    },
+                    {
+                        title: '初始价格',
+                        key: 'price_begin',
+                    },
+                    {
+                        title: '评价价格',
+                        key: 'price_ass',
+                    },
+                    {
+                        title: '起拍价格',
+                        key: 'price_shoot',
+                    },
                 ],
-                datas: [
-                    {
-                        name: '第一行',
-                        value: '数据是什么东西'
-                    },
-                    {
-                        name: '第二行',
-                        value: '数据是什么东西'
-                    },
-                    {
-                        name: '第三行',
-                        value: '数据是什么东西'
-                    },
-                    {
-                        name: '第二行',
-                        value: '数据是什么东西'
-                    },
-                ],
-                area_id: '999999',
+                datas: [],
+                area_id: '321204',
                 areas: [
                     {
                         area_id: '321204',
@@ -125,9 +144,18 @@
         },
         methods: {},
         created() {
-            setTimeout(() => {
-                this.tableLoading = false
-            }, 1000)
+            this.tableLoading = true;
+            this.$.gets('/result/index')
+                .then(res => {
+                    this.datas = res;
+                    this.tableLoading = false
+                })
+                .catch(error => {
+                    this.$Message.error(error.data);
+                    error.code === -1 && setTimeout(() => {
+                        this.$router.replace('/vuelogin');
+                    }, 1000)
+                })
         }
     }
 </script>

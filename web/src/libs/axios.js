@@ -47,7 +47,6 @@ ajax.posts = function (url, data) {
         ajax.post(url, param).then(res => {
             // 输出请求结果，调试用
             window.console.log(res);
-            window.console.log(res.data.data);
             if (res && res.data && res.data.code) {
                 // code != 0 => error
                 reject(res.data)

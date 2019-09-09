@@ -1,76 +1,83 @@
 <template>
-    <dev-article>
-        <Row :gutter="16">
-            <i-col span="8">
-                <Card title="标的清单">
-                    <!--数据采集完毕的数据 confirmed-->
-                    <Tag color="green" slot="extra">的</Tag>
-                    <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
-                </Card>
-            </i-col>
-            <i-col span="8">
-                <Card title="税率测算">
-                    <!--<Tooltip content="完成税率测算的数据占比" slot="extra" placement="top" transfer>-->
-                    <!--<Icon type="ios-alert-outline" size="18"/>-->
-                    <!--</Tooltip>-->
-                    <Tag color="red" slot="extra">算</Tag>
-                    <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Progress status="success" :percent="count.count.num" hide-info></Progress>
-                </Card>
-            </i-col>
-            <i-col span="8">
-                <Card title="协作成果">
-                    <Tag color="blue" slot="extra">果</Tag>
-                    <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
-                </Card>
-            </i-col>
-        </Row>
-        <Row class="margin-top16">
-            <Card>
-                <Tabs value="table">
-                    <TabPane label="测算列表" name="table">
-                        <Table
-                                :columns="cols"
-                                :data="datas"
-                                :loading="tableLoading"
-                                ref="selection"
-                                size="small"
-                                border stripe>
-                        </Table>
-                        <Row class="margin-top16">
-                            <i-col class="hidden-nowrap align-right">
-                                <Page :total="datas.length" show-sizer transfer/>
-                            </i-col>
-                        </Row>
-                    </TabPane>
-                    <!--表头附加相关操作：-->
-                    <template slot="extra">
-                        <Row class="hidden-nowrap">
-                            <RadioGroup v-model="dateType" @on-change="dateTypeChange">
-                                <Radio label="day">今日</Radio>
-                                <Radio label="week">周</Radio>
-                                <Radio label="month">月</Radio>
-                                <Radio label="year">年</Radio>
-                            </RadioGroup>
-                            <DatePicker
-                                    v-model="countDate"
-                                    type="daterange"
-                                    style="width: 180px"
-                                    @on-change="dateChange"
-                                    transfer>
-                            </DatePicker>
-                            <Button class="margin-left8" type="primary" @click="countDateClick">查询</Button>
-                        </Row>
-                    </template>
-                </Tabs>
-            </Card>
-        </Row>
-    </dev-article>
+  <dev-article>
+    <Row :gutter="16">
+      <i-col span="8">
+        <Card title="标的清单">
+          <!--数据采集完毕的数据 confirmed-->
+          <Tag color="green" slot="extra">的</Tag>
+          <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
+          <Divider size="small" dashed></Divider>
+          <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
+        </Card>
+      </i-col>
+      <i-col span="8">
+        <Card title="税率测算">
+          <!--<Tooltip content="完成税率测算的数据占比" slot="extra" placement="top" transfer>-->
+          <!--<Icon type="ios-alert-outline" size="18"/>-->
+          <!--</Tooltip>-->
+          <Tag color="red" slot="extra">算</Tag>
+          <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
+          <Divider size="small" dashed></Divider>
+          <Progress status="success" :percent="count.count.num" hide-info></Progress>
+        </Card>
+      </i-col>
+      <i-col span="8">
+        <Card title="协作成果">
+          <Tag color="blue" slot="extra">果</Tag>
+          <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
+          <Divider size="small" dashed></Divider>
+          <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
+        </Card>
+      </i-col>
+    </Row>
+    <Row class="margin-top16" :gutter="16">
+      <i-col span="16">
+        <Card>
+          <Tabs value="table">
+            <TabPane label="测算列表" name="table">
+              <Table
+                :columns="cols"
+                :data="datas"
+                :loading="tableLoading"
+                ref="selection"
+                size="small"
+                highlight-row border stripe>
+              </Table>
+              <Row class="margin-top16">
+                <i-col class="hidden-nowrap align-right">
+                  <Page :total="datas.length" show-sizer transfer/>
+                </i-col>
+              </Row>
+            </TabPane>
+            <!--表头附加相关操作：-->
+            <template slot="extra">
+              <Row class="hidden-nowrap">
+                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
+                  <Radio label="day">今日</Radio>
+                  <Radio label="week">周</Radio>
+                  <Radio label="month">月</Radio>
+                  <Radio label="year">年</Radio>
+                </RadioGroup>
+                <DatePicker
+                  v-model="countDate"
+                  type="daterange"
+                  style="width: 180px"
+                  @on-change="dateChange"
+                  transfer>
+                </DatePicker>
+                <Button class="margin-left8" type="primary" @click="countDateClick">查询</Button>
+              </Row>
+            </template>
+          </Tabs>
+        </Card>
+      </i-col>
+      <i-col span="8">
+        <Card>
+
+        </Card>
+      </i-col>
+    </Row>
+  </dev-article>
 </template>
 
 <script>
@@ -96,17 +103,53 @@
                         align: 'center',
                     },
                     {
-                        title: '名称',
+                        title: '编号',
+                        key: 'id',
+                    },
+                    {
+                        title: '标的名称',
                         key: 'name',
                     },
                     {
-                        title: '测试',
-                        key: 'value'
+                        title: '产权人',
+                        key: 'owner',
+                    },
+                    {
+                        title: '产权性质',
+                        key: 'type_name',
+                    },
+                    {
+                        title: '所属地区',
+                        key: 'area_name',
+                    },
+                    {
+                        title: '建筑面积',
+                        key: 'area_build',
+                    },
+                    {
+                        title: '土地面积',
+                        key: 'area_soil',
+                    },
+                    {
+                        title: '使用年限',
+                        key: 'use_year',
+                    },
+                    {
+                        title: '初始价格',
+                        key: 'price_begin',
+                    },
+                    {
+                        title: '评价价格',
+                        key: 'price_ass',
+                    },
+                    {
+                        title: '起拍价格',
+                        key: 'price_shoot',
                     },
                     {
                         title: '操作',
                         key: 'action',
-                        width: 150,
+                        width: 80,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
@@ -128,34 +171,31 @@
                         }
                     }
                 ],
-                datas: [
-                    {
-                        name: '第一行',
-                        value: '数据是什么东西'
-                    },
-                    {
-                        name: '第二行',
-                        value: '数据是什么东西'
-                    },
-                    {
-                        name: '第三行',
-                        value: '数据是什么东西'
-                    },
-                    {
-                        name: '第二行',
-                        value: '数据是什么东西'
-                    },
-                ],
+                datas: [],
             }
         },
         methods: {
             countDateClick() {
-                this.$Message.success('test！');
-                window.console.log(this.countDate)
+                let begin = this.countDate[0] instanceof Date ? this.countDate[0].format('yyyy-MM-dd') : this.countDate[0];
+                let end = this.countDate[1] instanceof Date ? this.countDate[1].format('yyyy-MM-dd') : this.countDate[1];
+
+                this.tableLoading = true;
+                this.$.posts('/count/find', {begin, end})
+                    .then(res => {
+                        this.datas = res;
+                        this.tableLoading = false;
+                    })
+                    .catch(error => {
+                        this.$Message.error(error.data);
+                        error.code === -1 && setTimeout(() => {
+                            this.$router.replace('/vuelogin');
+                        }, 1000)
+                    })
             },
-            dateChange() {
-                this.dateType = ''
+            dateChange(val) {
                 // 自定义日期列表，清除radio选项
+                this.dateType = '';
+                this.countDate = val;
             },
             dateTypeChange(val) {
                 const today = (new Date()).getTime();
@@ -184,9 +224,18 @@
             }
         },
         created() {
-            setTimeout(() => {
-                this.tableLoading = false
-            }, 1000)
+            this.tableLoading = true;
+            this.$.gets('/count/index')
+                .then(res => {
+                    this.datas = res;
+                    this.tableLoading = false
+                })
+                .catch(error => {
+                    this.$Message.error(error.data);
+                    error.code === -1 && setTimeout(() => {
+                        this.$router.replace('/vuelogin');
+                    }, 1000)
+                })
         }
     }
 </script>

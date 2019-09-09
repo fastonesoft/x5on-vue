@@ -1,15 +1,15 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data extends XC_Controller
+class Count extends XC_Controller
 {
 
     public function index()
     {
         $this->xcon->loginCheck(function ($userinfor) {
             try {
-                // 标的清单
-                $result = $this->xcon->gets('xvDataNotConfirm');
+                // 测算清单
+                $result = $this->xcon->gets('xvDataNotGuess');
                 $this->xcon->json(0, $result);
             } catch (Exception $e) {
                 $this->xcon->json(2, $e->getMessage());
@@ -28,11 +28,6 @@ class Data extends XC_Controller
                 $uid = $this->xcon->uid();
                 $param['uid'] = $uid;
                 $param['create_time'] = date('Y-m-d');
-
-                // 检测id是否重复
-//                $id = $param['id'];
-//                $data = $this->xcon->getById($id);
-//                if ($data !== null) throw new Exception('编号有重复');
 
                 // 添加数据
                 $this->xcon->add('xcData', $param);
@@ -80,7 +75,7 @@ class Data extends XC_Controller
                 $begin = $this->xcon->param('begin');
                 $end = $this->xcon->param('end');
 
-                $result = $this->xcon->getsBy('xvDataNotConfirm', "create_time between '$begin' and '$end'");
+                $result = $this->xcon->getsBy('xvDataNotGuess', "create_time between '$begin' and '$end'");
 
                 $this->xcon->json(0, $result);
             } catch (Exception $e) {
