@@ -55,6 +55,12 @@ const router = new Router({
     ]
 });
 
+// 解决点击重复路由出现错误提示的问题
+const originalPush = Router.prototype.replace;
+Router.prototype.replace = function replace(location) {
+    return originalPush.call(this, location).catch(err => err)
+};
+
 // 全局路由守卫
 router.beforeEach((to, from, next) => {
 

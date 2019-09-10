@@ -1,73 +1,71 @@
 <template>
-    <dev-article>
-        <Row :gutter="16">
-            <i-col :span="this.countId?'16':'24'" style="transition: all .2s ease-in-out;">
-                <Card>
-                    <Tabs type="line" value="table">
-                        <TabPane label="标的反馈" name="table">
-                            <Table
-                                    :columns="cols"
-                                    :data="datas"
-                                    :loading="tableLoading"
-                                    ref="selection"
-                                    size="small"
-                                    highlight-row border stripe>
-                            </Table>
-                            <Row class="margin-top16">
-                                <i-col class="hidden-nowrap align-right">
-                                    <Page :total="datas.length" show-sizer transfer/>
-                                </i-col>
-                            </Row>
-                        </TabPane>
-                        <!--表头附加相关操作：-->
-                        <template slot="extra">
-                            <Row class="hidden-nowrap">
-                                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
-                                    <Radio label="day">今日</Radio>
-                                    <Radio label="week">周</Radio>
-                                    <Radio label="month">月</Radio>
-                                    <Radio label="year">年</Radio>
-                                </RadioGroup>
-                                <DatePicker
-                                        v-model="countDate"
-                                        type="daterange"
-                                        style="width: 180px"
-                                        @on-change="dateChange"
-                                        transfer>
-                                </DatePicker>
-                                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
-                                </Button>
-                            </Row>
-                        </template>
-                    </Tabs>
-                </Card>
-            </i-col>
-            <i-col :span="this.countId?'8':'0'" style="transition: all .2s ease-in-out;">
-                <Card>
-                    <Tabs type="line" value="count1">
-                        <TabPane label="测算清单" name="count1">
-                            <Table
-                                    :columns="count_cols"
-                                    :data="counts"
-                                    :loading="countLoading"
-                                    ref="count_sec"
-                                    size="small"
-                                    border stripe>
-                            </Table>
-                        </TabPane>
-                        <!--表头附加相关操作：-->
-                        <template slot="extra">
-                            <Row class="hidden-nowrap">
-                                <Button type="error" size="small" @click="countDoneClick">完成</Button>
-                                <Button class="margin-left8" type="primary" size="small" @click="countAddClick">添加
-                                </Button>
-                            </Row>
-                        </template>
-                    </Tabs>
-                </Card>
-            </i-col>
-        </Row>
-    </dev-article>
+  <dev-article>
+    <Row :gutter="16">
+      <i-col :span="this.countId?'16':'24'" style="transition: all .2s ease-in-out;">
+        <Card>
+          <Tabs type="line" value="table">
+            <TabPane label="标的反馈" name="table">
+              <Table
+                :columns="cols"
+                :data="datas"
+                :loading="tableLoading"
+                ref="selection"
+                size="small"
+                highlight-row border stripe>
+              </Table>
+              <Row class="margin-top16">
+                <i-col class="hidden-nowrap align-right">
+                  <Page :total="datas.length" show-sizer transfer/>
+                </i-col>
+              </Row>
+            </TabPane>
+            <!--表头附加相关操作：-->
+            <template slot="extra">
+              <Row class="hidden-nowrap">
+                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
+                  <Radio label="day">今日</Radio>
+                  <Radio label="week">周</Radio>
+                  <Radio label="month">月</Radio>
+                  <Radio label="year">年</Radio>
+                </RadioGroup>
+                <DatePicker
+                  v-model="countDate"
+                  type="daterange"
+                  style="width: 180px"
+                  @on-change="dateChange"
+                  transfer>
+                </DatePicker>
+                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
+                </Button>
+              </Row>
+            </template>
+          </Tabs>
+        </Card>
+      </i-col>
+      <i-col :span="this.countId?'8':'0'" style="transition: all .2s ease-in-out;">
+        <Card>
+          <Tabs type="line" value="count1">
+            <TabPane label="测算清单" name="count1">
+              <Table
+                :columns="count_cols"
+                :data="counts"
+                :loading="countLoading"
+                ref="count_sec"
+                size="small"
+                border stripe>
+              </Table>
+            </TabPane>
+            <!--表头附加相关操作：-->
+            <template slot="extra">
+              <Row class="hidden-nowrap">
+                <Button type="error" size="small" @click="countDoneClick">完成</Button>
+              </Row>
+            </template>
+          </Tabs>
+        </Card>
+      </i-col>
+    </Row>
+  </dev-article>
 </template>
 
 <script>
@@ -275,6 +273,7 @@
                 let uid = this.countUid;
                 this.countId = null;
                 this.countUid = null;
+
                 // 提交标的，测算结束
                 this.countLoading = true;
                 this.$.posts('/back/upto', {uid})

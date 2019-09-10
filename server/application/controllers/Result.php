@@ -6,20 +6,20 @@ class Result extends XC_Controller
 
     public function index()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
                 // 测算清单
-                $result = $this->xcon->gets('xvDataDone');
-                $this->xcon->json(0, $result);
+                $result = Xcon::gets('xvDataDone');
+                Xcon::json(0, $result);
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json(2, $e->getMessage());
             }
         });
     }
 
     public function add()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
 
         });
     }
@@ -31,44 +31,44 @@ class Result extends XC_Controller
 
     public function del()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
 
         });
     }
 
     public function find()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
                 // 标的查询
-                $area_id = $this->xcon->param('area_id');
+                $area_id = Xcon::param('area_id');
 
-                $result = $this->xcon->getsBy('xvDataDone', compact('area_id'));
+                $result = Xcon::getsBy('xvDataDone', compact('area_id'));
 
-                $this->xcon->json(0, $result);
+                Xcon::json(0, $result);
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json(2, $e->getMessage());
             }
         });
     }
 
     public function upto()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
                 // 提交测算
-                $uid_string = $this->xcon->param('uids');
+                $uid_string = Xcon::param('uids');
 
                 $uids = explode(',', $uid_string);
                 foreach ($uids as $uid) {
                     $confirm_user_id = $userinfor->id;
-                    $this->xcon->setByUid('xcData', compact('confirm_user_id'), $uid);
+                    Xcon::setByUid('xcData', compact('confirm_user_id'), $uid);
                 }
 
-                $result = $this->xcon->gets('xvDataNotConfirm');
-                $this->xcon->json(0, $result);
+                $result = Xcon::gets('xvDataDone');
+                Xcon::json(0, $result);
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json(2, $e->getMessage());
             }
         });
     }

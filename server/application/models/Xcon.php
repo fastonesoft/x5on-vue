@@ -14,6 +14,21 @@ class Xcon
         }
     }
 
+    public static function sess_set($key, $value) {
+        $CI =& get_instance();
+        $CI->session->set_userdata($key, $value);
+    }
+
+    public static function sess_unset($key) {
+        $CI =& get_instance();
+        $CI->session->unset_userdata($key);
+    }
+
+    public static function sess_destroy() {
+        $CI =& get_instance();
+        $CI->session->sess_destroy();
+    }
+
     public static function loginCheck($success)
     {
         // 登录 检测
@@ -34,7 +49,7 @@ class Xcon
         return $CI->output
             ->set_content_type('application/json')
             ->set_output(
-                json_encode(['code' => $code, 'data' => $data])
+                json_encode(compact('code', 'data'))
             );
     }
 

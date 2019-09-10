@@ -1,4 +1,5 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class A extends XC_Controller
@@ -6,19 +7,23 @@ class A extends XC_Controller
 
     public function index()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
                 // 模板
                 $result = 0;
-                $this->xcon->json(0, $result);
+                Xcon::json(0, $result);
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json(2, $e->getMessage());
             }
         });
     }
 
     public function add()
     {
+
+        Xcon::uid();
+
+
 
         echo '---------------';
 

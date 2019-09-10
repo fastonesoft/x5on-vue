@@ -6,49 +6,49 @@ class Data extends XC_Controller
 
     public function index()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
                 // 标的清单
-                $result = $this->xcon->gets('xvDataNotConfirm');
-                $this->xcon->json(0, $result);
+                $result = Xcon::gets('xvDataNotConfirm');
+                Xcon::json(0, $result);
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json(2, $e->getMessage());
             }
         });
     }
 
     public function add()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
                 // 标的清单添加
-                $param = $this->xcon->params();
+                $param = Xcon::params();
 
                 // 增加 uid
-                $uid = $this->xcon->uid();
+                $uid = Xcon::uid();
                 $param['uid'] = $uid;
                 $param['create_time'] = date('Y-m-d');
 
                 // 添加数据
-                $this->xcon->add('xcData', $param);
+                Xcon::add('xcData', $param);
 
                 // 查询出添加数据
-                $result = $this->xcon->getByUid('xvDataNotConfirm', $uid);
+                $result = Xcon::getByUid('xvDataNotConfirm', $uid);
 
-                $this->xcon->json(0, $result);
+                Xcon::json(0, $result);
 
 //                // 检测id是否重复
 //                $id = $param['id'];
-//                $data = $this->xcon->getById($id);
+//                $data = Xcon::getById($id);
 //
 //                if ($data === null) {
 //
 //                } else {
-//                    $this->xcon->json(1, '标的编号重复');
+//                    Xcon::json(1, '标的编号重复');
 //                }
 
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json(2, $e->getMessage());
             }
         });
     }
@@ -60,58 +60,58 @@ class Data extends XC_Controller
 
     public function del()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
                 // 提交测算
-                $uid_string = $this->xcon->param('uids');
+                $uid_string = Xcon::param('uids');
 
                 $uids = explode(',', $uid_string);
                 foreach ($uids as $uid) {
-                    $this->xcon->delByUid('xcData', $uid);
+                    Xcon::delByUid('xcData', $uid);
                 }
 
-                $result = $this->xcon->gets('xvDataNotConfirm');
-                $this->xcon->json(0, $result);
+                $result = Xcon::gets('xvDataNotConfirm');
+                Xcon::json(0, $result);
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json(2, $e->getMessage());
             }
         });
     }
 
     public function find()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
                 // 标的查询
-                $begin = $this->xcon->param('begin');
-                $end = $this->xcon->param('end');
+                $begin = Xcon::param('begin');
+                $end = Xcon::param('end');
 
-                $result = $this->xcon->getsBy('xvDataNotConfirm', "create_time between '$begin' and '$end'");
+                $result = Xcon::getsBy('xvDataNotConfirm', "create_time between '$begin' and '$end'");
 
-                $this->xcon->json(0, $result);
+                Xcon::json(0, $result);
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json(2, $e->getMessage());
             }
         });
     }
 
     public function upto()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
                 // 提交测算
-                $uid_string = $this->xcon->param('uids');
+                $uid_string = Xcon::param('uids');
 
                 $uids = explode(',', $uid_string);
                 foreach ($uids as $uid) {
                     $confirm_user_id = $userinfor->id;
-                    $this->xcon->setByUid('xcData', compact('confirm_user_id'), $uid);
+                    Xcon::setByUid('xcData', compact('confirm_user_id'), $uid);
                 }
 
-                $result = $this->xcon->gets('xvDataNotConfirm');
-                $this->xcon->json(0, $result);
+                $result = Xcon::gets('xvDataNotConfirm');
+                Xcon::json(0, $result);
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json(2, $e->getMessage());
             }
         });
     }

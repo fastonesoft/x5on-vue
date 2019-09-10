@@ -6,20 +6,20 @@ class Back extends XC_Controller
 
     public function index()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
                 // 测算清单
-                $result = $this->xcon->gets('xvDataNotDone');
-                $this->xcon->json(0, $result);
+                $result = Xcon::gets('xvDataNotDone');
+                Xcon::json(0, $result);
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json(2, $e->getMessage());
             }
         });
     }
 
     public function add()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
 
         });
     }
@@ -31,55 +31,55 @@ class Back extends XC_Controller
 
     public function del()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
                 // 提交测算
-                $uid_string = $this->xcon->param('uids');
+                $uid_string = Xcon::param('uids');
 
                 $uids = explode(',', $uid_string);
                 foreach ($uids as $uid) {
-                    $this->xcon->delByUid('xcData', $uid);
+                    Xcon::delByUid('xcData', $uid);
                 }
 
-                $result = $this->xcon->gets('xvDataNotConfirm');
-                $this->xcon->json(0, $result);
+                $result = Xcon::gets('xvDataNotDone');
+                Xcon::json(0, $result);
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json(2, $e->getMessage());
             }
         });
     }
 
     public function find()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
                 // 标的查询
-                $begin = $this->xcon->param('begin');
-                $end = $this->xcon->param('end');
+                $begin = Xcon::param('begin');
+                $end = Xcon::param('end');
 
-                $result = $this->xcon->getsBy('xvDataNotDone', "create_time between '$begin' and '$end'");
+                $result = Xcon::getsBy('xvDataNotDone', "create_time between '$begin' and '$end'");
 
-                $this->xcon->json(0, $result);
+                Xcon::json(0, $result);
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json(2, $e->getMessage());
             }
         });
     }
 
     public function upto()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
                 // 测算结束
-                $uid = $this->xcon->param('uid');
+                $uid = Xcon::param('uid');
 
                 $done_user_id = $userinfor->id;
-                $this->xcon->setByUid('xcData', compact('done_user_id'), $uid);
+                Xcon::setByUid('xcData', compact('done_user_id'), $uid);
 
-                $result = $this->xcon->gets('xvDataNotGuess');
-                $this->xcon->json(0, $result);
+                $result = Xcon::gets('xvDataNotDone');
+                Xcon::json(0, $result);
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json(2, $e->getMessage());
             }
         });
     }

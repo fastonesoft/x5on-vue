@@ -33,7 +33,7 @@
         <Row class="margin-top16" :gutter="16">
             <i-col :span="this.countId?'16':'24'" style="transition: all .2s ease-in-out;">
                 <Card>
-                    <Tabs type="line" value="table">
+                    <Tabs>
                         <TabPane label="测算标的" name="table">
                             <Table
                                     :columns="cols"
@@ -74,7 +74,7 @@
             </i-col>
             <i-col :span="this.countId?'8':'0'" style="transition: all .2s ease-in-out;">
                 <Card>
-                    <Tabs type="line" value="count1">
+                    <Tabs value="count1">
                         <TabPane label="测算清单" name="count1">
                             <Table
                                     :columns="count_cols"
