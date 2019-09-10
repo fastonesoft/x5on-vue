@@ -1,40 +1,10 @@
 <template>
     <dev-article>
         <Row :gutter="16">
-            <i-col span="8">
-                <Card title="标的清单">
-                    <!--数据采集完毕的数据 confirmed-->
-                    <Tag color="green" slot="extra">的</Tag>
-                    <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
-                </Card>
-            </i-col>
-            <i-col span="8">
-                <Card title="税率测算">
-                    <!--<Tooltip content="完成税率测算的数据占比" slot="extra" placement="top" transfer>-->
-                    <!--<Icon type="ios-alert-outline" size="18"/>-->
-                    <!--</Tooltip>-->
-                    <Tag color="red" slot="extra">算</Tag>
-                    <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Progress status="success" :percent="count.count.num" hide-info></Progress>
-                </Card>
-            </i-col>
-            <i-col span="8">
-                <Card title="协作成果">
-                    <Tag color="blue" slot="extra">果</Tag>
-                    <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
-                </Card>
-            </i-col>
-        </Row>
-        <Row class="margin-top16" :gutter="16">
             <i-col :span="this.countId?'16':'24'" style="transition: all .2s ease-in-out;">
                 <Card>
                     <Tabs type="line" value="table">
-                        <TabPane label="测算标的" name="table">
+                        <TabPane label="标的反馈" name="table">
                             <Table
                                     :columns="cols"
                                     :data="datas"
@@ -185,7 +155,7 @@
                                             this.dataCount(params.index)
                                         }
                                     }
-                                }, '测算')
+                                }, '查看')
                             ]);
                         }
                     }
@@ -246,7 +216,7 @@
                 let end = this.countDate[1] instanceof Date ? this.countDate[1].format('yyyy-MM-dd') : this.countDate[1];
 
                 this.tableLoading = true;
-                this.$.posts('/count/find', {begin, end})
+                this.$.posts('/back/find', {begin, end})
                     .then(res => {
                         this.datas = res;
                         this.tableLoading = false;
@@ -307,7 +277,7 @@
                 this.countUid = null;
                 // 提交标的，测算结束
                 this.countLoading = true;
-                this.$.posts('/count/upto', {uid})
+                this.$.posts('/back/upto', {uid})
                     .then(res => {
                         this.datas = res;
                         this.countLoading = false;
@@ -322,7 +292,7 @@
         },
         created() {
             this.tableLoading = true;
-            this.$.gets('/count/index')
+            this.$.gets('/back/index')
                 .then(res => {
                     this.datas = res;
                     this.tableLoading = false

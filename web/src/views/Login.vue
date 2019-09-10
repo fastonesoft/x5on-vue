@@ -7,7 +7,7 @@
       <div class="login-body">
         <div class="login-code">
           <div class="login-form">
-            <i-col class="login-form-title">用户登录</i-col>
+            <i-col class="login-form-title">司法涉税综合管理</i-col>
             <Form ref="form" :model="form" :rules="rule">
               <FormItem prop="id">
                 <Input type="text" prefix="md-contact" v-model="form.id" size="large" :maxlength="20"
@@ -191,7 +191,7 @@
   .login-form-title {
     height: 70px;
     text-align: center;
-    letter-spacing: 8px;
+    letter-spacing: 5px;
     text-shadow: 1px 1px 3px #666;
     color: #378CBE;
     font-size: 24px;

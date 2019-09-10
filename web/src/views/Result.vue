@@ -1,66 +1,67 @@
 <template>
-  <dev-article>
-    <Row :gutter="16">
-      <i-col span="8">
-        <Card title="标的清单">
-          <!--数据采集完毕的数据 confirmed-->
-          <Tag color="green" slot="extra">的</Tag>
-          <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
-          <Divider size="small" dashed></Divider>
-          <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
-        </Card>
-      </i-col>
-      <i-col span="8">
-        <Card title="税率测算">
-          <Tag color="red" slot="extra">算</Tag>
-          <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
-          <Divider size="small" dashed></Divider>
-          <Progress status="success" :percent="count.count.num" hide-info></Progress>
-        </Card>
-      </i-col>
-      <i-col span="8">
-        <Card title="协作成果">
-          <Tag color="blue" slot="extra">果</Tag>
-          <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
-          <Divider size="small" dashed></Divider>
-          <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
-        </Card>
-      </i-col>
-    </Row>
-    <Row class="margin-top16">
-      <Card>
-        <Tabs value="table">
-          <TabPane label="完成列表" name="table">
-            <Table
-              :columns="cols"
-              :data="datas"
-              :loading="tableLoading"
-              ref="selection"
-              size="small"
-              border stripe>
-            </Table>
-            <Row class="margin-top16">
-              <i-col class="hidden-nowrap align-right">
-                <Page :total="datas.length" show-sizer transfer/>
-              </i-col>
-            </Row>
-          </TabPane>
-          <!--表头附加相关操作：-->
-          <template slot="extra">
-            <Row class="hidden-nowrap">
-              <Select v-model="area_id" placeholder="地区选择..." style="width:160px" transfer>
-                <Option
-                  v-for="item in areas"
-                  :value="item.area_id"
-                  :key="item.area_id">{{ item.area_name }}
-                </Option>
-              </Select>
-            </Row>
-          </template>
-        </Tabs>
-      </Card>
-    </Row>
-  </dev-article>
+    <dev-article>
+        <Row :gutter="16">
+            <i-col span="8">
+                <Card title="标的清单">
+                    <!--数据采集完毕的数据 confirmed-->
+                    <Tag color="green" slot="extra">的</Tag>
+                    <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
+                    <Divider size="small" dashed></Divider>
+                    <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
+                </Card>
+            </i-col>
+            <i-col span="8">
+                <Card title="税率测算">
+                    <Tag color="red" slot="extra">算</Tag>
+                    <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
+                    <Divider size="small" dashed></Divider>
+                    <Progress status="success" :percent="count.count.num" hide-info></Progress>
+                </Card>
+            </i-col>
+            <i-col span="8">
+                <Card title="协作成果">
+                    <Tag color="blue" slot="extra">果</Tag>
+                    <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
+                    <Divider size="small" dashed></Divider>
+                    <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
+                </Card>
+            </i-col>
+        </Row>
+        <Row class="margin-top16">
+            <Card>
+                <Tabs value="table">
+                    <TabPane label="完成列表" name="table">
+                        <Table
+                                :columns="cols"
+                                :data="datas"
+                                :loading="tableLoading"
+                                ref="selection"
+                                size="small"
+                                border stripe>
+                        </Table>
+                        <Row class="margin-top16">
+                            <i-col class="hidden-nowrap align-right">
+                                <Page :total="datas.length" show-sizer transfer/>
+                            </i-col>
+                        </Row>
+                    </TabPane>
+                    <!--表头附加相关操作：-->
+                    <template slot="extra">
+                        <Row class="hidden-nowrap">
+                            <Select v-model="area_id" placeholder="地区选择..." style="width:160px" @on-change="areaChange"
+                                    transfer>
+                                <Option
+                                        v-for="item in areas"
+                                        :value="item.area_id"
+                                        :key="item.area_id">{{ item.area_name }}
+                                </Option>
+                            </Select>
+                        </Row>
+                    </template>
+                </Tabs>
+            </Card>
+        </Row>
+    </dev-article>
 </template>
 
 <script>
@@ -129,7 +130,7 @@
                     },
                 ],
                 datas: [],
-                area_id: '321204',
+                area_id: '',
                 areas: [
                     {
                         area_id: '321204',
@@ -142,7 +143,22 @@
                 ],
             }
         },
-        methods: {},
+        methods: {
+            areaChange(area_id) {
+                this.tableLoading = true;
+                this.$.posts('/result/find', {area_id})
+                    .then(res => {
+                        this.datas = res;
+                        this.tableLoading = false
+                    })
+                    .catch(error => {
+                        this.$Message.error(error.data);
+                        error.code === -1 && setTimeout(() => {
+                            this.$router.replace('/vuelogin');
+                        }, 1000)
+                    })
+            }
+        },
         created() {
             this.tableLoading = true;
             this.$.gets('/result/index')

@@ -20,25 +20,7 @@ class Result extends XC_Controller
     public function add()
     {
         $this->xcon->loginCheck(function ($userinfor) {
-            try {
-                // 标的清单添加
-                $param = $this->xcon->params();
 
-                // 增加 uid
-                $uid = $this->xcon->uid();
-                $param['uid'] = $uid;
-                $param['create_time'] = date('Y-m-d');
-
-                // 添加数据
-                $this->xcon->add('xcData', $param);
-
-                // 查询出添加数据
-                $result = $this->xcon->getByUid('xvDataNotConfirm', $uid);
-
-                $this->xcon->json(0, $result);
-            } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
-            }
         });
     }
 
@@ -50,20 +32,7 @@ class Result extends XC_Controller
     public function del()
     {
         $this->xcon->loginCheck(function ($userinfor) {
-            try {
-                // 提交测算
-                $uid_string = $this->xcon->param('uids');
 
-                $uids = explode(',', $uid_string);
-                foreach ($uids as $uid) {
-                    $this->xcon->delByUid('xcData', $uid);
-                }
-
-                $result = $this->xcon->gets('xvDataNotConfirm');
-                $this->xcon->json(0, $result);
-            } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
-            }
         });
     }
 
@@ -72,10 +41,9 @@ class Result extends XC_Controller
         $this->xcon->loginCheck(function ($userinfor) {
             try {
                 // 标的查询
-                $begin = $this->xcon->param('begin');
-                $end = $this->xcon->param('end');
+                $area_id = $this->xcon->param('area_id');
 
-                $result = $this->xcon->getsBy('xvDataDone', "create_time between '$begin' and '$end'");
+                $result = $this->xcon->getsBy('xvDataDone', compact('area_id'));
 
                 $this->xcon->json(0, $result);
             } catch (Exception $e) {

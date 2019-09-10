@@ -39,6 +39,11 @@ const router = new Router({
             component: () => import('./views/Count.vue')
         },
         {
+            path: '/vueback',
+            name: '/vueback',
+            component: () => import('./views/Back.vue')
+        },
+        {
             path: '/vueresult',
             name: '/vueresult',
             component: () => import('./views/Result.vue')
@@ -53,16 +58,16 @@ const router = new Router({
 // 全局路由守卫
 router.beforeEach((to, from, next) => {
 
-  window.console.log(to);
-  window.console.log(from);
+    // window.console.log(to);
+    // window.console.log(from);
 
-  // ajax.posts('/home/logstatus')
-  //     .then(res=>{
-  //         window.console.log(res);
-  //     });
+    // ajax.posts('/home/logstatus')
+    //     .then(res=>{
+    //         window.console.log(res);
+    //     });
     // 暂时不做
 
-  next();
+    next();
 
 });
 

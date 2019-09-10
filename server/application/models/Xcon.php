@@ -158,8 +158,6 @@ class Xcon
     {
         $CI =& get_instance();
         $CI->db->insert($tableName, $values);
-        $error_msg = $CI->db->_error_message();
-        if ($error_msg) throw new Exception($error_msg);
     }
 
     /**

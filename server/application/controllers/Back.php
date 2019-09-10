@@ -1,15 +1,15 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data extends XC_Controller
+class Back extends XC_Controller
 {
 
     public function index()
     {
         $this->xcon->loginCheck(function ($userinfor) {
             try {
-                // 标的清单
-                $result = $this->xcon->gets('xvDataNotConfirm');
+                // 测算清单
+                $result = $this->xcon->gets('xvDataNotDone');
                 $this->xcon->json(0, $result);
             } catch (Exception $e) {
                 $this->xcon->json(2, $e->getMessage());
@@ -20,36 +20,7 @@ class Data extends XC_Controller
     public function add()
     {
         $this->xcon->loginCheck(function ($userinfor) {
-            try {
-                // 标的清单添加
-                $param = $this->xcon->params();
 
-                // 增加 uid
-                $uid = $this->xcon->uid();
-                $param['uid'] = $uid;
-                $param['create_time'] = date('Y-m-d');
-
-                // 添加数据
-                $this->xcon->add('xcData', $param);
-
-                // 查询出添加数据
-                $result = $this->xcon->getByUid('xvDataNotConfirm', $uid);
-
-                $this->xcon->json(0, $result);
-
-//                // 检测id是否重复
-//                $id = $param['id'];
-//                $data = $this->xcon->getById($id);
-//
-//                if ($data === null) {
-//
-//                } else {
-//                    $this->xcon->json(1, '标的编号重复');
-//                }
-
-            } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
-            }
         });
     }
 
@@ -86,7 +57,7 @@ class Data extends XC_Controller
                 $begin = $this->xcon->param('begin');
                 $end = $this->xcon->param('end');
 
-                $result = $this->xcon->getsBy('xvDataNotConfirm', "create_time between '$begin' and '$end'");
+                $result = $this->xcon->getsBy('xvDataNotDone', "create_time between '$begin' and '$end'");
 
                 $this->xcon->json(0, $result);
             } catch (Exception $e) {
@@ -99,16 +70,13 @@ class Data extends XC_Controller
     {
         $this->xcon->loginCheck(function ($userinfor) {
             try {
-                // 提交测算
-                $uid_string = $this->xcon->param('uids');
+                // 测算结束
+                $uid = $this->xcon->param('uid');
 
-                $uids = explode(',', $uid_string);
-                foreach ($uids as $uid) {
-                    $confirm_user_id = $userinfor->id;
-                    $this->xcon->setByUid('xcData', compact('confirm_user_id'), $uid);
-                }
+                $done_user_id = $userinfor->id;
+                $this->xcon->setByUid('xcData', compact('done_user_id'), $uid);
 
-                $result = $this->xcon->gets('xvDataNotConfirm');
+                $result = $this->xcon->gets('xvDataNotGuess');
                 $this->xcon->json(0, $result);
             } catch (Exception $e) {
                 $this->xcon->json(2, $e->getMessage());
