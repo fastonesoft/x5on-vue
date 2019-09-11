@@ -8,25 +8,13 @@ class Back extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             try {
-                // 测算清单
+                // 测算反馈
                 $result = Xcon::gets('xvDataNotDone');
                 Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
                 Xcon::json($e->getCode(), $e->getMessage());
             }
         });
-    }
-
-    public function add()
-    {
-        Xcon::loginCheck(function ($userinfor) {
-
-        });
-    }
-
-    public function edit()
-    {
-        echo '  --------edit ---------';
     }
 
     public function del()
@@ -73,8 +61,9 @@ class Back extends XC_Controller
                 // 测算结束
                 $uid = Xcon::param('uid');
 
+                $done_time = date('Y-m-d');
                 $done_user_id = $userinfor->id;
-                Xcon::setByUid('xcData', compact('done_user_id'), $uid);
+                Xcon::setByUid('xcData', compact('done_time', 'done_user_id'), $uid);
 
                 $result = Xcon::gets('xvDataNotDone');
                 Xcon::json(Xcon::NO_ERROR, $result);

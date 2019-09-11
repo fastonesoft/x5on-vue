@@ -8,31 +8,12 @@ class Result extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             try {
-                // 测算清单
+                // 协作成果
                 $result = Xcon::gets('xvDataDone');
                 Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
                 Xcon::json($e->getCode(), $e->getMessage());
             }
-        });
-    }
-
-    public function add()
-    {
-        Xcon::loginCheck(function ($userinfor) {
-
-        });
-    }
-
-    public function edit()
-    {
-        echo '  --------edit ---------';
-    }
-
-    public function del()
-    {
-        Xcon::loginCheck(function ($userinfor) {
-
         });
     }
 
@@ -40,32 +21,10 @@ class Result extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             try {
-                // 标的查询
+                // 地区协作查询
                 $area_id = Xcon::param('area_id');
 
                 $result = Xcon::getsBy('xvDataDone', compact('area_id'));
-
-                Xcon::json(Xcon::NO_ERROR, $result);
-            } catch (Exception $e) {
-                Xcon::json($e->getCode(), $e->getMessage());
-            }
-        });
-    }
-
-    public function upto()
-    {
-        Xcon::loginCheck(function ($userinfor) {
-            try {
-                // 提交测算
-                $uid_string = Xcon::param('uids');
-
-                $uids = explode(',', $uid_string);
-                foreach ($uids as $uid) {
-                    $confirm_user_id = $userinfor->id;
-                    Xcon::setByUid('xcData', compact('confirm_user_id'), $uid);
-                }
-
-                $result = Xcon::gets('xvDataDone');
                 Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
                 Xcon::json($e->getCode(), $e->getMessage());

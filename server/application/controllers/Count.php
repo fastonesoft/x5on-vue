@@ -73,8 +73,9 @@ class Count extends XC_Controller
                 // 测算结束
                 $uid = Xcon::param('uid');
 
+                $guess_time = date('Y-m-d');
                 $guess_user_id = $userinfor->id;
-                Xcon::setByUid('xcData', compact('guess_user_id'), $uid);
+                Xcon::setByUid('xcData', compact('guess_time', 'guess_user_id'), $uid);
 
                 $result = Xcon::gets('xvDataNotGuess');
                 Xcon::json(Xcon::NO_ERROR, $result);

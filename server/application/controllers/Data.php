@@ -97,8 +97,9 @@ class Data extends XC_Controller
 
                 $uids = explode(',', $uid_string);
                 foreach ($uids as $uid) {
+                    $confirm_time = date('Y-m-d');
                     $confirm_user_id = $userinfor->id;
-                    Xcon::setByUid('xcData', compact('confirm_user_id'), $uid);
+                    Xcon::setByUid('xcData', compact('confirm_time', 'confirm_user_id'), $uid);
                 }
 
                 $result = Xcon::gets('xvDataNotConfirm');
