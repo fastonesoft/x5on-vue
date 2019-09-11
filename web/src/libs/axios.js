@@ -1,4 +1,5 @@
 import axios from 'axios';
+import router from '../router'
 
 let axio = axios.create();
 
@@ -15,26 +16,44 @@ ajax.gets = function (url, data) {
     if (!data) {
         return new Promise(function (resolve, reject) {
             ajax.get(url).then(res => {
+                // 输出请求结果，调试用
+                window.console.log(res);
                 if (res && res.data && res.data.code) {
                     // code != 0 => error
-                    reject(res.data)
+                    if (res.data.code !== -1) {
+                        reject(res.data.data);
+                    } else {
+                        router.replace('/vuelogin');
+                    }
                 } else {
                     resolve(res.data.data)
                 }
-            }).catch(() => {
+            }).catch(error => {
+                // 输出请求结果，调试用
+                window.console.log('出错：调试信息=>' + error);
+
                 reject('数据请求失败')
             })
         })
     } else {
         return new Promise(function (resolve, reject) {
             ajax.get(url, {params: data}).then(res => {
+                // 输出请求结果，调试用
+                window.console.log(res);
                 if (res && res.data && res.data.code) {
                     // code != 0 => error
-                    reject(res.data)
+                    if (res.data.code !== -1) {
+                        reject(res.data.data);
+                    } else {
+                        router.replace('/vuelogin');
+                    }
                 } else {
                     resolve(res.data.data)
                 }
-            }).catch(() => {
+            }).catch(error => {
+                // 输出请求结果，调试用
+                window.console.log('出错：调试信息=>' + error);
+
                 reject('数据请求失败')
             })
         })
@@ -49,13 +68,18 @@ ajax.posts = function (url, data) {
             window.console.log(res);
             if (res && res.data && res.data.code) {
                 // code != 0 => error
-                reject(res.data)
+                if (res.data.code !== -1) {
+                    reject(res.data.data);
+                } else {
+                    router.replace('/vuelogin');
+                }
+
             } else {
                 resolve(res.data.data)
             }
-        }).catch((error) => {
+        }).catch(error => {
             // 输出请求结果，调试用
-            window.console.log(error);
+            window.console.log('出错：调试信息=>' + error);
 
             // 正常的结果提示
             reject('数据提交失败')

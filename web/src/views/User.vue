@@ -289,10 +289,7 @@
                     this.tableLoading = false;
                 })
                 .catch(error => {
-                    this.$Message.error(error.data);
-                    error.code === -1 && setTimeout(() => {
-                        this.$router.replace('/vuelogin');
-                    }, 1000)
+                    this.$Message.error(error);
                 })
         }
     }

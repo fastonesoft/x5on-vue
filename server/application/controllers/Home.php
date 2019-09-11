@@ -14,7 +14,7 @@ class Home extends XBASE_Controller
     public function token()
     {
         $token = md5(session_id());
-        Xcon::json(0, $token);
+        Xcon::json(Xcon::NO_ERROR, $token);
     }
 
     // 登录
@@ -26,7 +26,7 @@ class Home extends XBASE_Controller
 
         // 检测token是否正确
         if (md5(md5(session_id()) . $pass) !== $token) {
-            Xcon::json(1, '登录密码检验失败!');
+            Xcon::json(Xcon::ERROR_APP, '登录密码检验失败!');
             return;
         }
 
@@ -42,9 +42,9 @@ class Home extends XBASE_Controller
             $user = Xcon::getById('xvUser', $id);
             // 2、权限
 
-            Xcon::json(0, $user);
+            Xcon::json(Xcon::NO_ERROR, $user);
         } else {
-            Xcon::json(1, '登录帐号、密码有误！');
+            Xcon::json(Xcon::ERROR_APP, '登录帐号、密码有误！');
         }
 
     }

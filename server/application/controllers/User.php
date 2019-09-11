@@ -6,12 +6,12 @@ class User extends XC_Controller
 
     public function index()
     {
-        $this->xcon->loginCheck(function ($userinfor) {
+        Xcon::loginCheck(function ($userinfor) {
             try {
-                $result = $this->xcon->gets('xvUser');
-                $this->xcon->json(0, $result);
+                $result = Xcon::gets('xvUser');
+                Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
-                $this->xcon->json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }

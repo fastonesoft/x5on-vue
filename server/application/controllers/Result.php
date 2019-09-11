@@ -10,9 +10,9 @@ class Result extends XC_Controller
             try {
                 // 测算清单
                 $result = Xcon::gets('xvDataDone');
-                Xcon::json(0, $result);
+                Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
-                Xcon::json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }
@@ -45,9 +45,9 @@ class Result extends XC_Controller
 
                 $result = Xcon::getsBy('xvDataDone', compact('area_id'));
 
-                Xcon::json(0, $result);
+                Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
-                Xcon::json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }
@@ -66,9 +66,9 @@ class Result extends XC_Controller
                 }
 
                 $result = Xcon::gets('xvDataDone');
-                Xcon::json(0, $result);
+                Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
-                Xcon::json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }

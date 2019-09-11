@@ -6,6 +6,12 @@ class Xcon
     // 跨域支持，上传的时候要禁用
     const CROS = 1;
 
+    // ERROR-CODE
+    const NO_ERROR = 0;
+    const ERROR_NOT_LOGIN = -1;
+    const ERROR_APP = 1;
+    const ERROR_DB = 2;
+
     public static function cros()
     {
         if (self::CROS) {
@@ -14,17 +20,37 @@ class Xcon
         }
     }
 
-    public static function sess_set($key, $value) {
+    public static function error($code, $message)
+    {
+        throw new Exception($message, $code);
+    }
+
+    protected static function db_error()
+    {
+        $CI =& get_instance();
+        $error = $CI->db->error();
+        $message = $error['message'];
+
+        // 有数据库出错信息，就提示
+        if ($message) {
+            self::error(self::ERROR_DB, $message);
+        }
+    }
+
+    public static function sess_set($key, $value)
+    {
         $CI =& get_instance();
         $CI->session->set_userdata($key, $value);
     }
 
-    public static function sess_unset($key) {
+    public static function sess_unset($key)
+    {
         $CI =& get_instance();
         $CI->session->unset_userdata($key);
     }
 
-    public static function sess_destroy() {
+    public static function sess_destroy()
+    {
         $CI =& get_instance();
         $CI->session->sess_destroy();
     }
@@ -38,10 +64,9 @@ class Xcon
         if ($userinfor !== null) {
             call_user_func($success, $userinfor);
         } else {
-            $CI->xcon->json(-1, '没有登录，或登录状态已过期！');
+            self::json(self::ERROR_NOT_LOGIN, '没有登录，或登录状态已过期！');
         }
     }
-
 
     public static function json($code, $data)
     {
@@ -76,78 +101,128 @@ class Xcon
     }
 
     /**
-     * @param $tableName
+     * @param $table
      * @return mixed
-     * 数据库查询
+     * 获取数据库表
      */
-    public static function gets($tableName)
+    public static function gets($table)
     {
         $CI =& get_instance();
-        $query = $CI->db->get($tableName);
+        $query = $CI->db->get($table);
+        self::db_error();
         return $query->result();
     }
 
-    public static function gets_as_array($tableName)
+    public static function gets_as_array($table)
     {
         $CI =& get_instance();
-        $query = $CI->db->get($tableName);
+        $query = $CI->db->get($table);
+        self::db_error();
         return $query->result_array();
     }
 
     /**
-     * @param        $tableName
+     * @param        $table
      * @param        $condition  array('name !=' => $name, 'id <' => $id, 'date >' => $date);
      * @param string $orderby
-     * @param null   $limit
+     * @param null $limit
      * @return mixed
      * 条件查询
      */
-    public static function wheres_query($tableName, $condition, $orderby = '', $limit = null)
+    public static function wheres_query($table, $condition, $orderby = '', $limit = null)
     {
         $CI =& get_instance();
         $CI->db->order_by($orderby);
-        return $CI->db->get_where($tableName, $condition, $limit);
+        return $CI->db->get_where($table, $condition, $limit);
     }
 
     // 查询结果
-    public static function getsBy($tableName, $condition, $orderby = '', $limit = null)
+    public static function getsBy($table, $condition, $orderby = '', $limit = null)
     {
-        $query = self::wheres_query($tableName, $condition, $orderby, $limit);
+        $query = self::wheres_query($table, $condition, $orderby, $limit);
+        self::db_error();
         return $query->result();
     }
 
-    public static function get($tableName, $condition)
+    public static function getBy($table, $condition)
     {
-        $query = self::wheres_query($tableName, $condition);
+        $query = self::wheres_query($table, $condition);
+        self::db_error();
         return $query->row();
     }
 
-    public static function getById($tableName, $id)
+    public static function getById($table, $id)
     {
-        $query = self::wheres_query($tableName, compact('id'));
+        $query = self::wheres_query($table, compact('id'));
+        self::db_error();
         return $query->row();
     }
 
-    public static function getByUid($tableName, $uid)
+    public static function getByUid($table, $uid)
     {
-        $query = self::wheres_query($tableName, compact('uid'));
+        $query = self::wheres_query($table, compact('uid'));
+        self::db_error();
         return $query->row();
     }
 
     /**
-     * @param        $tableName
+     * 检测数据记录是否不存在
+     */
+    public static function checkBy($table, $condition, $message = '目标数据不存在！')
+    {
+        $row = self::getBy($table, $condition);
+        if ($row === null) {
+            self::error(self::ERROR_DB, $message);
+        }
+        return $row;
+    }
+
+    public static function checkById($table, $id)
+    {
+        self::checkBy($table, compact('id'), '“编号”对应记录不存在！');
+    }
+
+    public static function checkByUid($table, $uid)
+    {
+        self::checkBy($table, compact('uid'), '“系统编号”对应记录不存在！');
+    }
+
+    /**
+     * 检测数据记录是否不存在
+     */
+    public static function existBy($table, $condition, $message = '目标数据已存在！')
+    {
+        $row = self::getBy($table, $condition);
+        if ($row !== null) {
+            self::error(self::ERROR_DB, $message);
+        }
+    }
+
+    public static function existById($table, $id)
+    {
+        self::existBy($table, compact('id'), '“编号”对应记录已存在！');
+    }
+
+    public static function existByUid($table, $uid)
+    {
+        self::existBy($table, compact('uid'), '“系统编号”对应记录已存在！');
+    }
+
+    /**
+     * @param        $table
      * @param        $condition
      * @param        $likes
      * @param string $orderby
-     * @param null   $limit
+     * @param null $limit
      * @return mixed
      * 模糊查询
      */
-    public static function likes($tableName, $condition, $likes, $orderby = '', $limit = null)
+    public static function likes($table, $condition, $likes, $orderby = '', $limit = null)
     {
         $CI =& get_instance();
         $CI->db->like($likes);
-        $query = self::wheres_query($tableName, $condition, $orderby, $limit);
+        $query = self::wheres_query($table, $condition, $orderby, $limit);
+        self::db_error();
         return $query->result();
     }
 
@@ -159,62 +234,71 @@ class Xcon
     {
         $CI =& get_instance();
         $query = $CI->db->query('SELECT uuid() as uid');
+        self::db_error();
         $row = $query->row_array();
         $uid = $row['uid'];
         return str_replace('-', '', $uid);
     }
 
     /**
-     * @param $tableName
+     * @param $table
      * @param $values
      * 存储数据记录
      */
-    public static function add($tableName, $values)
+    public static function add($table, $values)
     {
         $CI =& get_instance();
-        $CI->db->insert($tableName, $values);
+        $CI->db->insert($table, $values);
+        self::db_error();
     }
 
     /**
-     * @param $tableName
+     * @param $table
      * @param $cols
      * @param $by
      * @return mixed
      * 更新数据记录
      */
-    public static function setBy($tableName, $cols, $by)
+    public static function setBy($table, $cols, $by)
     {
         $CI =& get_instance();
-        $CI->db->update($tableName, $cols, $by);
+        $CI->db->update($table, $cols, $by);
+        self::db_error();
         return $CI->db->affected_rows();
     }
 
-    public static function setById($tableName, $cols, $id)
+    public static function setById($table, $cols, $id)
     {
         $CI =& get_instance();
-        self::setBy($tableName, $cols, compact('id'));
+        self::setBy($table, $cols, compact('id'));
+        self::db_error();
         return $CI->db->affected_rows();
     }
 
-    public static function setByUid($tableName, $cols, $uid)
+    public static function setByUid($table, $cols, $uid)
     {
         $CI =& get_instance();
-        self::setBy($tableName, $cols, compact('uid'));
+        self::setBy($table, $cols, compact('uid'));
+        self::db_error();
         return $CI->db->affected_rows();
     }
 
-    public static function delBy($tableName, $condition) {
+    public static function delBy($table, $condition)
+    {
         $CI =& get_instance();
-        $CI->db->delete($tableName, $condition);
+        $CI->db->delete($table, $condition);
+        self::db_error();
         return $CI->db->affected_rows();
     }
 
-    public static function delById($tableName, $id) {
-        return self::delBy($tableName, compact('id'));
+    public static function delById($table, $id)
+    {
+        return self::delBy($table, compact('id'));
     }
 
-    public static function delByUid($tableName, $uid) {
-        return self::delBy($tableName, compact('uid'));
+    public static function delByUid($table, $uid)
+    {
+        return self::delBy($table, compact('uid'));
     }
 
 }

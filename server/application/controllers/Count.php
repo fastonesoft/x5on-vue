@@ -10,9 +10,9 @@ class Count extends XC_Controller
             try {
                 // 测算清单
                 $result = Xcon::gets('xvDataNotGuess');
-                Xcon::json(0, $result);
+                Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
-                Xcon::json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }
@@ -42,9 +42,9 @@ class Count extends XC_Controller
                 }
 
                 $result = Xcon::gets('xvDataNotGuess');
-                Xcon::json(0, $result);
+                Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
-                Xcon::json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }
@@ -59,9 +59,9 @@ class Count extends XC_Controller
 
                 $result = Xcon::getsBy('xvDataNotGuess', "create_time between '$begin' and '$end'");
 
-                Xcon::json(0, $result);
+                Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
-                Xcon::json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }
@@ -77,9 +77,9 @@ class Count extends XC_Controller
                 Xcon::setByUid('xcData', compact('guess_user_id'), $uid);
 
                 $result = Xcon::gets('xvDataNotGuess');
-                Xcon::json(0, $result);
+                Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
-                Xcon::json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }

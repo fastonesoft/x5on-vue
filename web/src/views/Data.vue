@@ -1,137 +1,137 @@
 <template>
-    <dev-article>
-        <Row :gutter="16">
-            <i-col span="6">
-                <Card title="标的清单">
-                    <!--数据采集完毕的数据 confirmed-->
-                    <Tag color="green" slot="extra">的</Tag>
-                    <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
-                </Card>
-            </i-col>
-            <i-col span="6">
-                <Card title="税率测算">
-                    <Tag color="red" slot="extra">算</Tag>
-                    <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Progress status="success" :percent="count.count.num" hide-info></Progress>
-                </Card>
-            </i-col>
-            <i-col span="6">
-                <Card title="协作成果">
-                    <Tag color="blue" slot="extra">果</Tag>
-                    <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
-                </Card>
-            </i-col>
-            <i-col span="6">
-                <Card title="快捷操作">
-                    <Row class="data-collect align-center margin-bottom22 hidden-nowrap">添加标的数据</Row>
-                    <Button type="primary" icon="md-add" @click="formAdd=true" long>添加</Button>
-                </Card>
-            </i-col>
-        </Row>
-        <Row class="margin-top16">
-            <Card>
-                <Tabs value="table">
-                    <TabPane label="标的清单" name="table">
-                        <Table
-                                :columns="cols"
-                                :data="datas"
-                                :loading="tableLoading"
-                                ref="table"
-                                size="small"
-                                border stripe>
-                        </Table>
-                        <Row class="margin-top16">
-                            <i-col span="12" class="hidden-nowrap align-left">
-                                <Button type="primary" @click="updateCount">提交测算</Button>
-                                <Button type="error" class="margin-left16" @click="delRecord">删除记录</Button>
-                            </i-col>
-                            <i-col span="12" class="hidden-nowrap align-right">
-                                <Page :total="datas.length" show-sizer transfer/>
-                            </i-col>
-                        </Row>
-                    </TabPane>
-                    <!--表头附加相关操作：-->
-                    <template slot="extra">
-                        <Row class="hidden-nowrap">
-                            <RadioGroup v-model="dateType" @on-change="dateTypeChange">
-                                <Radio label="day">今日</Radio>
-                                <Radio label="week">周</Radio>
-                                <Radio label="month">月</Radio>
-                                <Radio label="year">年</Radio>
-                            </RadioGroup>
-                            <DatePicker
-                                    v-model="countDate"
-                                    type="daterange"
-                                    style="width: 180px"
-                                    @on-change="dateChange"
-                                    transfer>
-                            </DatePicker>
-                            <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询</Button>
-                        </Row>
-                    </template>
-                </Tabs>
-            </Card>
-        </Row>
-        <Modal
-                title="标的添加"
-                v-model="formAdd"
-                :mask-closable="false"
-                :loading="formLoading"
-                @on-ok="formOk('form')"
-                @on-cancel="formCancel"
-                width="550"
-        >
-            <Form ref="form" :model="form" :rules="rule" label-position="top" inline>
-                <FormItem prop="id" label="编号">
-                    <Input v-model="form.id" placeholder="输入标的编号"/>
-                </FormItem>
-                <FormItem prop="name" label="拍卖标的" style="width: 330px;">
-                    <i-col></i-col>
-                    <Input v-model="form.name" placeholder="输入拍卖标的相关说明"/>
-                </FormItem>
-                <br>
-                <FormItem prop="owner" label="产权人">
-                    <Input v-model="form.owner" placeholder="输入产权人姓名"/>
-                </FormItem>
-                <FormItem prop="type_name" label="产权性质">
-                    <Select v-model="form.type_name" placeholder="产权性质选择..." style="width: 162px;" transfer>
-                        <Option value="国有" key="国有">国有</Option>
-                        <Option value="集体" key="集体">集体</Option>
-                    </Select>
-                </FormItem>
-                <FormItem prop="area_id" label="所属地区">
-                    <Select v-model="form.area_id" placeholder="地区选择..." style="width: 162px;" transfer>
-                        <Option value="321204" key="321204">姜堰区</Option>
-                        <Option value="999999" key="999999">其他地区</Option>
-                    </Select>
-                </FormItem>
-                <FormItem prop="area_build" label="建筑面积">
-                    <Input v-model="form.area_build" placeholder="输入建筑面积"/>
-                </FormItem>
-                <FormItem prop="area_soil" label="土地面积">
-                    <Input v-model="form.area_soil" placeholder="输入土地面积"/>
-                </FormItem>
-                <FormItem prop="use_year" label="使用年限">
-                    <Input v-model="form.use_year" placeholder="输入使用年限"/>
-                </FormItem>
-                <br>
-                <FormItem prop="price_begin" label="初始价格">
-                    <Input v-model="form.price_begin" placeholder="输入标的初始价格"/>
-                </FormItem>
-                <FormItem prop="price_ass" label="评估价格">
-                    <Input v-model="form.price_ass" placeholder="输入标的评估价格"/>
-                </FormItem>
-                <FormItem prop="price_shoot" label="起拍价格">
-                    <Input v-model="form.price_shoot" placeholder="输入标的起拍价格"/>
-                </FormItem>
-            </Form>
-        </Modal>
-    </dev-article>
+  <dev-article>
+    <Row :gutter="16">
+      <i-col span="6">
+        <Card title="标的清单">
+          <!--数据采集完毕的数据 confirmed-->
+          <Tag color="green" slot="extra">的</Tag>
+          <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
+          <Divider size="small" dashed></Divider>
+          <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
+        </Card>
+      </i-col>
+      <i-col span="6">
+        <Card title="税率测算">
+          <Tag color="red" slot="extra">算</Tag>
+          <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
+          <Divider size="small" dashed></Divider>
+          <Progress status="success" :percent="count.count.num" hide-info></Progress>
+        </Card>
+      </i-col>
+      <i-col span="6">
+        <Card title="协作成果">
+          <Tag color="blue" slot="extra">果</Tag>
+          <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
+          <Divider size="small" dashed></Divider>
+          <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
+        </Card>
+      </i-col>
+      <i-col span="6">
+        <Card title="快捷操作">
+          <Row class="data-collect align-center margin-bottom22 hidden-nowrap">添加标的数据</Row>
+          <Button type="primary" icon="md-add" @click="formAdd=true" long>添加</Button>
+        </Card>
+      </i-col>
+    </Row>
+    <Row class="margin-top16">
+      <Card>
+        <Tabs value="table">
+          <TabPane label="标的清单" name="table">
+            <Table
+              :columns="cols"
+              :data="datas"
+              :loading="tableLoading"
+              ref="table"
+              size="small"
+              border stripe>
+            </Table>
+            <Row class="margin-top16">
+              <i-col span="12" class="hidden-nowrap align-left">
+                <Button type="primary" @click="updateCount">提交测算</Button>
+                <Button type="error" class="margin-left16" @click="delRecord">删除记录</Button>
+              </i-col>
+              <i-col span="12" class="hidden-nowrap align-right">
+                <Page :total="datas.length" show-sizer transfer/>
+              </i-col>
+            </Row>
+          </TabPane>
+          <!--表头附加相关操作：-->
+          <template slot="extra">
+            <Row class="hidden-nowrap">
+              <RadioGroup v-model="dateType" @on-change="dateTypeChange">
+                <Radio label="day">今日</Radio>
+                <Radio label="week">周</Radio>
+                <Radio label="month">月</Radio>
+                <Radio label="year">年</Radio>
+              </RadioGroup>
+              <DatePicker
+                v-model="countDate"
+                type="daterange"
+                style="width: 180px"
+                @on-change="dateChange"
+                transfer>
+              </DatePicker>
+              <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询</Button>
+            </Row>
+          </template>
+        </Tabs>
+      </Card>
+    </Row>
+    <Modal
+      title="标的添加"
+      v-model="formAdd"
+      :mask-closable="false"
+      :loading="formLoading"
+      @on-ok="formOk('form')"
+      @on-cancel="formCancel"
+      width="550"
+    >
+      <Form ref="form" :model="form" :rules="rule" label-position="top" inline>
+        <FormItem prop="id" label="编号">
+          <Input v-model="form.id" placeholder="输入标的编号"/>
+        </FormItem>
+        <FormItem prop="name" label="拍卖标的" style="width: 330px;">
+          <i-col></i-col>
+          <Input v-model="form.name" placeholder="输入拍卖标的相关说明"/>
+        </FormItem>
+        <br>
+        <FormItem prop="owner" label="产权人">
+          <Input v-model="form.owner" placeholder="输入产权人姓名"/>
+        </FormItem>
+        <FormItem prop="type_name" label="产权性质">
+          <Select v-model="form.type_name" placeholder="产权性质选择..." style="width: 162px;" transfer>
+            <Option value="国有" key="国有">国有</Option>
+            <Option value="集体" key="集体">集体</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="area_id" label="所属地区">
+          <Select v-model="form.area_id" placeholder="地区选择..." style="width: 162px;" transfer>
+            <Option value="321204" key="321204">姜堰区</Option>
+            <Option value="999999" key="999999">其他地区</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="area_build" label="建筑面积">
+          <Input v-model="form.area_build" placeholder="输入建筑面积"/>
+        </FormItem>
+        <FormItem prop="area_soil" label="土地面积">
+          <Input v-model="form.area_soil" placeholder="输入土地面积"/>
+        </FormItem>
+        <FormItem prop="use_year" label="使用年限">
+          <Input v-model="form.use_year" placeholder="输入使用年限"/>
+        </FormItem>
+        <br>
+        <FormItem prop="price_begin" label="初始价格">
+          <Input v-model="form.price_begin" placeholder="输入标的初始价格"/>
+        </FormItem>
+        <FormItem prop="price_ass" label="评估价格">
+          <Input v-model="form.price_ass" placeholder="输入标的评估价格"/>
+        </FormItem>
+        <FormItem prop="price_shoot" label="起拍价格">
+          <Input v-model="form.price_shoot" placeholder="输入标的起拍价格"/>
+        </FormItem>
+      </Form>
+    </Modal>
+  </dev-article>
 </template>
 
 <script>
@@ -354,10 +354,7 @@
                         this.tableLoading = false;
                     })
                     .catch(error => {
-                        this.$Message.error(error.data);
-                        error.code === -1 && setTimeout(() => {
-                            this.$router.replace('/vuelogin');
-                        }, 1000)
+                        this.$Message.error(error);
                     })
             },
             dateChange(val) {
@@ -398,10 +395,13 @@
                                 this.$Message.success('标的添加成功！');
                             })
                             .catch(error => {
-                                this.$Message.error(error.data);
-                                error.code === -1 && setTimeout(() => {
-                                    this.$router.replace('/vuelogin');
-                                }, 1000)
+                                // 修改按钮状态
+                                this.formLoading = false;
+                                this.$nextTick(() => {
+                                    this.formLoading = true;
+                                });
+                                // 出错提示
+                                this.$Message.error(error);
                             });
                     } else {
                         this.formLoading = false;
@@ -433,10 +433,7 @@
                         this.tableLoading = false;
                     })
                     .catch(error => {
-                        this.$Message.error(error.data);
-                        error.code === -1 && setTimeout(() => {
-                            this.$router.replace('/vuelogin');
-                        }, 1000)
+                        this.$Message.error(error);
                     });
             },
             delRecord() {
@@ -455,10 +452,7 @@
                         this.tableLoading = false;
                     })
                     .catch(error => {
-                        this.$Message.error(error.data);
-                        error.code === -1 && setTimeout(() => {
-                            this.$router.replace('/vuelogin');
-                        }, 1000)
+                        this.$Message.error(error);
                     });
             },
         },
@@ -469,10 +463,7 @@
                     this.tableLoading = false
                 })
                 .catch(error => {
-                    this.$Message.error(error.data);
-                    error.code === -1 && setTimeout(() => {
-                        this.$router.replace('/vuelogin');
-                    }, 1000)
+                    this.$Message.error(error);
                 })
         }
     }

@@ -10,9 +10,9 @@ class Data extends XC_Controller
             try {
                 // 标的清单
                 $result = Xcon::gets('xvDataNotConfirm');
-                Xcon::json(0, $result);
+                Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
-                Xcon::json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }
@@ -29,26 +29,19 @@ class Data extends XC_Controller
                 $param['uid'] = $uid;
                 $param['create_time'] = date('Y-m-d');
 
+                // 重复编号检测
+                $id = $param['id'];
+                Xcon::existById('xcData', $id);
+
                 // 添加数据
                 Xcon::add('xcData', $param);
 
                 // 查询出添加数据
                 $result = Xcon::getByUid('xvDataNotConfirm', $uid);
 
-                Xcon::json(0, $result);
-
-//                // 检测id是否重复
-//                $id = $param['id'];
-//                $data = Xcon::getById($id);
-//
-//                if ($data === null) {
-//
-//                } else {
-//                    Xcon::json(1, '标的编号重复');
-//                }
-
+                Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
-                Xcon::json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }
@@ -71,9 +64,9 @@ class Data extends XC_Controller
                 }
 
                 $result = Xcon::gets('xvDataNotConfirm');
-                Xcon::json(0, $result);
+                Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
-                Xcon::json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }
@@ -88,9 +81,9 @@ class Data extends XC_Controller
 
                 $result = Xcon::getsBy('xvDataNotConfirm', "create_time between '$begin' and '$end'");
 
-                Xcon::json(0, $result);
+                Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
-                Xcon::json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }
@@ -109,9 +102,9 @@ class Data extends XC_Controller
                 }
 
                 $result = Xcon::gets('xvDataNotConfirm');
-                Xcon::json(0, $result);
+                Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
-                Xcon::json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }
