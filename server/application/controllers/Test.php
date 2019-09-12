@@ -10,7 +10,7 @@ class Test extends XC_Controller
         Xcon::loginCheck(function ($userinfor) {
             try {
                 $id = '001';
-                $result = Xcon::existBy('xcTest', compact('id'));
+                Xcon::existBy('xcTest', compact('id'));
 
                 Xcon::json(Xcon::NO_ERROR, $result);
 

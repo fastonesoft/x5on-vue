@@ -168,44 +168,44 @@ class Xcon
     /**
      * 检测数据记录是否不存在
      */
-    public static function checkBy($table, $condition, $message = '目标数据不存在！')
+    public static function checkBy($table, $condition, $kesName = '“查询条件”')
     {
         $row = self::getBy($table, $condition);
         if ($row === null) {
-            self::error(self::ERROR_DB, $message);
+            self::error(self::ERROR_DB, $kesName . '对应记录不存在！');
         }
         return $row;
     }
 
     public static function checkById($table, $id)
     {
-        self::checkBy($table, compact('id'), '“编号”对应记录不存在！');
+        return self::checkBy($table, compact('id'), '“编号”');
     }
 
     public static function checkByUid($table, $uid)
     {
-        self::checkBy($table, compact('uid'), '“系统编号”对应记录不存在！');
+        return self::checkBy($table, compact('uid'), '“系统编号”');
     }
 
     /**
      * 检测数据记录是否不存在
      */
-    public static function existBy($table, $condition, $message = '目标数据已存在！')
+    public static function existBy($table, $condition, $kesName = '“查询条件”')
     {
         $row = self::getBy($table, $condition);
         if ($row !== null) {
-            self::error(self::ERROR_DB, $message);
+            self::error(self::ERROR_DB, $kesName . '对应记录已存在！');
         }
     }
 
     public static function existById($table, $id)
     {
-        self::existBy($table, compact('id'), '“编号”对应记录已存在！');
+        self::existBy($table, compact('id'), '“编号”');
     }
 
     public static function existByUid($table, $uid)
     {
-        self::existBy($table, compact('uid'), '“系统编号”对应记录已存在！');
+        self::existBy($table, compact('uid'), '“系统编号”');
     }
 
     /**
