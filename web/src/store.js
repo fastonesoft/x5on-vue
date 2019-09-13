@@ -6,8 +6,20 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         user: null,
-        token: null,
+        count: -1,
     },
-    mutations: {},
+    getters: {
+        user(state) {
+            return state.user;
+        }
+    },
+    mutations: {
+        userSet(state, user) {
+            state.user = user;
+        },
+        increase(state) {
+            state.count++;
+        }
+    },
     actions: {}
 })

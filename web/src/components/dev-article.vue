@@ -55,10 +55,10 @@
       <Header class="header">
         <Row>
           <i-col span="19" class="header-title">
-            税收合作 合作共赢（Tax Coperation）
+            <!--税收合作 -->合作共赢（Tax Coperation）
           </i-col>
           <i-col span="5" class="hidden-nowrap" style="text-align: right;">
-            <Tag color="error" v-if="this.userName">{{ this.userName }}，{{ this.groupName }}</Tag>
+            <Tag color="error" v-if="this.user.user_name">{{ this.user.user_name }}，{{ this.user.group_name }}</Tag>
             <Dropdown @on-click="downMenuClick" class="margin-left16" transfer>
               <Avatar icon="ios-person"/>
               <DropdownMenu slot="list">
@@ -93,15 +93,18 @@
                 isCollaped: false,
                 menuDark: false,
                 leftWidth: '200',
-                userName: null,
-                groupName: null,
             };
+        },
+
+        computed: {
+            user() {
+                return this.$store.state.user;
+            }
         },
         created() {
             this.activeName = this.$route.path;
-            this.userName = this.$store.state.user.name;
-            this.groupName = this.$store.state.user.group_name;
         },
+
         methods: {
             logoClick() {
                 this.$router.replace('/vuehome');
@@ -115,7 +118,6 @@
                             .then(() => {
                                 // 记录用户信息
                                 this.$store.state.user = null;
-                                this.$store.state.token = null;
 
                                 this.$router.replace('/vuelogin');
                             })

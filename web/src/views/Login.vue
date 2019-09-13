@@ -37,6 +37,7 @@
         name: "Login",
         data() {
             return {
+                token: '',
                 form: {
                     id: 'admin',
                     pass: 'stone',
@@ -81,11 +82,11 @@
                             this.$.posts('/home/login', {
                                 id: this.form.id,
                                 pass: this.$md5(this.form.pass),
-                                token: this.$md5(this.$store.state.token + this.$md5(this.form.pass))
+                                token: this.$md5(this.token + this.$md5(this.form.pass))
                             })
                                 .then(res => {
                                     // 记录用户信息
-                                    this.$store.state.user = res;
+                                    this.$store.commit('userSet', res);
 
                                     this.$router.replace('/vuehome');
                                 })
@@ -123,7 +124,7 @@
             this.$.gets('/home/token')
                 .then(res => {
                     // token
-                    this.$store.state.token = res;
+                    this.token = res;
                 })
                 .catch(error => {
                     this.$Message.error(error);
