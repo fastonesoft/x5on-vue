@@ -58,7 +58,7 @@
             <!--税收合作 -->合作共赢（Tax Coperation）
           </i-col>
           <i-col span="5" class="hidden-nowrap" style="text-align: right;">
-            <Tag color="error" v-if="this.user.user_name">{{ this.user.user_name }}，{{ this.user.group_name }}</Tag>
+            <Tag color="error" v-if="this.user.name">{{ this.user.name }}，{{ this.user.group_name }}</Tag>
             <Dropdown @on-click="downMenuClick" class="margin-left16" transfer>
               <Avatar icon="ios-person"/>
               <DropdownMenu slot="list">

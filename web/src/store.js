@@ -6,7 +6,6 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         user: null,
-        count: -1,
     },
     getters: {
         user(state) {
@@ -17,9 +16,6 @@ export default new Vuex.Store({
         userSet(state, user) {
             state.user = user;
         },
-        increase(state) {
-            state.count++;
-        }
     },
     actions: {}
 })
