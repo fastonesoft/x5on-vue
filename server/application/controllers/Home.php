@@ -41,8 +41,14 @@ class Home extends XBASE_Controller
             // 1、用户
             $user = Xcon::getById('xvUser', $id);
             // 2、权限
+            $roles = [];
 
-            Xcon::json(Xcon::NO_ERROR, $user);
+            // 3、菜单
+            $user_id = $id;
+            $menus = Xcon::getsBy('xvUserMenu', compact('user_id'), 'type_id');
+            $items = Xcon::getsBy('xvUserMenuItem', compact('user_id'), 'type_id, ord');
+
+            Xcon::json(Xcon::NO_ERROR, compact('user', 'menus', 'items', 'roles'));
         } else {
             Xcon::json(Xcon::ERROR_APP, '登录帐号、密码有误！');
         }

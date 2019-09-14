@@ -9,10 +9,9 @@ class Test extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             try {
-                $id = '001';
-                Xcon::existBy('xcTest', compact('id'));
+                $items = Xcon::getsBy('xcRouter', null, 'type_id, ord');
 
-                Xcon::json(Xcon::NO_ERROR, $result);
+                Xcon::json(Xcon::NO_ERROR, $items);
 
             } catch (Exception $e) {
                 Xcon::json($e->getCode(), $e->getMessage());

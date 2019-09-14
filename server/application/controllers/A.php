@@ -13,7 +13,7 @@ class A extends XC_Controller
                 $result = 0;
                 Xcon::json(0, $result);
             } catch (Exception $e) {
-                Xcon::json(2, $e->getMessage());
+                Xcon::json($e->getCode(), $e->getMessage());
             }
         });
     }

@@ -123,30 +123,31 @@ class Xcon
 
     /**
      * @param        $table
-     * @param        $condition  array('name !=' => $name, 'id <' => $id, 'date >' => $date);
+     * @param        $where  array('name !=' => $name, 'id <' => $id, 'date >' => $date);
      * @param string $orderby
      * @param null $limit
      * @return mixed
      * 条件查询
      */
-    public static function wheres_query($table, $condition, $orderby = '', $limit = null)
+    public static function wheres_query($table, $where, $orderbyKeys = '', $limit = null, $offset = null)
     {
         $CI =& get_instance();
-        $CI->db->order_by($orderby);
-        return $CI->db->get_where($table, $condition, $limit);
+        $CI->db->order_by($orderbyKeys);
+        return $CI->db->get_where($table, $where, $limit, $offset);
     }
 
-    // 查询结果
-    public static function getsBy($table, $condition, $orderby = '', $limit = null)
+    // 多记录查询结果
+    public static function getsBy($table, $where, $orderbyKeys = '', $limit = null, $offset = null)
     {
-        $query = self::wheres_query($table, $condition, $orderby, $limit);
+        $query = self::wheres_query($table, $where, $orderbyKeys, $limit, $offset);
         self::db_error();
         return $query->result();
     }
 
-    public static function getBy($table, $condition)
+    // 单记录查询
+    public static function getBy($table, $where)
     {
-        $query = self::wheres_query($table, $condition);
+        $query = self::wheres_query($table, $where);
         self::db_error();
         return $query->row();
     }
@@ -168,9 +169,9 @@ class Xcon
     /**
      * 检测数据记录是否不存在
      */
-    public static function checkBy($table, $condition, $kesName = '“查询条件”')
+    public static function checkBy($table, $where, $kesName = '“查询条件”')
     {
-        $row = self::getBy($table, $condition);
+        $row = self::getBy($table, $where);
         if ($row === null) {
             self::error(self::ERROR_DB, $kesName . '对应记录不存在！');
         }
@@ -190,9 +191,9 @@ class Xcon
     /**
      * 检测数据记录是否不存在
      */
-    public static function existBy($table, $condition, $kesName = '“查询条件”')
+    public static function existBy($table, $where, $kesName = '“查询条件”')
     {
-        $row = self::getBy($table, $condition);
+        $row = self::getBy($table, $where);
         if ($row !== null) {
             self::error(self::ERROR_DB, $kesName . '对应记录已存在！');
         }
@@ -210,18 +211,18 @@ class Xcon
 
     /**
      * @param        $table
-     * @param        $condition
+     * @param        $where
      * @param        $likes
      * @param string $orderby
      * @param null $limit
      * @return mixed
      * 模糊查询
      */
-    public static function likes($table, $condition, $likes, $orderby = '', $limit = null)
+    public static function likes($table, $where, $likes, $orderby = '', $limit = null)
     {
         $CI =& get_instance();
         $CI->db->like($likes);
-        $query = self::wheres_query($table, $condition, $orderby, $limit);
+        $query = self::wheres_query($table, $where, $orderby, $limit);
         self::db_error();
         return $query->result();
     }
@@ -283,10 +284,10 @@ class Xcon
         return $CI->db->affected_rows();
     }
 
-    public static function delBy($table, $condition)
+    public static function delBy($table, $where)
     {
         $CI =& get_instance();
-        $CI->db->delete($table, $condition);
+        $CI->db->delete($table, $where);
         self::db_error();
         return $CI->db->affected_rows();
     }
@@ -299,6 +300,14 @@ class Xcon
     public static function delByUid($table, $uid)
     {
         return self::delBy($table, compact('uid'));
+    }
+
+    /**
+     * 分页数据查询
+     */
+
+    public static function page($table, $size, $index) {
+
     }
 
 }

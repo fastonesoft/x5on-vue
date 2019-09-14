@@ -1,38 +1,40 @@
 <template>
-  <div class="login">
-    <div class="cloudBody">
-      <div id="cloud1" class="login-cloud"></div>
-      <div id="cloud2" class="login-cloud"></div>
+    <div class="login">
+        <div class="cloudBody">
+            <div id="cloud1" class="login-cloud"></div>
+            <div id="cloud2" class="login-cloud"></div>
 
-      <div class="login-body">
-        <div class="login-code">
-          <div class="login-form">
-            <i-col class="login-form-title">司法涉税综合管理</i-col>
-            <Form ref="form" :model="form" :rules="rule">
-              <FormItem prop="id">
-                <Input type="text" prefix="md-contact" v-model="form.id" size="large" :maxlength="20"
-                       placeholder="输入帐号，5-20个字符"/>
-              </FormItem>
-              <FormItem prop="pass">
-                <Input type="password" prefix="ios-eye" v-model="form.pass" size="large" :maxlength="20"
-                       placeholder="输入密码，6-20个字符"/>
-              </FormItem>
-              <FormItem>
-                <Button type="primary" size="large" @click="loginClick('form')" long
-                        style="background-color: #378CBE;">登录
-                </Button>
-              </FormItem>
-            </Form>
+            <div class="login-body">
+                <div class="login-code">
+                    <div class="login-form">
+                        <i-col class="login-form-title">司法涉税综合管理</i-col>
+                        <Form ref="form" :model="form" :rules="rule">
+                            <FormItem prop="id">
+                                <Input type="text" prefix="md-contact" v-model="form.id" size="large" :maxlength="20"
+                                       placeholder="输入帐号，5-20个字符"/>
+                            </FormItem>
+                            <FormItem prop="pass">
+                                <Input type="password" prefix="ios-eye" v-model="form.pass" size="large" :maxlength="20"
+                                       placeholder="输入密码，6-20个字符"/>
+                            </FormItem>
+                            <FormItem>
+                                <Button type="primary" size="large" @click="loginClick('form')" long
+                                        style="background-color: #378CBE;">登录
+                                </Button>
+                            </FormItem>
+                        </Form>
 
-          </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
 </template>
 
 <script>
+    import xcon from '../libs/xcon'
+
     export default {
         name: "Login",
         data() {
@@ -86,8 +88,12 @@
                             })
                                 .then(res => {
                                     // 记录用户信息
-                                    this.$store.commit('userSet', res);
-
+                                    this.$store.commit('userSet', res.user);
+                                    this.$store.commit('menuSet', res.menus);
+                                    this.$store.commit('itemSet', res.items);
+                                    this.$store.commit('roleSet', res.roles);
+                                    // 写入本地
+                                    xcon.stateWrite(this.$store.state);
                                     this.$router.replace('/vuehome');
                                 })
                                 .catch(error => {
@@ -135,67 +141,67 @@
 
 <style scoped>
 
-  .login {
-    height: 100%;
-    background: #1c77ac;
-    overflow: hidden;
-  }
+    .login {
+        height: 100%;
+        background: #1c77ac;
+        overflow: hidden;
+    }
 
-  .cloudBody {
-    width: 100%;
-    height: 100%;
-    background: url(../assets/login_light.png) no-repeat center center;
-    position: relative;
-    overflow: hidden;
-  }
+    .cloudBody {
+        width: 100%;
+        height: 100%;
+        background: url(../assets/login_light.png) no-repeat center center;
+        position: relative;
+        overflow: hidden;
+    }
 
-  .login-cloud {
-    top: 0px;
-    left: 0px;
-    width: 405px;
-    height: 165px;
-    position: absolute;
-    background: url("../assets/login_cloud.png") no-repeat;
-    z-index: 1;
-    opacity: 0.5;
-  }
+    .login-cloud {
+        top: 0px;
+        left: 0px;
+        width: 405px;
+        height: 165px;
+        position: absolute;
+        background: url("../assets/login_cloud.png") no-repeat;
+        z-index: 1;
+        opacity: 0.5;
+    }
 
-  .login-body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    position: absolute;
-    background: url("../assets/login_bg.png") no-repeat center center;
-    z-index: 2;
-  }
+    .login-body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: absolute;
+        background: url("../assets/login_bg.png") no-repeat center center;
+        z-index: 2;
+    }
 
-  .login-code {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    width: 586px;
-    height: 322px;
-    margin-left: -293px;
-    margin-top: -161px;
-    background: url("../assets/login_auth.png");
-    border-radius: 5px;
-    box-shadow: 1px 1px 5px #333333, -1px -1px 5px #333333;
-  }
+    .login-code {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        width: 586px;
+        height: 322px;
+        margin-left: -293px;
+        margin-top: -161px;
+        background: url("../assets/login_auth.png");
+        border-radius: 5px;
+        box-shadow: 1px 1px 5px #333333, -1px -1px 5px #333333;
+    }
 
-  .login-form {
-    margin-left: 206px;
-    width: 380px;
-    height: 322px;
-    padding: 30px 40px;
-  }
+    .login-form {
+        margin-left: 206px;
+        width: 380px;
+        height: 322px;
+        padding: 30px 40px;
+    }
 
-  .login-form-title {
-    height: 70px;
-    text-align: center;
-    letter-spacing: 5px;
-    text-shadow: 1px 1px 3px #666;
-    color: #378CBE;
-    font-size: 24px;
-  }
+    .login-form-title {
+        height: 70px;
+        text-align: center;
+        letter-spacing: 5px;
+        text-shadow: 1px 1px 3px #666;
+        color: #378CBE;
+        font-size: 24px;
+    }
 
 </style>

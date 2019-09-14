@@ -9,16 +9,11 @@
         name: 'app',
         components: {},
         created() {
-            // 读取状态信息
-            let store = sessionStorage.getItem("store");
+            // 读取session保存的store.state状态信息
+            let store = sessionStorage.getItem("xc-store");
             if (store) {
                 this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(store)))
             }
-
-            // 保存vuex=>sessionStorage
-            window.addEventListener("beforeunload", () => {
-                sessionStorage.setItem("store", JSON.stringify(this.$store.state))
-            })
         }
     }
 </script>

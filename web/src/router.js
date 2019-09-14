@@ -59,20 +59,4 @@ Router.prototype.replace = function replace(location) {
     return originalPush.call(this, location).catch(err => err)
 };
 
-// 全局路由守卫
-router.beforeEach((to, from, next) => {
-
-    // window.console.log(to);
-    // window.console.log(from);
-
-    // ajax.posts('/home/logstatus')
-    //     .then(res=>{
-    //         window.console.log(res);
-    //     });
-    // 暂时不做
-
-    next();
-
-});
-
 export default router;

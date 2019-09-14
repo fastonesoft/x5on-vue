@@ -1,97 +1,100 @@
 <template>
-  <dev-article>
-    <div class="user-body">
-      <Card>
-        <Tabs value="table">
-          <TabPane label="用户列表" name="table">
-            <Table
-              :columns="cols"
-              :data="datas"
-              :loading="tableLoading"
-              ref="users"
-              size="small"
-              border stripe>
-            </Table>
-            <Row class="margin-top16 hidden-nowrap align-right">
-              <Page :total="datas.length" show-sizer transfer/>
-            </Row>
-          </TabPane>
-          <!--表头附加相关操作：-->
-          <template slot="extra">
-            <Row class="hidden-nowrap">
-              <Select v-model="part_id" placeholder="部门选择..." style="width:160px" transfer>
-                <Option
-                  v-for="item in parts"
-                  :value="item.part_id"
-                  :key="item.part_id">{{ item.part_name }}
-                </Option>
-              </Select>
-              <Dropdown style="margin-left: 16px" @on-click="userDown" transfer>
-                <Button>
-                  用户菜单
-                  <Icon type="ios-arrow-down"></Icon>
-                </Button>
-                <DropdownMenu slot="list">
-                  <DropdownItem name="add">用户添加</DropdownItem>
-                  <DropdownItem name="down" divided>用户数据导出</DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </Row>
+    <dev-article>
+        <div class="user-body">
+            <Card>
+                <Tabs value="table">
+                    <TabPane label="用户列表" name="table">
+                        <Table
+                                :columns="cols"
+                                :data="users"
+                                :loading="tableLoading"
+                                ref="users"
+                                size="small"
+                                border stripe>
+                        </Table>
+                        <Row class="margin-top16 hidden-nowrap align-right">
+                            <Page
+                                    :total="ajax_users.length"
+                                    :page-size="pageSize"
+                                    :page-size-opts="[5, 10, 20, 50, 100]"
+                                    show-sizer
+                                    transfer
+                                    @on-change="pageChange"
+                                    @on-page-size-change="sizeChange"
+                            />
+                        </Row>
+                    </TabPane>
+                    <!--表头附加相关操作：-->
+                    <template slot="extra">
+                        <Row class="hidden-nowrap">
+                            <Dropdown style="margin-left: 16px" @on-click="userDown" transfer>
+                                <Button>
+                                    用户菜单
+                                    <Icon type="ios-arrow-down"></Icon>
+                                </Button>
+                                <DropdownMenu slot="list">
+                                    <DropdownItem name="add">用户添加</DropdownItem>
+                                    <DropdownItem name="down" divided>用户数据导出</DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                        </Row>
+                    </template>
+                </Tabs>
+            </Card>
+        </div>
+        <Modal
+                title="用户添加"
+                v-model="formAdd"
+                :mask-closable="false"
+                :loading="formLoading"
+                @on-ok="formOk('form')"
+                @on-cancel="formCancel"
+        >
+            <Form ref="form" :model="form" :rules="rule" label-position="top">
+                <FormItem prop="id" label="帐号">
+                    <Input v-model="form.id" :maxlength="20" placeholder="输入帐号，5-20个字符"/>
+                </FormItem>
+                <FormItem prop="name" label="名称">
+                    <Input v-model="form.name" :maxlength="20" placeholder="输入帐号名称，4-10个中文字符"/>
+                </FormItem>
+                <FormItem prop="pass" label="密码">
+                    <Input v-model="form.pass" :maxlength="20" placeholder="输入用户密码，6-20个字符"/>
+                </FormItem>
+                <FormItem prop="part_name" label="部门选择">
+                    <Select v-model="form.part_name" placeholder="部门选择..." transfer>
+                        <Option
+                                v-for="item in parts"
+                                :value="item.part_name"
+                                :key="item.part_id">{{ item.part_name }}
+                        </Option>
+                    </Select>
+                </FormItem>
+                <FormItem prop="group_name" label="权限分组">
+                    <Select v-model="form.group_name" placeholder="权限组选择..." transfer>
+                        <Option
+                                v-for="item in roles"
+                                :value="item.group_name"
+                                :key="item.role_id">{{ item.group_name }}
+                        </Option>
+                    </Select>
+                </FormItem>
 
-
-          </template>
-        </Tabs>
-      </Card>
-    </div>
-    <Modal
-      title="用户添加"
-      v-model="formAdd"
-      :mask-closable="false"
-      :loading="formLoading"
-      @on-ok="formOk('form')"
-      @on-cancel="formCancel"
-    >
-      <Form ref="form" :model="form" :rules="rule" label-position="top">
-        <FormItem prop="id" label="帐号">
-          <Input v-model="form.id" :maxlength="20" placeholder="输入帐号，5-20个字符"/>
-        </FormItem>
-        <FormItem prop="name" label="名称">
-          <Input v-model="form.name" :maxlength="20" placeholder="输入帐号名称，4-10个中文字符"/>
-        </FormItem>
-        <FormItem prop="pass" label="密码">
-          <Input v-model="form.pass" :maxlength="20" placeholder="输入用户密码，6-20个字符"/>
-        </FormItem>
-        <FormItem prop="part_name" label="部门选择">
-          <Select v-model="form.part_name" placeholder="部门选择..." transfer>
-            <Option
-              v-for="item in parts"
-              :value="item.part_name"
-              :key="item.part_id">{{ item.part_name }}
-            </Option>
-          </Select>
-        </FormItem>
-        <FormItem prop="group_name" label="权限分组">
-          <Select v-model="form.group_name" placeholder="权限组选择..." transfer>
-            <Option
-              v-for="item in roles"
-              :value="item.group_name"
-              :key="item.role_id">{{ item.group_name }}
-            </Option>
-          </Select>
-        </FormItem>
-
-      </Form>
-    </Modal>
-  </dev-article>
+            </Form>
+        </Modal>
+    </dev-article>
 </template>
 
 <script>
+    import xcon from '../libs/xcon'
+
     export default {
         name: "User",
         data() {
             return {
-
                 tableLoading: true,
+
+                pageIndex: 1,
+                pageSize: 5,
                 cols: [
                     {
                         width: 50,
@@ -150,7 +153,8 @@
                         }
                     }
                 ],
-                datas: [],
+                ajax_users: [],
+
                 part_id: '02',
                 parts: [
                     {
@@ -230,7 +234,7 @@
                             required: true, message: '请选择相应的权限分组', trigger: 'blur'
                         }
                     ],
-                }
+                },
             }
         },
         methods: {
@@ -249,12 +253,12 @@
                 }
             },
             userDel(index) {
-                this.datas.splice(index, 1);
+                this.ajax_users.splice(index, 1);
             },
             userEdit(index) {
                 this.$Modal.info({
                     title: '用户信息',
-                    content: `帐号：${this.datas[index].id}<br>名称：${this.datas[index].name}<br>部门信息：${this.datas[index].part_name}<br>权限分组：${this.datas[index].group_name}`
+                    content: `帐号：${this.ajax_users[index].id}<br>名称：${this.ajax_users[index].name}<br>部门信息：${this.ajax_users[index].part_name}<br>权限分组：${this.ajax_users[index].group_name}`
                 })
             },
             formOk(name) {
@@ -262,7 +266,7 @@
                     if (valid) {
                         // 提交this.form服务器端认证
                         window.console.log(this.form);
-                        this.datas.push(this.form);
+                        this.ajax_users.push(this.form);
                         this.formAdd = false;
 
                         this.$Message.success('用户帐号添加成功！');
@@ -280,12 +284,24 @@
                 this.$refs['form'].resetFields();
                 this.$Message.warning('表单添加取消！');
             },
+
+            pageChange(index) {
+                this.pageIndex = index;
+            },
+            sizeChange(size) {
+                this.pageSize = size;
+            },
+        },
+        computed: {
+            users() {
+                return xcon.pageData(this.ajax_users, this.pageIndex, this.pageSize)
+            },
         },
         created() {
 
             this.$.gets('/user/')
                 .then(res => {
-                    this.datas = res;
+                    this.ajax_users = res;
                     this.tableLoading = false;
                 })
                 .catch(error => {
@@ -297,8 +313,8 @@
 
 <style scoped>
 
-  .user-body {
+    .user-body {
 
-  }
+    }
 
 </style>
