@@ -9,7 +9,7 @@ class Test extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             try {
-                $items = Xcon::getsBy('xcRouter', null, 'type_id, ord');
+                $items = Xcon::getsBy('xcMenu', null, 'type_id, ord');
 
                 Xcon::json(Xcon::NO_ERROR, $items);
 

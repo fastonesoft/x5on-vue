@@ -33,34 +33,6 @@
                         <span>{{item.title}}</span>
                     </MenuItem>
                 </MenuGroup>
-                <!--<MenuGroup title="设置">-->
-                <!--<MenuItem class="hidden-nowrap" name="/vueuser" to="/vueuser" replace>-->
-                <!--<Icon type="md-document"/>-->
-                <!--<span>用户权限</span>-->
-                <!--</MenuItem>-->
-                <!--</MenuGroup>-->
-                <!--<MenuGroup title="法院">-->
-                <!--<MenuItem class="hidden-nowrap" name="/vuedata" to="/vuedata" replace>-->
-                <!--<Icon type="md-calendar"/>-->
-                <!--<span>标的清单</span>-->
-                <!--</MenuItem>-->
-                <!--<MenuItem class="hidden-nowrap" name="/vueback" to="/vueback" replace>-->
-                <!--<Icon type="ios-basket"/>-->
-                <!--<span>测算反馈</span>-->
-                <!--</MenuItem>-->
-                <!--</MenuGroup>-->
-                <!--<MenuGroup title="税务">-->
-                <!--<MenuItem class="hidden-nowrap" name="/vuecount" to="/vuecount" replace>-->
-                <!--<Icon type="md-analytics"/>-->
-                <!--<span>税费测算</span>-->
-                <!--</MenuItem>-->
-                <!--</MenuGroup>-->
-                <!--<MenuGroup title="成果">-->
-                <!--<MenuItem class="hidden-nowrap" name="/vueresult" to="/vueresult" replace>-->
-                <!--<Icon type="md-barcode"/>-->
-                <!--<span>协作成果</span>-->
-                <!--</MenuItem>-->
-                <!--</MenuGroup>-->
             </Menu>
         </Sider>
         <Layout>

@@ -103,7 +103,7 @@ class Xcon
     /**
      * @param $table
      * @return mixed
-     * 获取数据库表
+     * 获取数据库表  array形式 => 每条记录 可以使用 row['name'] 形式访问
      */
     public static function gets($table)
     {
@@ -113,7 +113,7 @@ class Xcon
         return $query->result();
     }
 
-    public static function gets_as_array($table)
+    public static function gets_array($table)
     {
         $CI =& get_instance();
         $query = $CI->db->get($table);
@@ -144,12 +144,26 @@ class Xcon
         return $query->result();
     }
 
+    public static function getsBy_array($table, $where, $orderbyKeys = '', $limit = null, $offset = null)
+    {
+        $query = self::wheres_query($table, $where, $orderbyKeys, $limit, $offset);
+        self::db_error();
+        return $query->result_array();
+    }
+
     // 单记录查询
     public static function getBy($table, $where)
     {
         $query = self::wheres_query($table, $where);
         self::db_error();
         return $query->row();
+    }
+
+    public static function getBy_array($table, $where)
+    {
+        $query = self::wheres_query($table, $where);
+        self::db_error();
+        return $query->row_array();
     }
 
     public static function getById($table, $id)
@@ -159,11 +173,55 @@ class Xcon
         return $query->row();
     }
 
+    public static function getById_array($table, $id)
+    {
+        $query = self::wheres_query($table, compact('id'));
+        self::db_error();
+        return $query->row_array();
+    }
+
     public static function getByUid($table, $uid)
     {
         $query = self::wheres_query($table, compact('uid'));
         self::db_error();
         return $query->row();
+    }
+
+    public static function getByUid_array($table, $uid)
+    {
+        $query = self::wheres_query($table, compact('uid'));
+        self::db_error();
+        return $query->row_array();
+    }
+
+    /**
+     * 获取字段值，不存在，则为空
+     */
+    public static function getKeyBy($table, $where, $keyName) {
+        $row = self::getBy_array($table, $where);
+        if ($row === null) {
+            return null;
+        } else {
+            return $row[$keyName];
+        }
+    }
+
+    public static function getKeyById($table, $id, $keyName) {
+        $row = self::getById_array($table, $id);
+        if ($row === null) {
+            return null;
+        } else {
+            return array_key_exists($keyName, $row) ? $row[$keyName] : null;
+        }
+    }
+
+    public static function getKeyByUid($table, $uid, $keyName) {
+        $row = self::getByUid_array($table, $uid);
+        if ($row === null) {
+            return null;
+        } else {
+            return array_key_exists($keyName, $row) ? $row[$keyName] : null;
+        }
     }
 
     /**
@@ -187,6 +245,25 @@ class Xcon
     {
         return self::checkBy($table, compact('uid'), '“系统编号”');
     }
+
+    /**
+     * 返回字段值
+     */
+    public static function checkKeyBy($table, $where, $keyName) {
+        $row = self::checkBy($table, $where);
+        return $row[$keyName];
+    }
+
+    public static function checkKeyById($table, $id, $keyName) {
+        $row = self::checkById($table, $id);
+        return $row[$keyName];
+    }
+
+    public static function checkKeyByUid($table, $uid, $keyName) {
+        $row = self::checkByUid($table, $uid);
+        return $row[$keyName];
+    }
+
 
     /**
      * 检测数据记录是否不存在

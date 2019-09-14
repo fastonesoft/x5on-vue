@@ -298,7 +298,6 @@
             },
         },
         created() {
-
             this.$.gets('/user/')
                 .then(res => {
                     this.ajax_users = res;
