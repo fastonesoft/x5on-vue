@@ -1,6 +1,7 @@
+// 日期格式
 let dateFormat = function (value, fmt) {
     if (value instanceof Date) {
-        var o = {
+        let o = {
             'M+': value.getMonth() + 1,
             'd+': value.getDate(),
             'h+': value.getHours(),
@@ -12,9 +13,9 @@ let dateFormat = function (value, fmt) {
         if (/(y+)/.test(fmt)) {
             fmt = fmt.replace(RegExp.$1, ('0000' + value.getFullYear()).substr(-RegExp.$1.length));
         }
-        for (var k in o) {
+        for (let k in o) {
             if (new RegExp('(' + k + ')').test(fmt)) {
-                fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(-RegExp.$1.length));
+                fmt = fmt.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] : ('00' + o[k]).substr(-RegExp.$1.length));
             }
         }
         return fmt;
@@ -23,7 +24,6 @@ let dateFormat = function (value, fmt) {
     }
 
 };
-// 日期格式
 
 // 数据分页
 let pageData = function (datas, index, size) {
@@ -39,10 +39,33 @@ let pageData = function (datas, index, size) {
 // 写入、删除本地session
 let stateClear = function () {
     sessionStorage.clear();
-}
+};
 
 let stateWrite = function (state) {
     sessionStorage.setItem("xc-store", JSON.stringify(state))
 };
 
-export default {dateFormat, pageData, stateClear, stateWrite};
+// 数组增删改
+let arrsDel = function (arrs, key, keyValue) {
+    arrs.forEach((item, index) => {
+        if (item[key] === keyValue) {
+            arrs.splice(index, 1)
+        }
+    });
+    return arrs;
+};
+
+let arrsEdit = function (arrs, key, keyValue, value) {
+    arrs.forEach((item, index) => {
+        if (item[key] === keyValue) {
+            arrs.splice(index, 1, value)
+        }
+    });
+    return arrs;
+};
+
+export default {
+    dateFormat, pageData,
+    stateClear, stateWrite,
+    arrsDel, arrsEdit,
+};

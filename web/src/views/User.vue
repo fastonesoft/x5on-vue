@@ -276,7 +276,7 @@
                             this.formLoading = true;
                         });
 
-                        this.$Message.error('用户帐号无法通过验证，请重新输入');
+                        this.$Message.error('无法通过验证，请重新输入');
                     }
                 });
             },

@@ -328,6 +328,7 @@ class Xcon
         $CI =& get_instance();
         $CI->db->insert($table, $values);
         self::db_error();
+        return $CI->db->affected_rows();
     }
 
     /**

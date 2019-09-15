@@ -72,6 +72,8 @@
 </template>
 
 <script>
+    import xcon from "../libs/xcon";
+
     export default {
         data() {
             return {
@@ -120,7 +122,7 @@
                                 this.$store.commit('itemSet', []);
                                 this.$store.commit('roleSet', []);
                                 // 清楚session
-                                sessionStorage.clear();
+                                xcon.stateClear();
                                 this.$router.replace('/vuelogin');
                             })
                             .catch(error => {

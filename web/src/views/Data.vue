@@ -394,7 +394,7 @@
                                 this.formAdd = false;
                                 // 重置表单
                                 this.$refs['form'].resetFields();
-                                this.$Message.success('标的数据添加成功！');
+                                this.$Message.success('数据添加成功！');
                             })
                             .catch(error => {
                                 // 修改按钮状态
