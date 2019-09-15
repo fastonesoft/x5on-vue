@@ -94,10 +94,13 @@ class Xcon
         return json_decode($CI->input->raw_input_stream);
     }
 
-    public static function param($key)
+    public static function array_key($arr, $key)
     {
-        $params = self::params();
-        return $params[$key];
+        if (array_key_exists($key, $arr)) {
+            return $arr[$key];
+        } else {
+            self::error(self::ERROR_APP, '“' . $key . '”对应参数不存在！');
+        }
     }
 
     /**
@@ -197,7 +200,8 @@ class Xcon
     /**
      * 获取字段值，不存在，则为空
      */
-    public static function getKeyBy($table, $where, $keyName) {
+    public static function getKeyBy($table, $where, $keyName)
+    {
         $row = self::getBy_array($table, $where);
         if ($row === null) {
             return null;
@@ -206,7 +210,8 @@ class Xcon
         }
     }
 
-    public static function getKeyById($table, $id, $keyName) {
+    public static function getKeyById($table, $id, $keyName)
+    {
         $row = self::getById_array($table, $id);
         if ($row === null) {
             return null;
@@ -215,7 +220,8 @@ class Xcon
         }
     }
 
-    public static function getKeyByUid($table, $uid, $keyName) {
+    public static function getKeyByUid($table, $uid, $keyName)
+    {
         $row = self::getByUid_array($table, $uid);
         if ($row === null) {
             return null;
@@ -227,39 +233,42 @@ class Xcon
     /**
      * 检测数据记录是否不存在
      */
-    public static function checkBy($table, $where, $kesName = '“查询条件”')
+    public static function checkBy($table, $where, $message = '“查询条件”对应记录不存在！')
     {
         $row = self::getBy($table, $where);
         if ($row === null) {
-            self::error(self::ERROR_DB, $kesName . '对应记录不存在！');
+            self::error(self::ERROR_DB, $message);
         }
         return $row;
     }
 
     public static function checkById($table, $id)
     {
-        return self::checkBy($table, compact('id'), '“编号”');
+        return self::checkBy($table, compact('id'), '“编号”不存在！');
     }
 
     public static function checkByUid($table, $uid)
     {
-        return self::checkBy($table, compact('uid'), '“系统编号”');
+        return self::checkBy($table, compact('uid'), '“系统编号”不存在！');
     }
 
     /**
      * 返回字段值
      */
-    public static function checkKeyBy($table, $where, $keyName) {
+    public static function checkKeyBy($table, $where, $keyName)
+    {
         $row = self::checkBy($table, $where);
         return $row[$keyName];
     }
 
-    public static function checkKeyById($table, $id, $keyName) {
+    public static function checkKeyById($table, $id, $keyName)
+    {
         $row = self::checkById($table, $id);
         return $row[$keyName];
     }
 
-    public static function checkKeyByUid($table, $uid, $keyName) {
+    public static function checkKeyByUid($table, $uid, $keyName)
+    {
         $row = self::checkByUid($table, $uid);
         return $row[$keyName];
     }
@@ -268,22 +277,22 @@ class Xcon
     /**
      * 检测数据记录是否不存在
      */
-    public static function existBy($table, $where, $kesName = '“查询条件”')
+    public static function existBy($table, $where, $message = '“查询条件”对应记录已存在！')
     {
         $row = self::getBy($table, $where);
         if ($row !== null) {
-            self::error(self::ERROR_DB, $kesName . '对应记录已存在！');
+            self::error(self::ERROR_DB, $message);
         }
     }
 
     public static function existById($table, $id)
     {
-        self::existBy($table, compact('id'), '“编号”');
+        self::existBy($table, compact('id'), '“编号”已存在！');
     }
 
     public static function existByUid($table, $uid)
     {
-        self::existBy($table, compact('uid'), '“系统编号”');
+        self::existBy($table, compact('uid'), '“系统编号”对应记录已存在！');
     }
 
     /**
@@ -384,7 +393,8 @@ class Xcon
      * 分页数据查询
      */
 
-    public static function page($table, $size, $index) {
+    public static function page($table, $size, $index)
+    {
 
     }
 

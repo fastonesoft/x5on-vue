@@ -1,54 +1,54 @@
 <template>
-    <dev-article>
-        <Card>
-            <Tabs value="table">
-                <TabPane label="部门列表" name="table">
-                    <Table
-                            :columns="cols"
-                            :data="parts"
-                            :loading="tableLoading"
-                            ref="parts"
-                            size="small"
-                            border stripe>
-                    </Table>
-                    <Row class="margin-top16 hidden-nowrap align-right">
-                        <Page
-                                :total="ajax_parts.length"
-                                :page-size="pageSize"
-                                :page-size-opts="[10, 20, 50, 100]"
-                                show-sizer
-                                transfer
-                                @on-change="pageChange"
-                                @on-page-size-change="sizeChange"
-                        />
-                    </Row>
-                </TabPane>
-                <!--表头附加相关操作：-->
-                <template slot="extra">
-                    <Row class="hidden-nowrap">
-                        <Button type="primary" size="small" @click="partAdd">添加</Button>
-                    </Row>
-                </template>
-            </Tabs>
-        </Card>
-        <Modal
-                title="部门添加"
-                v-model="formAdd"
-                :mask-closable="false"
-                :loading="formLoading"
-                @on-ok="formOk('form')"
-                @on-cancel="formCancel"
-        >
-            <Form ref="form" :model="form" :rules="rule" label-position="top">
-                <FormItem prop="id" label="编号">
-                    <Input v-model="form.id" :maxlength="2" placeholder="输入部门编号，1-2位数字"/>
-                </FormItem>
-                <FormItem prop="name" label="名称">
-                    <Input v-model="form.name" :maxlength="10" placeholder="输入部门名称，2-10个中文字符"/>
-                </FormItem>
-            </Form>
-        </Modal>
-    </dev-article>
+  <dev-article>
+    <Card>
+      <Tabs value="table">
+        <TabPane label="部门列表" name="table">
+          <Table
+            :columns="cols"
+            :data="parts"
+            :loading="tableLoading"
+            ref="parts"
+            size="small"
+            border stripe>
+          </Table>
+          <Row class="margin-top16 hidden-nowrap align-right">
+            <Page
+              :total="ajax_parts.length"
+              :page-size="pageSize"
+              :page-size-opts="[10, 20, 50, 100]"
+              show-sizer
+              transfer
+              @on-change="pageChange"
+              @on-page-size-change="sizeChange"
+            />
+          </Row>
+        </TabPane>
+        <!--表头附加相关操作：-->
+        <template slot="extra">
+          <Row class="hidden-nowrap">
+            <Button type="primary" size="small" @click="partAdd">添加</Button>
+          </Row>
+        </template>
+      </Tabs>
+    </Card>
+    <Modal
+      title="部门添加"
+      v-model="formAdd"
+      :mask-closable="false"
+      :loading="formLoading"
+      @on-ok="formOk('form')"
+      @on-cancel="formCancel"
+    >
+      <Form ref="form" :model="form" :rules="rule" label-position="top">
+        <FormItem prop="id" label="编号">
+          <Input v-model="form.id" :maxlength="2" placeholder="输入部门编号，1-2位数字"/>
+        </FormItem>
+        <FormItem prop="name" label="名称">
+          <Input v-model="form.name" :maxlength="10" placeholder="输入部门名称，2-10个中文字符"/>
+        </FormItem>
+      </Form>
+    </Modal>
+  </dev-article>
 </template>
 
 <script>
@@ -161,6 +161,7 @@
 
                 this.$.posts('/part/del', {uid})
                     .then(res => {
+                        this.$Message.success(res + '条记录删除成功！');
                         this.ajax_parts = xcon.arrsDel(this.ajax_parts, 'uid', uid)
                     })
                     .catch(error => {
