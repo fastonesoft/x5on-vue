@@ -47,8 +47,6 @@ class Group extends XC_Controller
                 $params = Xcon::params();
                 $uid = Xcon::array_key($params, 'uid');
 
-                var_dump($params);
-
                 Xcon::setByUid('xcGroup', $params, $uid);
                 $result = Xcon::getByUid('xvGroup', $uid);
 
@@ -64,15 +62,16 @@ class Group extends XC_Controller
         Xcon::loginCheck(function ($userinfor) {
             try {
                 $params = Xcon::params();
+
                 // 删除之前要确认一下
                 $uid = Xcon::array_key($params, 'uid');
-                $part = Xcon::checkByUid('xcGroup', $uid);
-                $part_id = $part->id;
+                $group = Xcon::checkByUid('xcGroup', $uid);
+                $group_id = $group->id;
 
-                // 检测分组列表
-                Xcon::existBy('xcGroup', compact('part_id'), '编号已存在分组列表');
-                // 检测用户列表
-                Xcon::existBy('xcUser', compact('part_id'), '编号已存在用户列表');
+                // 检测路由、权限、用户列表
+                Xcon::existBy('xcGroupMenu', compact('group_id'), '编号已存在路由列表');
+                Xcon::existBy('xcGroupAction', compact('group_id'), '编号已存在权限列表');                // 检测用户列表
+                Xcon::existBy('xcUser', compact('group_id'), '编号已存在用户列表');
 
                 // 删除
                 $result = Xcon::delByUid('xcGroup', $uid);

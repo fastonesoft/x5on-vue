@@ -1,63 +1,63 @@
 <template>
-  <dev-article>
-    <Card>
-      <Tabs value="table">
-        <TabPane label="分组列表" name="table">
-          <Table
-            :columns="cols"
-            :data="datas"
-            :loading="tableLoading"
-            ref="datas"
-            size="small"
-            border stripe>
-          </Table>
-          <Row class="margin-top16 hidden-nowrap align-right">
-            <Page
-              :total="ajax_datas.length"
-              :page-size="pageSize"
-              :page-size-opts="[10, 20, 50, 100]"
-              show-sizer
-              transfer
-              @on-change="pageChange"
-              @on-page-size-change="sizeChange"
-            />
-          </Row>
-        </TabPane>
-        <!--表头附加相关操作：-->
-        <template slot="extra">
-          <Row class="hidden-nowrap">
-            <Button type="primary" size="small" @click="formAdd">添加</Button>
-          </Row>
-        </template>
-      </Tabs>
-    </Card>
-    <Modal
-      :title="formTitle"
-      v-model="formModel"
-      :mask-closable="false"
-      :loading="formLoading"
-      @on-ok="formOk('form')"
-      @on-cancel="formCancel"
-    >
-      <Form ref="form" :model="form" :rules="rule" label-position="top">
-        <FormItem prop="id" label="编号">
-          <Input v-model="form.id" :maxlength="2" placeholder="输入分组编号，2位数字" :disabled="inputDisable"/>
-        </FormItem>
-        <FormItem prop="name" label="名称">
-          <Input v-model="form.name" :maxlength="10" placeholder="输入分组名称，3-10个中文字符"/>
-        </FormItem>
-        <FormItem prop="part_id" label="部门选择">
-          <Select v-model="form.part_id" placeholder="部门选择..." transfer>
-            <Option
-              v-for="item in parts"
-              :value="item.id"
-              :key="item.id">{{ item.name }}
-            </Option>
-          </Select>
-        </FormItem>
-      </Form>
-    </Modal>
-  </dev-article>
+    <dev-article>
+        <Card>
+            <Tabs value="table">
+                <TabPane label="分组列表" name="table">
+                    <Table
+                            :columns="cols"
+                            :data="datas"
+                            :loading="tableLoading"
+                            ref="datas"
+                            size="small"
+                            border stripe>
+                    </Table>
+                    <Row class="margin-top16 hidden-nowrap align-right">
+                        <Page
+                                :total="ajax_datas.length"
+                                :page-size="pageSize"
+                                :page-size-opts="[10, 20, 50, 100]"
+                                show-sizer
+                                transfer
+                                @on-change="pageChange"
+                                @on-page-size-change="sizeChange"
+                        />
+                    </Row>
+                </TabPane>
+                <!--表头附加相关操作：-->
+                <template slot="extra">
+                    <Row class="hidden-nowrap">
+                        <Button type="primary" size="small" @click="formAdd">添加</Button>
+                    </Row>
+                </template>
+            </Tabs>
+        </Card>
+        <Modal
+                :title="formTitle"
+                v-model="formModel"
+                :mask-closable="false"
+                :loading="formLoading"
+                @on-ok="formOk('form')"
+                @on-cancel="formCancel"
+        >
+            <Form ref="form" :model="form" :rules="rule" label-position="top">
+                <FormItem prop="id" label="编号">
+                    <Input v-model="form.id" :maxlength="2" placeholder="输入分组编号，2位数字" :disabled="inputDisable"/>
+                </FormItem>
+                <FormItem prop="name" label="名称">
+                    <Input v-model="form.name" :maxlength="10" placeholder="输入分组名称，3-10个中文字符"/>
+                </FormItem>
+                <FormItem prop="part_id" label="部门选择">
+                    <Select v-model="form.part_id" placeholder="部门选择..." transfer>
+                        <Option
+                                v-for="item in parts"
+                                :value="item.id"
+                                :key="item.id">{{ item.name }}
+                        </Option>
+                    </Select>
+                </FormItem>
+            </Form>
+        </Modal>
+    </dev-article>
 </template>
 
 <script>
@@ -134,7 +134,7 @@
                     }
                 ],
                 ajax_datas: [],
-                ajax_parts: [],
+                parts: [],
 
                 formType: 'add',
                 formModel: false,
@@ -174,7 +174,7 @@
                     ],
                     part_id: [
                         {
-                            required: true, message: '部门选择不得为空', trigger: 'blur'
+                            required: true, message: '部门选择不得为空', trigger: 'change'
                         },
                     ]
                 },
@@ -190,7 +190,8 @@
                 this.formType = 'edit';
                 this.formModel = true;
                 let data = this.datas[index];
-                this.form = Object.assign({}, data);
+                let {id, uid, name, part_id} = data;
+                this.form = Object.assign({}, {id, uid, name, part_id});
             },
             formDel(index) {
                 let data = this.datas[index];
@@ -256,9 +257,6 @@
             datas() {
                 return xcon.pageData(this.ajax_datas, this.pageIndex, this.pageSize)
             },
-            parts() {
-                return this.ajax_parts
-            },
             formTitle() {
                 return this.formType === 'add' ? '分组添加' : '分组修改'
             },
@@ -276,7 +274,7 @@
                 });
             this.$.gets('/part/')
                 .then(res => {
-                    this.ajax_parts = res;
+                    this.parts = res;
                     this.tableLoading = false;
                 })
                 .catch(error => {
