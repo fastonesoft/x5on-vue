@@ -27,6 +27,11 @@ const router = new Router({
             component: () => import('./views/Part.vue')
         },
         {
+            path: '/vuegroup',
+            name: '/vuegroup',
+            component: () => import('./views/Group.vue')
+        },
+        {
             path: '/vueuser',
             name: '/vueuser',
             component: () => import('./views/User.vue')

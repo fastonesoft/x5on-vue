@@ -1,15 +1,15 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Count extends XC_Controller
+class Group extends XC_Controller
 {
 
     public function index()
     {
         Xcon::loginCheck(function ($userinfor) {
             try {
-                // 测算清单
-                $result = Xcon::gets('xvDataNotGuess');
+                $result = Xcon::gets('xvGroup');
+
                 Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
                 Xcon::json($e->getCode(), $e->getMessage());
@@ -20,67 +20,63 @@ class Count extends XC_Controller
     public function add()
     {
         Xcon::loginCheck(function ($userinfor) {
+            try {
+                $params = Xcon::params();
+                $params['uid'] = Xcon::uid();
 
+                // 重复编号检测
+                Xcon::existById('xcGroup', Xcon::array_key($params, 'id'));
+                // 重复名称检测
+                $name = Xcon::array_key($params, 'name');
+                Xcon::existBy('xcGroup', compact('name'), '“名称”重复');
+
+                Xcon::add('xcGroup', $params);
+                $result = Xcon::getByUid('xvGroup', $params['uid']);
+
+                Xcon::json(Xcon::NO_ERROR, $result);
+            } catch (Exception $e) {
+                Xcon::json($e->getCode(), $e->getMessage());
+            }
         });
     }
 
     public function edit()
     {
-        echo '  --------edit ---------';
+        Xcon::loginCheck(function ($userinfor) {
+            try {
+                $params = Xcon::params();
+                $uid = Xcon::array_key($params, 'uid');
+
+                var_dump($params);
+
+                Xcon::setByUid('xcGroup', $params, $uid);
+                $result = Xcon::getByUid('xvGroup', $uid);
+
+                Xcon::json(Xcon::NO_ERROR, $result);
+            } catch (Exception $e) {
+                Xcon::json($e->getCode(), $e->getMessage());
+            }
+        });
     }
 
     public function del()
     {
         Xcon::loginCheck(function ($userinfor) {
             try {
-                // 提交测算
                 $params = Xcon::params();
-                $uid_string = Xcon::array_key($params, 'uids');
-
-                $uids = explode(',', $uid_string);
-                foreach ($uids as $uid) {
-                    Xcon::delByUid('xcData', $uid);
-                }
-
-                $result = Xcon::gets('xvDataNotGuess');
-                Xcon::json(Xcon::NO_ERROR, $result);
-            } catch (Exception $e) {
-                Xcon::json($e->getCode(), $e->getMessage());
-            }
-        });
-    }
-
-    public function find()
-    {
-        Xcon::loginCheck(function ($userinfor) {
-            try {
-                // 标的查询
-                $params = Xcon::params();
-                $begin = Xcon::array_key($params, 'begin');
-                $end = Xcon::array_key($params, 'end');
-
-                $result = Xcon::getsBy('xvDataNotGuess', "create_time between '$begin' and '$end'");
-
-                Xcon::json(Xcon::NO_ERROR, $result);
-            } catch (Exception $e) {
-                Xcon::json($e->getCode(), $e->getMessage());
-            }
-        });
-    }
-
-    public function upto()
-    {
-        Xcon::loginCheck(function ($userinfor) {
-            try {
-                // 测算结束
-                $params = Xcon::params();
+                // 删除之前要确认一下
                 $uid = Xcon::array_key($params, 'uid');
+                $part = Xcon::checkByUid('xcGroup', $uid);
+                $part_id = $part->id;
 
-                $guess_time = date('Y-m-d');
-                $guess_user_id = $userinfor->id;
-                Xcon::setByUid('xcData', compact('guess_time', 'guess_user_id'), $uid);
+                // 检测分组列表
+                Xcon::existBy('xcGroup', compact('part_id'), '编号已存在分组列表');
+                // 检测用户列表
+                Xcon::existBy('xcUser', compact('part_id'), '编号已存在用户列表');
 
-                $result = Xcon::gets('xvDataNotGuess');
+                // 删除
+                $result = Xcon::delByUid('xcGroup', $uid);
+
                 Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
                 Xcon::json($e->getCode(), $e->getMessage());

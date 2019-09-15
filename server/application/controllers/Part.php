@@ -42,7 +42,19 @@ class Part extends XC_Controller
 
     public function edit()
     {
-        echo '  --------edit ---------';
+        Xcon::loginCheck(function ($userinfor) {
+            try {
+                $params = Xcon::params();
+                $uid = Xcon::array_key($params, 'uid');
+
+                Xcon::setByUid('xcPart', $params, $uid);
+                $result = Xcon::getByUid('xcPart', $uid);
+
+                Xcon::json(Xcon::NO_ERROR, $result);
+            } catch (Exception $e) {
+                Xcon::json($e->getCode(), $e->getMessage());
+            }
+        });
     }
 
     public function del()
@@ -68,11 +80,6 @@ class Part extends XC_Controller
                 Xcon::json($e->getCode(), $e->getMessage());
             }
         });
-    }
-
-    public function find()
-    {
-        echo '  --------find -------------';
     }
 
 }

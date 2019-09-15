@@ -5,15 +5,15 @@
         <TabPane label="部门列表" name="table">
           <Table
             :columns="cols"
-            :data="parts"
+            :data="datas"
             :loading="tableLoading"
-            ref="parts"
+            ref="datas"
             size="small"
             border stripe>
           </Table>
           <Row class="margin-top16 hidden-nowrap align-right">
             <Page
-              :total="ajax_parts.length"
+              :total="ajax_datas.length"
               :page-size="pageSize"
               :page-size-opts="[10, 20, 50, 100]"
               show-sizer
@@ -26,14 +26,14 @@
         <!--表头附加相关操作：-->
         <template slot="extra">
           <Row class="hidden-nowrap">
-            <Button type="primary" size="small" @click="partAdd">添加</Button>
+            <Button type="primary" size="small" @click="formAdd">添加</Button>
           </Row>
         </template>
       </Tabs>
     </Card>
     <Modal
-      title="部门添加"
-      v-model="formAdd"
+      :title="formTitle"
+      v-model="formModel"
       :mask-closable="false"
       :loading="formLoading"
       @on-ok="formOk('form')"
@@ -41,7 +41,7 @@
     >
       <Form ref="form" :model="form" :rules="rule" label-position="top">
         <FormItem prop="id" label="编号">
-          <Input v-model="form.id" :maxlength="2" placeholder="输入部门编号，1-2位数字"/>
+          <Input v-model="form.id" :maxlength="2" placeholder="输入部门编号，1-2位数字" :disabled="inputDisable"/>
         </FormItem>
         <FormItem prop="name" label="名称">
           <Input v-model="form.name" :maxlength="10" placeholder="输入部门名称，2-10个中文字符"/>
@@ -54,8 +54,14 @@
 <script>
     import xcon from '../libs/xcon'
 
+    const formData = {
+        id: '',
+        uid: '',
+        name: '',
+    };
+
     export default {
-        name: "Area",
+        name: "Part",
         data() {
             return {
                 tableLoading: true,
@@ -93,7 +99,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.partEdit(params.index)
+                                            this.formEdit(params.index)
                                         }
                                     }
                                 }, '修改'),
@@ -104,7 +110,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.partDel(params.index)
+                                            this.formDel(params.index)
                                         }
                                     }
                                 }, '删除')
@@ -112,14 +118,12 @@
                         }
                     }
                 ],
-                ajax_parts: [],
+                ajax_datas: [],
 
-                formAdd: false,
+                formType: 'add',
+                formModel: false,
                 formLoading: true,
-                form: {
-                    id: '',
-                    name: '',
-                },
+                form: Object.assign({}, formData),
                 rule: {
                     id: [
                         {
@@ -128,9 +132,14 @@
                         {
                             min: 1,
                             max: 2,
-                            message: '帐号长度最小1位，最大2位',
+                            message: '长度最小1位，最大2位',
                             trigger: 'change'
-                        }
+                        },
+                        {
+                            pattern: /^\d{1,2}$/,
+                            message: '必须是数字',
+                            trigger: 'change'
+                        },
                     ],
                     name: [
                         {
@@ -139,7 +148,7 @@
                         {
                             min: 2,
                             max: 10,
-                            message: '帐号长度最小2位，最大10位',
+                            message: '长度最小2位，最大10位',
                             trigger: 'change'
                         },
                         {
@@ -152,37 +161,46 @@
             }
         },
         methods: {
-            partAdd() {
-                this.formAdd = true;
+            formAdd() {
+                this.formType = 'add';
+                this.formModel = true;
+                this.form = Object.assign({}, formData)
             },
-            partDel(index) {
-                let part = this.parts[index];
-                let uid = part.uid;
+            formEdit(index) {
+                this.formType = 'edit';
+                this.formModel = true;
+                let data = this.datas[index];
+                this.form = Object.assign({}, data);
+            },
+            formDel(index) {
+                let data = this.datas[index];
+                let uid = data.uid;
 
                 this.$.posts('/part/del', {uid})
                     .then(res => {
                         this.$Message.success(res + '条记录删除成功！');
-                        this.ajax_parts = xcon.arrsDel(this.ajax_parts, 'uid', uid)
+                        this.ajax_datas = xcon.arrsDel(this.ajax_datas, 'uid', uid)
                     })
                     .catch(error => {
                         this.$Message.error(error);
                     })
             },
-            partEdit(index) {
-                this.$Modal.info({
-                    title: '用户信息',
-                    content: `帐号：${this.ajax_parts[index].id}<br>名称：${this.ajax_parts[index].name}<br>部门信息：${this.ajax_parts[index].part_name}<br>权限分组：${this.ajax_parts[index].group_name}`
-                })
-            },
             formOk(name) {
+                // 增加表单类型检测
+                let action = this.formType;
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$.posts('/part/add', this.form)
+                        this.$.posts('/part/' + action, this.form)
                             .then(res => {
-                                this.ajax_parts.push(res);
-                                this.formAdd = false;
+                                if (action === 'add') {
+                                    this.ajax_datas.push(res);
+                                } else {
+                                    this.ajax_datas = xcon.arrsEdit(this.ajax_datas, 'id', res.id, res)
+                                }
+
+                                this.formModel = false;
                                 this.$refs['form'].resetFields();
-                                this.$Message.success('表单添加成功！');
+                                this.$Message.success(this.formTitle + '成功！');
                             })
                             .catch(error => {
                                 // 修改按钮状态
@@ -201,6 +219,7 @@
                     }
                 });
             },
+
             formCancel() {
                 this.$refs['form'].resetFields();
             },
@@ -208,19 +227,26 @@
             pageChange(index) {
                 this.pageIndex = index;
             },
+
             sizeChange(size) {
                 this.pageSize = size;
             },
         },
         computed: {
-            parts() {
-                return xcon.pageData(this.ajax_parts, this.pageIndex, this.pageSize)
+            datas() {
+                return xcon.pageData(this.ajax_datas, this.pageIndex, this.pageSize)
             },
+            formTitle() {
+                return this.formType === 'add' ? '部门添加' : '部门修改'
+            },
+            inputDisable() {
+                return this.formType !== 'add'
+            }
         },
         created() {
             this.$.gets('/part/')
                 .then(res => {
-                    this.ajax_parts = res;
+                    this.ajax_datas = res;
                     this.tableLoading = false;
                 })
                 .catch(error => {

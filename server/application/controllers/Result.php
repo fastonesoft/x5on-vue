@@ -22,7 +22,8 @@ class Result extends XC_Controller
         Xcon::loginCheck(function ($userinfor) {
             try {
                 // 地区协作查询
-                $area_id = Xcon::param('area_id');
+                $params = Xcon::params();
+                $area_id = Xcon::array_key($params, 'area_id');
 
                 $result = Xcon::getsBy('xvDataDone', compact('area_id'));
                 Xcon::json(Xcon::NO_ERROR, $result);

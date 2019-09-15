@@ -22,7 +22,8 @@ class Back extends XC_Controller
         Xcon::loginCheck(function ($userinfor) {
             try {
                 // 提交测算
-                $uid_string = Xcon::param('uids');
+                $params = Xcon::params();
+                $uid_string = Xcon::array_key($params, 'uids');
 
                 $uids = explode(',', $uid_string);
                 foreach ($uids as $uid) {
@@ -42,8 +43,9 @@ class Back extends XC_Controller
         Xcon::loginCheck(function ($userinfor) {
             try {
                 // 标的查询
-                $begin = Xcon::param('begin');
-                $end = Xcon::param('end');
+                $params = Xcon::params();
+                $begin = Xcon::array_key($params, 'begin');
+                $end = Xcon::array_key($params, 'end');
 
                 $result = Xcon::getsBy('xvDataNotDone', "create_time between '$begin' and '$end'");
 
@@ -59,7 +61,8 @@ class Back extends XC_Controller
         Xcon::loginCheck(function ($userinfor) {
             try {
                 // 测算结束
-                $uid = Xcon::param('uid');
+                $params = Xcon::params();
+                $uid = Xcon::array_key($params, 'uid');
 
                 $done_time = date('Y-m-d');
                 $done_user_id = $userinfor->id;

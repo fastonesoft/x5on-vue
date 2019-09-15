@@ -20,9 +20,10 @@ class Home extends XBASE_Controller
     // 登录
     public function login()
     {
-        $id = Xcon::param('id');
-        $pass = Xcon::param('pass');
-        $token = Xcon::param('token');
+        $params = Xcon::params();
+        $id = Xcon::array_key($params, 'id');
+        $pass = Xcon::array_key($params, 'pass');
+        $token = Xcon::array_key($params, 'token');
 
         // 检测token是否正确
         if (md5(md5(session_id()) . $pass) !== $token) {

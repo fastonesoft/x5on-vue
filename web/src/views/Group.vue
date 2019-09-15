@@ -2,7 +2,7 @@
   <dev-article>
     <Card>
       <Tabs value="table">
-        <TabPane label="地区列表" name="table">
+        <TabPane label="分组列表" name="table">
           <Table
             :columns="cols"
             :data="datas"
@@ -41,10 +41,19 @@
     >
       <Form ref="form" :model="form" :rules="rule" label-position="top">
         <FormItem prop="id" label="编号">
-          <Input v-model="form.id" :maxlength="6" placeholder="输入地区编号，6位数字" :disabled="inputDisable"/>
+          <Input v-model="form.id" :maxlength="2" placeholder="输入分组编号，2位数字" :disabled="inputDisable"/>
         </FormItem>
         <FormItem prop="name" label="名称">
-          <Input v-model="form.name" :maxlength="10" placeholder="输入地区名称，3-10个中文字符"/>
+          <Input v-model="form.name" :maxlength="10" placeholder="输入分组名称，3-10个中文字符"/>
+        </FormItem>
+        <FormItem prop="part_id" label="部门选择">
+          <Select v-model="form.part_id" placeholder="部门选择..." transfer>
+            <Option
+              v-for="item in parts"
+              :value="item.id"
+              :key="item.id">{{ item.name }}
+            </Option>
+          </Select>
         </FormItem>
       </Form>
     </Modal>
@@ -58,10 +67,11 @@
         id: '',
         uid: '',
         name: '',
+        part_id: '',
     };
 
     export default {
-        name: "Area",
+        name: "Group",
         data() {
             return {
                 tableLoading: true,
@@ -82,6 +92,11 @@
                         title: '名称',
                         key: 'name',
                     },
+                    {
+                        title: '部门',
+                        key: 'part_name',
+                    },
+
                     {
                         title: '操作',
                         key: 'action',
@@ -119,6 +134,7 @@
                     }
                 ],
                 ajax_datas: [],
+                ajax_parts: [],
 
                 formType: 'add',
                 formModel: false,
@@ -127,22 +143,22 @@
                 rule: {
                     id: [
                         {
-                            required: true, message: '地区编号不得为空', trigger: 'blur'
+                            required: true, message: '分组编号不得为空', trigger: 'blur'
                         },
                         {
-                            len: 6,
-                            message: '长度6位',
+                            len: 2,
+                            message: '长度2位',
                             trigger: 'change'
                         },
                         {
-                            pattern: /^\d{6}$/,
+                            pattern: /^\d{2}$/,
                             message: '必须是数字',
                             trigger: 'change'
                         },
                     ],
                     name: [
                         {
-                            required: true, message: '地区名称不得为空', trigger: 'blur'
+                            required: true, message: '分组名称不得为空', trigger: 'blur'
                         },
                         {
                             min: 3,
@@ -156,6 +172,11 @@
                             trigger: 'change'
                         },
                     ],
+                    part_id: [
+                        {
+                            required: true, message: '部门选择不得为空', trigger: 'blur'
+                        },
+                    ]
                 },
             }
         },
@@ -175,7 +196,7 @@
                 let data = this.datas[index];
                 let uid = data.uid;
 
-                this.$.posts('/area/del', {uid})
+                this.$.posts('/group/del', {uid})
                     .then(res => {
                         this.$Message.success(res + '条记录删除成功！');
                         this.ajax_datas = xcon.arrsDel(this.ajax_datas, 'uid', uid)
@@ -189,7 +210,7 @@
                 let action = this.formType;
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$.posts('/area/' + action, this.form)
+                        this.$.posts('/group/' + action, this.form)
                             .then(res => {
                                 if (action === 'add') {
                                     this.ajax_datas.push(res);
@@ -235,17 +256,27 @@
             datas() {
                 return xcon.pageData(this.ajax_datas, this.pageIndex, this.pageSize)
             },
+            parts() {
+                return this.ajax_parts
+            },
             formTitle() {
-                return this.formType === 'add' ? '地区添加' : '地区修改'
+                return this.formType === 'add' ? '分组添加' : '分组修改'
             },
             inputDisable() {
                 return this.formType !== 'add'
-            }
+            },
         },
         created() {
-            this.$.gets('/area/')
+            this.$.gets('/group/')
                 .then(res => {
                     this.ajax_datas = res;
+                })
+                .catch(error => {
+                    this.$Message.error(error);
+                });
+            this.$.gets('/part/')
+                .then(res => {
+                    this.ajax_parts = res;
                     this.tableLoading = false;
                 })
                 .catch(error => {

@@ -22,19 +22,19 @@ class Data extends XC_Controller
         Xcon::loginCheck(function ($userinfor) {
             try {
                 // 标的清单添加
-                $param = Xcon::params();
+                $params = Xcon::params();
 
                 // 增加 uid
                 $uid = Xcon::uid();
-                $param['uid'] = $uid;
-                $param['create_time'] = date('Y-m-d');
+                $params['uid'] = $uid;
+                $params['create_time'] = date('Y-m-d');
 
                 // 重复编号检测
-                $id = $param['id'];
+                $id = $params['id'];
                 Xcon::existById('xcData', $id);
 
                 // 添加数据
-                Xcon::add('xcData', $param);
+                Xcon::add('xcData', $params);
 
                 // 查询出添加数据
                 $result = Xcon::getByUid('xvDataNotConfirm', $uid);
@@ -56,7 +56,8 @@ class Data extends XC_Controller
         Xcon::loginCheck(function ($userinfor) {
             try {
                 // 提交测算
-                $uid_string = Xcon::param('uids');
+                $params = Xcon::params();
+                $uid_string = Xcon::array_key($params, 'uids');
 
                 $uids = explode(',', $uid_string);
                 foreach ($uids as $uid) {
@@ -76,8 +77,9 @@ class Data extends XC_Controller
         Xcon::loginCheck(function ($userinfor) {
             try {
                 // 标的查询
-                $begin = Xcon::param('begin');
-                $end = Xcon::param('end');
+                $params = Xcon::params();
+                $begin = Xcon::array_key($params, 'begin');
+                $end = Xcon::array_key($params, 'end');
 
                 $result = Xcon::getsBy('xvDataNotConfirm', "create_time between '$begin' and '$end'");
 
@@ -93,7 +95,8 @@ class Data extends XC_Controller
         Xcon::loginCheck(function ($userinfor) {
             try {
                 // 提交测算
-                $uid_string = Xcon::param('uids');
+                $params = Xcon::params();
+                $uid_string = Xcon::array_key($params, 'uids');
 
                 $uids = explode(',', $uid_string);
                 foreach ($uids as $uid) {
