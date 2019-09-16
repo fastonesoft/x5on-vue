@@ -8,14 +8,9 @@ class Test extends XC_Controller
     public function index()
     {
         Xcon::loginCheck(function ($userinfor) {
-            try {
-                $items = Xcon::getsBy('xcMenu', null, 'type_id, ord');
+            $result = Xcon::gets('xcPart');
 
-                Xcon::json(Xcon::NO_ERROR, $items);
-
-            } catch (Exception $e) {
-                Xcon::json($e->getCode(), $e->getMessage());
-            }
+            Xcon::json(Xcon::NO_ERROR, $result);
         });
     }
 

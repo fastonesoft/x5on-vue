@@ -89,8 +89,8 @@
                                 .then(res => {
                                     // 记录用户信息
                                     this.$store.commit('userSet', res.user);
+                                    this.$store.commit('typeSet', res.types);
                                     this.$store.commit('menuSet', res.menus);
-                                    this.$store.commit('itemSet', res.items);
                                     this.$store.commit('roleSet', res.roles);
                                     // 写入本地
                                     xcon.stateWrite(this.$store.state);

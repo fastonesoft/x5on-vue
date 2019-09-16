@@ -6,19 +6,19 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         user: null,
+        types: [],
         menus: [],
-        items: [],
         roles: [],
     },
     mutations: {
         userSet(state, user) {
             state.user = user
         },
+        typeSet(state, types) {
+            state.types = types
+        },
         menuSet(state, menus) {
             state.menus = menus
-        },
-        itemSet(state, items) {
-            state.items = items
         },
         roleSet(state, roles) {
             state.roles = roles

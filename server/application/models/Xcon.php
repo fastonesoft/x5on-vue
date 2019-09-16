@@ -11,6 +11,7 @@ class Xcon
     const ERROR_NOT_LOGIN = -1;
     const ERROR_APP = 1;
     const ERROR_DB = 2;
+    const TO_KEN = '#30ca5d5fd85b11e98f5870f395158687#';
 
     public static function cros()
     {
@@ -55,17 +56,30 @@ class Xcon
         $CI->session->sess_destroy();
     }
 
+    public static function errorCheck($success)
+    {
+        try {
+            call_user_func($success);
+        } catch (Exception $e) {
+            self::json($e->getCode(), $e->getMessage());
+        }
+    }
+
     public static function loginCheck($success)
     {
-        // 登录 检测
-        $CI =& get_instance();
-        $userinfor = $CI->userinfor;
+        self::errorCheck(function () use ($success) {
+            // 登录检测
+            $CI =& get_instance();
+            $userinfor = $CI->userinfor;
 
-        if ($userinfor !== null) {
+            if ($userinfor === null) {
+                self::error(self::ERROR_NOT_LOGIN, '没有登录，或登录状态已过期！');
+            }
+            // 权限检测
+
+            // 已登录
             call_user_func($success, $userinfor);
-        } else {
-            self::json(self::ERROR_NOT_LOGIN, '没有登录，或登录状态已过期！');
-        }
+        });
     }
 
     public static function json($code, $data)

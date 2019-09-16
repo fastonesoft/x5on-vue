@@ -21,16 +21,16 @@
                     width="200"
                     :active-name="activeName"
             >
-                <MenuGroup :title="menu.type_name" v-for="menu of menus" v-bind:key="menu.type_id">
+                <MenuGroup :title="type.type_name" v-for="type of types" v-bind:key="type.type_id">
                     <MenuItem
                             class="hidden-nowrap"
-                            :name="item.id"
-                            :to="item.id"
-                            v-for="item of items.filter(item => item.type_id === menu.type_id)"
-                            v-bind:key="item.id"
+                            :name="menu.name"
+                            :to="menu.name"
+                            v-for="menu of menus.filter(menu => menu.type_id === type.type_id)"
+                            v-bind:key="menu.id"
                             replace>
-                        <Icon :type="item.icon"/>
-                        <span>{{item.title}}</span>
+                        <Icon :type="menu.icon"/>
+                        <span>{{menu.title}}</span>
                     </MenuItem>
                 </MenuGroup>
             </Menu>
@@ -80,7 +80,6 @@
                 activeName: this.$route.path,
                 count: 0,
                 isCollaped: false,
-                menuDark: false,
                 Types: [],
                 ajax_Items: [],
             };
@@ -90,18 +89,18 @@
             user() {
                 return this.$store.state.user;
             },
+            types() {
+                return this.$store.state.types;
+            },
             menus() {
                 return this.$store.state.menus;
-            },
-            items() {
-                return this.$store.state.items;
             }
         },
         created() {
             this.activeName = this.$route.path;
 
+            window.console.log(this.types)
             window.console.log(this.menus)
-            window.console.log(this.items)
             window.console.log(this.user)
         },
 
@@ -118,8 +117,8 @@
                             .then(() => {
                                 // 清除用户信息
                                 this.$store.commit('userSet', null);
+                                this.$store.commit('typeSet', []);
                                 this.$store.commit('menuSet', []);
-                                this.$store.commit('itemSet', []);
                                 this.$store.commit('roleSet', []);
                                 // 清楚session
                                 xcon.stateClear();

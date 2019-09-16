@@ -7,13 +7,9 @@ class Count extends XC_Controller
     public function index()
     {
         Xcon::loginCheck(function ($userinfor) {
-            try {
-                // 测算清单
-                $result = Xcon::gets('xvDataNotGuess');
-                Xcon::json(Xcon::NO_ERROR, $result);
-            } catch (Exception $e) {
-                Xcon::json($e->getCode(), $e->getMessage());
-            }
+            // 测算清单
+            $result = Xcon::gets('xvDataNotGuess');
+            Xcon::json(Xcon::NO_ERROR, $result);
         });
     }
 
@@ -32,59 +28,47 @@ class Count extends XC_Controller
     public function del()
     {
         Xcon::loginCheck(function ($userinfor) {
-            try {
-                // 提交测算
-                $params = Xcon::params();
-                $uid_string = Xcon::array_key($params, 'uids');
+            // 提交测算
+            $params = Xcon::params();
+            $uid_string = Xcon::array_key($params, 'uids');
 
-                $uids = explode(',', $uid_string);
-                foreach ($uids as $uid) {
-                    Xcon::delByUid('xcData', $uid);
-                }
-
-                $result = Xcon::gets('xvDataNotGuess');
-                Xcon::json(Xcon::NO_ERROR, $result);
-            } catch (Exception $e) {
-                Xcon::json($e->getCode(), $e->getMessage());
+            $uids = explode(',', $uid_string);
+            foreach ($uids as $uid) {
+                Xcon::delByUid('xcData', $uid);
             }
+
+            $result = Xcon::gets('xvDataNotGuess');
+            Xcon::json(Xcon::NO_ERROR, $result);
         });
     }
 
     public function find()
     {
         Xcon::loginCheck(function ($userinfor) {
-            try {
-                // 标的查询
-                $params = Xcon::params();
-                $begin = Xcon::array_key($params, 'begin');
-                $end = Xcon::array_key($params, 'end');
+            // 标的查询
+            $params = Xcon::params();
+            $begin = Xcon::array_key($params, 'begin');
+            $end = Xcon::array_key($params, 'end');
 
-                $result = Xcon::getsBy('xvDataNotGuess', "create_time between '$begin' and '$end'");
+            $result = Xcon::getsBy('xvDataNotGuess', "create_time between '$begin' and '$end'");
 
-                Xcon::json(Xcon::NO_ERROR, $result);
-            } catch (Exception $e) {
-                Xcon::json($e->getCode(), $e->getMessage());
-            }
+            Xcon::json(Xcon::NO_ERROR, $result);
         });
     }
 
     public function upto()
     {
         Xcon::loginCheck(function ($userinfor) {
-            try {
-                // 测算结束
-                $params = Xcon::params();
-                $uid = Xcon::array_key($params, 'uid');
+            // 测算结束
+            $params = Xcon::params();
+            $uid = Xcon::array_key($params, 'uid');
 
-                $guess_time = date('Y-m-d');
-                $guess_user_id = $userinfor->id;
-                Xcon::setByUid('xcData', compact('guess_time', 'guess_user_id'), $uid);
+            $guess_time = date('Y-m-d');
+            $guess_user_id = $userinfor->id;
+            Xcon::setByUid('xcData', compact('guess_time', 'guess_user_id'), $uid);
 
-                $result = Xcon::gets('xvDataNotGuess');
-                Xcon::json(Xcon::NO_ERROR, $result);
-            } catch (Exception $e) {
-                Xcon::json($e->getCode(), $e->getMessage());
-            }
+            $result = Xcon::gets('xvDataNotGuess');
+            Xcon::json(Xcon::NO_ERROR, $result);
         });
     }
 
