@@ -41,26 +41,50 @@ class User extends XC_Controller
 
     public function edit()
     {
-        $params = Xcon::params();
+        Xcon::loginCheck(function ($userinfor) {
+            $params = Xcon::params();
 
-        // 帐号、名称检测
-        $id = Xcon::array_key($params, 'id');
-        $uid = Xcon::array_key($params, 'uid');
-        $name = Xcon::array_key($params, 'name');
-        $part_id = Xcon::array_key($params, 'part_id');
-        $group_id = Xcon::array_key($params, 'group_id');
+            // 帐号、名称检测
+            $id = Xcon::array_key($params, 'id');
+            $uid = Xcon::array_key($params, 'uid');
+            $name = Xcon::array_key($params, 'name');
+            $part_id = Xcon::array_key($params, 'part_id');
+            $group_id = Xcon::array_key($params, 'group_id');
 
-        // 检测帐号是否存
-        Xcon::checkBy('xcUser', compact('id', 'uid'), '帐号不存在！');
+            // 检测帐号是否存
+            Xcon::checkBy('xcUser', compact('id', 'uid'), '帐号不存在！');
 
-        // 加密
-        $validate = md5($id . Xcon::TO_KEN . $group_id);
+            // 加密
+            $validate = md5($id . Xcon::TO_KEN . $group_id);
 
-        // 修改
-        Xcon::setByUid('xcUser', compact('name', 'part_id', 'group_id', 'validate'), $uid);
+            // 修改
+            Xcon::setByUid('xcUser', compact('name', 'part_id', 'group_id', 'validate'), $uid);
 
-        $result = Xcon::getByUid('xvUser', $uid);
-        Xcon::json(Xcon::NO_ERROR, $result);
+            $result = Xcon::getByUid('xvUser', $uid);
+            Xcon::json(Xcon::NO_ERROR, $result);
+        });
+    }
+    
+    public function pass()
+    {
+        Xcon::loginCheck(function ($userinfor) {
+            $params = Xcon::params();
+
+            // 帐号、名称检测
+            $id = Xcon::array_key($params, 'id');
+            $uid = Xcon::array_key($params, 'uid');
+            $pass = Xcon::array_key($params, 'pass');
+
+            // 检测帐号是否存
+            Xcon::checkBy('xcUser', compact('id', 'uid'), '帐号不存在！');
+
+            // 加密
+            $pass = md5($pass);
+
+            // 修改
+            $result = Xcon::setByUid('xcUser', compact('pass'), $uid);
+            Xcon::json(Xcon::NO_ERROR, $result);
+        });
     }
 
     public function del()

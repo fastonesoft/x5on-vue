@@ -23,7 +23,6 @@
                                 </Button>
                             </FormItem>
                         </Form>
-
                     </div>
                 </div>
             </div>
@@ -47,7 +46,7 @@
                 rule: {
                     id: [
                         {
-                            required: true, message: '请输入用户账号', trigger: 'blur'
+                            required: true, message: '请输入用户账号', trigger: 'change'
                         },
                         {
                             type: 'string',
@@ -55,11 +54,16 @@
                             max: 20,
                             message: '帐号长度最小5位，最大20位',
                             trigger: 'change'
-                        }
+                        },
+                        {
+                            pattern: /^\w+$/,
+                            message: '必须是字母、数字或者下划线',
+                            trigger: 'change'
+                        },
                     ],
                     pass: [
                         {
-                            required: true, message: '请输入用户密码', trigger: 'blur'
+                            required: true, message: '请输入用户密码', trigger: 'change'
                         },
                         {
                             type: 'string',
@@ -67,12 +71,15 @@
                             max: 20,
                             message: '密码长度最小6位，最大20位',
                             trigger: 'change'
-                        }
+                        },
+                        {
+                            pattern: /^[\\.\w]+$/,
+                            message: '必须是字母、数字或者下划线',
+                            trigger: 'change'
+                        },
                     ]
                 },
             }
-
-
         },
         methods:
             {
@@ -99,7 +106,6 @@
                                 .catch(error => {
                                     this.$Message.error(error);
                                 });
-
                         } else {
                             this.$Message.error('登录信息无法通过验证，请重新输入');
                         }

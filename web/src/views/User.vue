@@ -1,138 +1,139 @@
 <template>
-  <dev-article>
-    <Card>
-      <Tabs value="table">
-        <TabPane label="用户列表" name="table">
-          <Table
-            :columns="cols"
-            :data="datas"
-            :loading="tableLoading"
-            ref="datas"
-            size="small"
-            border stripe>
-          </Table>
-          <Row class="margin-top16 hidden-nowrap align-right">
-            <Page
-              :total="ajax_datas.length"
-              :page-size="pageSize"
-              :page-size-opts="[10, 20, 50, 100]"
-              show-sizer
-              transfer
-              @on-change="pageChange"
-              @on-page-size-change="sizeChange"
-            />
-          </Row>
-        </TabPane>
-        <!--表头附加相关操作：-->
-        <template slot="extra">
-          <Row class="hidden-nowrap">
-            <Button type="primary" size="small" @click="formAdd">添加</Button>
-          </Row>
-        </template>
-      </Tabs>
-    </Card>
-    <Modal
-      :title="formTitle"
-      v-model="model.add"
-      :mask-closable="false"
-      :loading="loading.add"
-      @on-ok="formOk('add')"
-      @on-cancel="formCancel('add')"
-    >
-      <Form ref="add" :model="add" :rules="addRule" label-position="top">
-        <FormItem prop="id" label="帐号">
-          <Input v-model="add.id" :maxlength="20" placeholder="输入帐号，5-20个字符"/>
-        </FormItem>
-        <FormItem prop="name" label="名称">
-          <Input v-model="add.name" :maxlength="20" placeholder="输入帐号名称，4-10个中文字符"/>
-        </FormItem>
-        <FormItem prop="pass" label="密码">
-          <Input v-model="add.pass" :maxlength="20" placeholder="输入用户密码，6-20个字符"/>
-        </FormItem>
-        <FormItem prop="part_id" label="部门选择">
-          <Select v-model="add.part_id" placeholder="部门选择..." transfer>
-            <Option
-              v-for="item in parts"
-              :value="item.id"
-              :key="item.id">{{ item.name }}
-            </Option>
-          </Select>
-        </FormItem>
-        <FormItem prop="group_id" label="权限分组">
-          <Select v-model="add.group_id" placeholder="权限组选择..." transfer>
-            <Option
-              v-for="item in groups"
-              :value="item.id"
-              :key="item.id">{{ item.name }}
-            </Option>
-          </Select>
-        </FormItem>
+    <dev-article>
+        <Card>
+            <Tabs value="table">
+                <TabPane label="用户列表" name="table">
+                    <Table
+                            :columns="cols"
+                            :data="datas"
+                            :loading="tableLoading"
+                            ref="datas"
+                            size="small"
+                            border stripe>
+                    </Table>
+                    <Row class="margin-top16 hidden-nowrap align-right">
+                        <Page
+                                :total="ajax_datas.length"
+                                :page-size="pageSize"
+                                :page-size-opts="[10, 20, 50, 100]"
+                                show-sizer
+                                transfer
+                                @on-change="pageChange"
+                                @on-page-size-change="sizeChange"
+                        />
+                    </Row>
+                </TabPane>
+                <!--表头附加相关操作：-->
+                <template slot="extra">
+                    <Row class="hidden-nowrap">
+                        <Button type="primary" size="small" @click="formAdd">添加</Button>
+                    </Row>
+                </template>
+            </Tabs>
+        </Card>
+        <Modal
+                v-model="model.add"
+                :title="formTitle"
+                :mask-closable="false"
+                :loading="formLoading"
+                @on-ok="formOk('add')"
+                @on-cancel="formCancel('add')"
+        >
+            <Form ref="add" :model="addData" :rules="addRule" label-position="top">
+                <FormItem prop="id" label="帐号">
+                    <Input v-model="addData.id" :maxlength="20" placeholder="输入帐号，5-20个字符"/>
+                </FormItem>
+                <FormItem prop="name" label="名称">
+                    <Input v-model="addData.name" :maxlength="20" placeholder="输入帐号名称，4-10个中文字符"/>
+                </FormItem>
+                <FormItem prop="pass" label="密码">
+                    <Input v-model="addData.pass" :maxlength="20" placeholder="输入用户密码，6-20个字符"/>
+                </FormItem>
+                <FormItem prop="part_id" label="部门选择">
+                    <Select v-model="addData.part_id" placeholder="部门选择..." transfer>
+                        <Option
+                                v-for="item in parts"
+                                :value="item.id"
+                                :key="item.id">{{ item.name }}
+                        </Option>
+                    </Select>
+                </FormItem>
+                <FormItem prop="group_id" label="权限分组">
+                    <Select v-model="addData.group_id" placeholder="权限组选择..." transfer>
+                        <Option
+                                v-for="item in groups"
+                                :value="item.id"
+                                :key="item.id">{{ item.name }}
+                        </Option>
+                    </Select>
+                </FormItem>
 
-      </Form>
-    </Modal>
-    <Modal
-      :title="formTitle"
-      v-model="model.edit"
-      :mask-closable="false"
-      :loading="loading.edit"
-      @on-ok="formOk('edit')"
-      @on-cancel="formCancel('edit')"
-    >
-      <Form ref="edit" :model="edit" :rules="editRule" label-position="top">
-        <FormItem prop="id" label="帐号">
-          <Input v-model="edit.id" :maxlength="20" placeholder="输入帐号，5-20个字符" :disabled="inputDisable"/>
-        </FormItem>
-        <FormItem prop="name" label="名称">
-          <Input v-model="edit.name" :maxlength="20" placeholder="输入帐号名称，4-10个中文字符"/>
-        </FormItem>
-        <FormItem prop="part_id" label="部门选择">
-          <Select v-model="edit.part_id" placeholder="部门选择..." transfer>
-            <Option
-              v-for="item in parts"
-              :value="item.id"
-              :key="item.id">{{ item.name }}
-            </Option>
-          </Select>
-        </FormItem>
-        <FormItem prop="group_id" label="权限分组">
-          <Select v-model="edit.group_id" placeholder="权限组选择..." transfer>
-            <Option
-              v-for="item in groups"
-              :value="item.id"
-              :key="item.id">{{ item.name }}
-            </Option>
-          </Select>
-        </FormItem>
+            </Form>
+        </Modal>
+        <Modal
+                v-model="model.edit"
+                :title="formTitle"
+                :mask-closable="false"
+                :loading="formLoading"
+                @on-ok="formOk('edit')"
+                @on-cancel="formCancel('edit')"
+        >
+            <Form ref="edit" :model="editData" :rules="editRule" label-position="top">
+                <FormItem prop="id" label="帐号">
+                    <Input v-model="editData.id" :maxlength="20" placeholder="输入帐号，5-20个字符" :disabled="inputDisable"/>
+                </FormItem>
+                <FormItem prop="name" label="名称">
+                    <Input v-model="editData.name" :maxlength="20" placeholder="输入帐号名称，4-10个中文字符"/>
+                </FormItem>
+                <FormItem prop="part_id" label="部门选择">
+                    <Select v-model="editData.part_id" placeholder="部门选择..." transfer>
+                        <Option
+                                v-for="item in parts"
+                                :value="item.id"
+                                :key="item.id">{{ item.name }}
+                        </Option>
+                    </Select>
+                </FormItem>
+                <FormItem prop="group_id" label="权限分组">
+                    <Select v-model="editData.group_id" placeholder="权限组选择..." transfer>
+                        <Option
+                                v-for="item in groups"
+                                :value="item.id"
+                                :key="item.id">{{ item.name }}
+                        </Option>
+                    </Select>
+                </FormItem>
 
-      </Form>
-    </Modal>
-    <Modal
-      :title="formTitle"
-      v-model="model.pass"
-      :mask-closable="false"
-      :loading="loading.pass"
-      @on-ok="formOk('pass')"
-      @on-cancel="formCancel('pass')"
-    >
-      <Form ref="pass" :model="pass" :rules="passRule" label-position="top">
-        <FormItem prop="id" label="帐号">
-          <Input v-model="pass.id" :maxlength="20" placeholder="输入帐号，5-20个字符" :disabled="inputDisable"/>
-        </FormItem>
-        <FormItem prop="name" label="名称">
-          <Input v-model="pass.name" :maxlength="20" placeholder="输入帐号名称，4-10个中文字符" :disabled="inputDisable"/>
-        </FormItem>
-        <FormItem prop="pass" label="密码">
-          <Input v-model="pass.pass" :maxlength="20" placeholder="输入用户密码，6-20个字符"/>
-        </FormItem>
-      </Form>
-    </Modal>
-  </dev-article>
+            </Form>
+        </Modal>
+        <Modal
+                v-model="model.pass"
+                :title="formTitle"
+                :mask-closable="false"
+                :loading="formLoading"
+                @on-ok="formOk('pass')"
+                @on-cancel="formCancel('pass')"
+        >
+            <Form ref="pass" :model="passData" :rules="passRule" label-position="top">
+                <FormItem prop="id" label="帐号">
+                    <Input v-model="passData.id" :maxlength="20" placeholder="输入帐号，5-20个字符" :disabled="inputDisable"/>
+                </FormItem>
+                <FormItem prop="name" label="名称">
+                    <Input v-model="passData.name" :maxlength="20" placeholder="输入帐号名称，4-10个中文字符"
+                           :disabled="inputDisable"/>
+                </FormItem>
+                <FormItem prop="pass" label="密码">
+                    <Input v-model="passData.pass" :maxlength="20" placeholder="输入用户密码，6-20个字符"/>
+                </FormItem>
+            </Form>
+        </Modal>
+    </dev-article>
 </template>
 
 <script>
     import xcon from '../libs/xcon'
 
-    const addData = {
+    const addConst = {
         id: '',
         uid: '',
         name: '',
@@ -141,7 +142,7 @@
         group_id: '',
     };
 
-    const editData = {
+    const editConst = {
         id: '',
         uid: '',
         name: '',
@@ -149,7 +150,7 @@
         group_id: '',
     };
 
-    const passData = {
+    const passConst = {
         id: '',
         uid: '',
         name: '',
@@ -205,7 +206,7 @@
                                             this.formEdit(params.index)
                                         }
                                     }
-                                }, '编辑'),
+                                }, '修改'),
                                 h('Button', {
                                     props: {
                                         type: 'success',
@@ -242,9 +243,9 @@
 
                 formType: 'add',
                 model: {add: false, edit: false, pass: false},
-                loading: {add: false, edit: false, pass: false},
+                formLoading: true,
 
-                add: Object.assign({}, addData),
+                addData: Object.assign({}, addConst),
                 addRule: {
                     id: [
                         {
@@ -289,7 +290,7 @@
                             trigger: 'change'
                         },
                         {
-                            pattern: /^\w+$/,
+                            pattern: /^[\\.\w]+$/,
                             message: '必须是字母、数字或者下划线',
                             trigger: 'change'
                         },
@@ -306,24 +307,8 @@
                     ],
                 },
 
-                edit: Object.assign({}, editData),
+                editData: Object.assign({}, editConst),
                 editRule: {
-                    id: [
-                        {
-                            required: true, message: '用户账号不得为空', trigger: 'change'
-                        },
-                        {
-                            min: 5,
-                            max: 20,
-                            message: '长度最小5位，最大20位',
-                            trigger: 'change'
-                        },
-                        {
-                            pattern: /^\w+$/,
-                            message: '必须是字母、数字或者下划线',
-                            trigger: 'change'
-                        },
-                    ],
                     name: [
                         {
                             required: true, message: '用户名称不得为空', trigger: 'change'
@@ -352,40 +337,8 @@
                     ],
                 },
 
-                pass: Object.assign({}, passData),
+                passData: Object.assign({}, passConst),
                 passRule: {
-                    id: [
-                        {
-                            required: true, message: '用户账号不得为空', trigger: 'change'
-                        },
-                        {
-                            min: 5,
-                            max: 20,
-                            message: '长度最小5位，最大20位',
-                            trigger: 'change'
-                        },
-                        {
-                            pattern: /^\w+$/,
-                            message: '必须是字母、数字或者下划线',
-                            trigger: 'change'
-                        },
-                    ],
-                    name: [
-                        {
-                            required: true, message: '用户名称不得为空', trigger: 'change'
-                        },
-                        {
-                            min: 5,
-                            max: 20,
-                            message: '长度最小5位，最大20位',
-                            trigger: 'change'
-                        },
-                        {
-                            pattern: /^[\u4e00-\u9fa5]+$/,
-                            message: '必须是汉字，不得有空格',
-                            trigger: 'change'
-                        },
-                    ],
                     pass: [
                         {
                             required: true, message: '用户密码不得为空', trigger: 'change'
@@ -397,7 +350,7 @@
                             trigger: 'change'
                         },
                         {
-                            pattern: /^\w+$/,
+                            pattern: /^[\\.\w]+$/,
                             message: '必须是字母、数字或者下划线',
                             trigger: 'change'
                         },
@@ -409,21 +362,21 @@
             formAdd() {
                 this.formType = 'add';
                 this.model.add = true;
-                this.add = Object.assign({}, addData)
+                this.addData = Object.assign({}, addConst)
             },
             formEdit(index) {
                 this.formType = 'edit';
                 this.model.edit = true;
                 let data = this.datas[index];
                 let {id, uid, name, part_id, group_id} = data;
-                this.edit = Object.assign(editData, {id, uid, name, part_id, group_id});
+                this.editData = Object.assign(editConst, {id, uid, name, part_id, group_id});
             },
             formPass(index) {
                 this.formType = 'pass';
                 this.model.pass = true;
                 let data = this.datas[index];
                 let {id, uid, name} = data;
-                this.pass = Object.assign(passData, {id, uid, name});
+                this.passData = Object.assign(passConst, {id, uid, name});
             },
             formDel(index) {
                 let data = this.datas[index];
@@ -444,13 +397,13 @@
                         let data = null;
                         switch (name) {
                             case 'add':
-                                data = this.add;
+                                data = this.addData;
                                 break;
                             case 'edit':
-                                data = this.edit;
+                                data = this.editData;
                                 break;
                             case 'pass':
-                                data = this.pass;
+                                data = this.passData;
                                 break;
                         }
                         // 提交数据
@@ -458,27 +411,29 @@
                             .then(res => {
                                 if (name === 'add') {
                                     this.ajax_datas.push(res);
-                                    this.model[name] = false;
                                 } else if (name === 'edit') {
                                     this.ajax_datas = xcon.arrsEdit(this.ajax_datas, 'id', res.id, res)
+                                } else {
+                                    // 重置密码，没有反馈
                                 }
-                                // 重置密码，没有反馈
 
+                                // 关闭窗口
+                                this.$set(this.model, name, false);
                                 this.$refs[name].resetFields();
                                 this.$Message.success(this.formTitle + '成功！');
                             })
                             .catch(error => {
                                 // 修改按钮状态
-                                this.loading[name] = false;
+                                this.formLoading = false;
                                 this.$nextTick(() => {
-                                    this.loading[name] = true;
+                                    this.formLoading = true;
                                 });
                                 this.$Message.error(error);
                             })
                     } else {
-                        this.loading[name] = false;
+                        this.formLoading = false;
                         this.$nextTick(() => {
-                            this.loading[name] = true;
+                            this.formLoading = true;
                         });
                         this.$Message.error('无法通过验证，请重新输入');
                     }
