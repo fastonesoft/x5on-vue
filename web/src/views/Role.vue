@@ -1,55 +1,57 @@
 <template>
-  <dev-article>
-    <div id="roleSplit">
-      <Split v-model="split1" class="split">
-        <div slot="left" class="slot-left">
-          <Tabs value="menus">
-            <TabPane label="菜单鉴权" name="menus">
-              <Tree :data="menu_datas" show-checkbox @on-check-change="menuCheck" @on-select-change="menuSelect"></Tree>
-            </TabPane>
-            <!--表头附加相关操作：-->
-            <template slot="extra">
-              <Row class="hidden-nowrap">
-                <Select v-model="group_id" placeholder="分组选择..." style="width:160px" @on-change="groupChange"
-                        transfer>
-                  <Option
-                    v-for="item in groups"
-                    :value="item.uid"
-                    :key="item.id">{{ item.name }}
-                  </Option>
-                </Select>
-              </Row>
-            </template>
-          </Tabs>
+    <dev-article>
+        <div id="roleSplit">
+            <Split v-model="split1" class="split">
+                <div slot="left" class="slot-left">
+                    <Tabs value="menus">
+                        <TabPane label="菜单鉴权" name="menus">
+                            <Tree ref="menu" :data="menu_datas" show-checkbox @on-check-change="menuCheck"
+                                  @on-select-change="menuSelect"></Tree>
+                        </TabPane>
+                        <!--表头附加相关操作：-->
+                        <template slot="extra">
+                            <Row class="hidden-nowrap">
+                                <Select v-model="group_uid" placeholder="分组选择..." style="width:120px"
+                                        @on-change="groupChange"
+                                        transfer>
+                                    <Option
+                                            v-for="item in groups"
+                                            :value="item.uid"
+                                            :key="item.id">{{ item.name }}
+                                    </Option>
+                                </Select>
+                            </Row>
+                        </template>
+                    </Tabs>
+                </div>
+                <div slot="right" class="slot-right">
+                    <Tabs value="menus">
+                        <TabPane label="模块鉴权" name="menus">
+                            <Tree :data="action_datas" show-checkbox @on-check-change="actionCheck"
+                                  @on-select-change="actionSelect"></Tree>
+                        </TabPane>
+                    </Tabs>
+                </div>
+            </Split>
         </div>
-        <div slot="right" class="slot-right">
-          <Tabs value="menus">
-            <TabPane label="模块鉴权" name="menus">
-              <Tree :data="action_datas" show-checkbox @on-check-change="actionCheck"
-                    @on-select-change="actionSelect"></Tree>
-            </TabPane>
-          </Tabs>
-        </div>
-      </Split>
-    </div>
-    <Modal
-      v-model="model.edit"
-      :title="formTitle"
-      :mask-closable="false"
-      :loading="formLoading"
-      @on-ok="formOk('edit')"
-      @on-cancel="formCancel('edit')"
-    >
-      <Form ref="edit" :model="editData" :rules="editRule" label-position="top">
-        <FormItem prop="id" label="帐号">
-          <Input v-model="editData.id" :maxlength="20" placeholder="输入帐号，5-20个字符" :disabled="inputDisable"/>
-        </FormItem>
-        <FormItem prop="name" label="名称">
-          <Input v-model="editData.name" :maxlength="20" placeholder="输入帐号名称，2-10个中文字符"/>
-        </FormItem>
-      </Form>
-    </Modal>
-  </dev-article>
+        <Modal
+                v-model="model.edit"
+                :title="formTitle"
+                :mask-closable="false"
+                :loading="formLoading"
+                @on-ok="formOk('edit')"
+                @on-cancel="formCancel('edit')"
+        >
+            <Form ref="edit" :model="editData" :rules="editRule" label-position="top">
+                <FormItem prop="id" label="帐号">
+                    <Input v-model="editData.id" :maxlength="20" placeholder="输入帐号，5-20个字符" :disabled="inputDisable"/>
+                </FormItem>
+                <FormItem prop="name" label="名称">
+                    <Input v-model="editData.name" :maxlength="20" placeholder="输入帐号名称，2-10个中文字符"/>
+                </FormItem>
+            </Form>
+        </Modal>
+    </dev-article>
 </template>
 
 <script>
@@ -70,8 +72,9 @@
                 split1: 0.4,
 
                 groups: [],
-                group_id: '',
+                group_uid: '',
 
+                menus: [],
                 menu_datas: [],
                 action_datas: [],
                 formLoading: true,
@@ -109,7 +112,21 @@
         methods: {
 
             menuCheck(val) {
-                window.console.log(val)
+                // 提交分组uid、所有的菜单uids的状态
+                let uid = this.group_uid;
+                let checked = val.filter(menu => menu.is_menu);
+                let uids = {};
+                let menus = this.menus;
+                menus.forEach(menu => {
+                    uids[menu.uid] = checked.filter(item => item.id === menu.id).length > 0;
+                });
+                this.$.posts('/role/upto', {uid, uids: JSON.stringify(uids)})
+                    .then(res => {
+                        window.console.log(res);
+                    })
+                    .catch(error => {
+                        this.$Message.error(error);
+                    });
             },
             menuSelect(val) {
                 window.console.log(val)
@@ -124,25 +141,24 @@
                 this.$.posts('/role/menus', {uid})
                     .then(res => {
                         let {types, menus, group_menus} = res;
+                        this.menus = menus;
 
-                        // this.types = types;
-                        // this.menus = menus;
-                        // this.group_menus = group_menus;
-
+                        // 合并分组菜单和所有菜单项
                         menus.forEach(menu => {
                             menu.is_menu = true;
                             menu.checked = group_menus.filter(item => item.menu_id === menu.id).length > 0;
                         });
+                        // 合并菜单分类和菜单项
                         types.forEach(item => {
                             item.expand = true;
                             item.disabled = true;
+                            item.checked = false;
                             item.is_menu = false;
+                            item.disableCheckbox = true;
                             item.children = menus.filter(menu => menu.type_id === item.type_id);
                         });
 
                         this.menu_datas = types;
-
-                        window.console.log(this.menu_datas);
                     })
                     .catch(error => {
                         this.$Message.error(error);
@@ -213,10 +229,6 @@
 
         },
         computed: {
-            datas() {
-                return xcon.pageData(this.ajax_datas, this.pageIndex, this.pageSize)
-            },
-
             formTitle() {
                 let title = '';
                 switch (this.formType) {
@@ -254,25 +266,25 @@
 
 <style scoped>
 
-  .split {
-    border: 1px solid #e8eaec;
-    border-radius: 4px;
-    background: #fff;
-    transition: all .2s ease-in-out;
-  }
+    .split {
+        border: 1px solid #e8eaec;
+        border-radius: 4px;
+        background: #fff;
+        transition: all .2s ease-in-out;
+    }
 
-  .split:hover {
-    border-color: #eee;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
-    transition: all .2s ease-in-out;
-  }
+    .split:hover {
+        border-color: #eee;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+        transition: all .2s ease-in-out;
+    }
 
-  .slot-left {
-    padding: 16px;
-  }
+    .slot-left {
+        padding: 16px;
+    }
 
-  .slot-right {
-    padding: 16px 16px 16px 20px;
-  }
+    .slot-right {
+        padding: 16px 16px 16px 20px;
+    }
 
 </style>

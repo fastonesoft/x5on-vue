@@ -34,5 +34,13 @@ class Role extends XC_Controller
         });
     }
 
+    public function upto()
+    {
+        Xcon::loginCheck(function ($userinfor) {
+            $result = Xcon::params();
+            Xcon::json(Xcon::NO_ERROR, $result);
+        });
+    }
+
 
 }
