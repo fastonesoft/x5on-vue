@@ -98,10 +98,6 @@
         },
         created() {
             this.activeName = this.$route.path;
-
-            window.console.log(this.types)
-            window.console.log(this.menus)
-            window.console.log(this.user)
         },
 
         methods: {

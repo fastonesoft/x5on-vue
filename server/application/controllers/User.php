@@ -12,6 +12,14 @@ class User extends XC_Controller
         });
     }
 
+    public function group()
+    {
+        Xcon::loginCheck(function ($userinfor) {
+            $result = Xcon::getsBy('xvGroup', null, 'id');
+            Xcon::json(Xcon::NO_ERROR, $result);
+        });
+    }
+
     public function add()
     {
         Xcon::loginCheck(function ($userinfor) {
@@ -48,7 +56,6 @@ class User extends XC_Controller
             $id = Xcon::array_key($params, 'id');
             $uid = Xcon::array_key($params, 'uid');
             $name = Xcon::array_key($params, 'name');
-            $part_id = Xcon::array_key($params, 'part_id');
             $group_id = Xcon::array_key($params, 'group_id');
 
             // 检测帐号是否存
@@ -58,7 +65,7 @@ class User extends XC_Controller
             $validate = md5($id . Xcon::TO_KEN . $group_id);
 
             // 修改
-            Xcon::setByUid('xcUser', compact('name', 'part_id', 'group_id', 'validate'), $uid);
+            Xcon::setByUid('xcUser', compact('name', 'group_id', 'validate'), $uid);
 
             $result = Xcon::getByUid('xvUser', $uid);
             Xcon::json(Xcon::NO_ERROR, $result);

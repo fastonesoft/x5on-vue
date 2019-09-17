@@ -13,7 +13,6 @@ class XBASE_Controller extends CI_Controller
         parent::__construct();
 
         $this->userinfor = $this->session->userdata('XcSession');
-
         // 跨域测试，发布的时候禁用
         Xcon::cros();
     }
@@ -30,18 +29,18 @@ class XC_Controller extends XBASE_Controller
         // 获取方法
         $method = $this->router->fetch_method();
 
-        // 提交数据库，保存
-        $id = $action . '/' . $method;
-        $uid = Xcon::uid();
-
-        $role = Xcon::getById('xcAction', $id);
-        if (!$role) {
-            // 查找action对应的名称
-            $name = $method;
-            $name = Xcon::getKeyBy('xcActionDefault', compact('name'), 'title');
-
-            Xcon::add('xcAction', compact('id', 'uid', 'action', 'method', 'name'));
-        }
+//        // 提交数据库，保存
+//        $id = $action . '/' . $method;
+//        $uid = Xcon::uid();
+//
+//        $role = Xcon::getById('xcAction', $id);
+//        if (!$role) {
+//            // 查找action对应的名称
+//            $name = $method;
+//            $name = Xcon::getKeyBy('xcActionDefault', compact('name'), 'title');
+//
+//            Xcon::add('xcAction', compact('id', 'uid', 'action', 'method', 'name'));
+//        }
     }
 
 }

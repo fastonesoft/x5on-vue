@@ -48,8 +48,8 @@ class Home extends XBASE_Controller
 
                 // 3、菜单
                 $user_id = $id;
-                $types = Xcon::getsBy('xvUserMenuType', compact('user_id'), 'type_id');
-                $menus = Xcon::getsBy('xvUserMenu', compact('user_id'), 'type_id, ord');
+                $types = Xcon::getsBy('xvUserMenuType', compact('user_id'));
+                $menus = Xcon::getsBy('xvUserMenu', compact('user_id'));
 
                 Xcon::json(Xcon::NO_ERROR, compact('user', 'types', 'menus', 'roles'));
             } else {

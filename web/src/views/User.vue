@@ -44,19 +44,10 @@
                     <Input v-model="addData.id" :maxlength="20" placeholder="输入帐号，5-20个字符"/>
                 </FormItem>
                 <FormItem prop="name" label="名称">
-                    <Input v-model="addData.name" :maxlength="20" placeholder="输入帐号名称，4-10个中文字符"/>
+                    <Input v-model="addData.name" :maxlength="20" placeholder="输入帐号名称，2-10个中文字符"/>
                 </FormItem>
                 <FormItem prop="pass" label="密码">
                     <Input v-model="addData.pass" :maxlength="20" placeholder="输入用户密码，6-20个字符"/>
-                </FormItem>
-                <FormItem prop="part_id" label="部门选择">
-                    <Select v-model="addData.part_id" placeholder="部门选择..." transfer>
-                        <Option
-                                v-for="item in parts"
-                                :value="item.id"
-                                :key="item.id">{{ item.name }}
-                        </Option>
-                    </Select>
                 </FormItem>
                 <FormItem prop="group_id" label="权限分组">
                     <Select v-model="addData.group_id" placeholder="权限组选择..." transfer>
@@ -83,16 +74,7 @@
                     <Input v-model="editData.id" :maxlength="20" placeholder="输入帐号，5-20个字符" :disabled="inputDisable"/>
                 </FormItem>
                 <FormItem prop="name" label="名称">
-                    <Input v-model="editData.name" :maxlength="20" placeholder="输入帐号名称，4-10个中文字符"/>
-                </FormItem>
-                <FormItem prop="part_id" label="部门选择">
-                    <Select v-model="editData.part_id" placeholder="部门选择..." transfer>
-                        <Option
-                                v-for="item in parts"
-                                :value="item.id"
-                                :key="item.id">{{ item.name }}
-                        </Option>
-                    </Select>
+                    <Input v-model="editData.name" :maxlength="20" placeholder="输入帐号名称，2-10个中文字符"/>
                 </FormItem>
                 <FormItem prop="group_id" label="权限分组">
                     <Select v-model="editData.group_id" placeholder="权限组选择..." transfer>
@@ -119,7 +101,7 @@
                     <Input v-model="passData.id" :maxlength="20" placeholder="输入帐号，5-20个字符" :disabled="inputDisable"/>
                 </FormItem>
                 <FormItem prop="name" label="名称">
-                    <Input v-model="passData.name" :maxlength="20" placeholder="输入帐号名称，4-10个中文字符"
+                    <Input v-model="passData.name" :maxlength="20" placeholder="输入帐号名称，2-10个中文字符"
                            :disabled="inputDisable"/>
                 </FormItem>
                 <FormItem prop="pass" label="密码">
@@ -138,7 +120,6 @@
         uid: '',
         name: '',
         pass: '',
-        part_id: '',
         group_id: '',
     };
 
@@ -146,7 +127,6 @@
         id: '',
         uid: '',
         name: '',
-        part_id: '',
         group_id: '',
     };
 
@@ -183,7 +163,7 @@
                         key: 'part_name',
                     },
                     {
-                        title: '权限用户',
+                        title: '权限分组',
                         key: 'group_name',
                     },
                     {
@@ -238,7 +218,6 @@
                 ],
 
                 ajax_datas: [],
-                parts: [],
                 groups: [],
 
                 formType: 'add',
@@ -268,9 +247,9 @@
                             required: true, message: '用户名称不得为空', trigger: 'change'
                         },
                         {
-                            min: 5,
-                            max: 20,
-                            message: '长度最小5位，最大20位',
+                            min: 2,
+                            max: 10,
+                            message: '长度最小2位，最大10位',
                             trigger: 'change'
                         },
                         {
@@ -295,11 +274,6 @@
                             trigger: 'change'
                         },
                     ],
-                    part_id: [
-                        {
-                            required: true, message: '请选择相应的部门', trigger: 'change'
-                        }
-                    ],
                     group_id: [
                         {
                             required: true, message: '请选择相应的权限用户', trigger: 'change'
@@ -314,9 +288,9 @@
                             required: true, message: '用户名称不得为空', trigger: 'change'
                         },
                         {
-                            min: 5,
-                            max: 20,
-                            message: '长度最小5位，最大20位',
+                            min: 2,
+                            max: 10,
+                            message: '长度最小2位，最大10位',
                             trigger: 'change'
                         },
                         {
@@ -324,11 +298,6 @@
                             message: '必须是汉字，不得有空格',
                             trigger: 'change'
                         },
-                    ],
-                    part_id: [
-                        {
-                            required: true, message: '请选择相应的部门', trigger: 'change'
-                        }
                     ],
                     group_id: [
                         {
@@ -368,8 +337,8 @@
                 this.formType = 'edit';
                 this.model.edit = true;
                 let data = this.datas[index];
-                let {id, uid, name, part_id, group_id} = data;
-                this.editData = Object.assign(editConst, {id, uid, name, part_id, group_id});
+                let {id, uid, name, group_id} = data;
+                this.editData = Object.assign(editConst, {id, uid, name, group_id});
             },
             formPass(index) {
                 this.formType = 'pass';
@@ -484,14 +453,7 @@
                 .catch(error => {
                     this.$Message.error(error);
                 });
-            this.$.gets('/part/')
-                .then(res => {
-                    this.parts = res;
-                })
-                .catch(error => {
-                    this.$Message.error(error);
-                });
-            this.$.gets('/group/')
+            this.$.gets('/user/group')
                 .then(res => {
                     this.groups = res;
                     this.tableLoading = false;

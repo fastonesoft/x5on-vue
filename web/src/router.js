@@ -37,6 +37,11 @@ const router = new Router({
             component: () => import('./views/User.vue')
         },
         {
+            path: '/vuerole',
+            name: '/vuerole',
+            component: () => import('./views/Role.vue')
+        },
+        {
             path: '/vuegrid',
             name: '/vuegrid',
             component: () => import('./views/Grid.vue')

@@ -8,8 +8,7 @@ class Group extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             try {
-                $result = Xcon::gets('xvGroup');
-
+                $result = Xcon::getsBy('xvGroup', null, 'id');
                 Xcon::json(Xcon::NO_ERROR, $result);
             } catch (Exception $e) {
                 Xcon::json($e->getCode(), $e->getMessage());
