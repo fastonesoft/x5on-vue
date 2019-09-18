@@ -37,7 +37,36 @@ class Role extends XC_Controller
     public function upto()
     {
         Xcon::loginCheck(function ($userinfor) {
-            $result = Xcon::params();
+            $params = Xcon::params();
+
+            $group_uid = Xcon::array_key($params, 'uid');
+            $uids_string = Xcon::array_key($params, 'uids');
+            $uids = json_decode($uids_string);
+
+            // 获取分组编号
+            $group = Xcon::checkByUid('xcGroup', $group_uid);
+            $group_id = $group->id;
+
+            $result = 0;
+            foreach ($uids as $uid => $checked) {
+                $menu = Xcon::checkByUid('xcMenu', $uid);
+                $menu_id = $menu->id;
+
+                $group_menu = Xcon::getBy('xcGroupMenu', compact('group_id', 'menu_id'));
+                if ($checked) {
+                    if ($group_menu === null) {
+                        // 菜单加权，添加
+                        $uid = Xcon::uid();
+                        $result = Xcon::add('xcGroupMenu', compact('uid', 'group_id', 'menu_id'));
+                    }
+                } else {
+                    if ($group_menu !== null) {
+                        // 菜单减权，删除
+                        $uid = $group_menu->uid;
+                        $result = Xcon::delByUid('xcGroupMenu', $uid);
+                    }
+                }
+            }
             Xcon::json(Xcon::NO_ERROR, $result);
         });
     }

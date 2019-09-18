@@ -34,36 +34,10 @@
                 </div>
             </Split>
         </div>
-        <Modal
-                v-model="model.edit"
-                :title="formTitle"
-                :mask-closable="false"
-                :loading="formLoading"
-                @on-ok="formOk('edit')"
-                @on-cancel="formCancel('edit')"
-        >
-            <Form ref="edit" :model="editData" :rules="editRule" label-position="top">
-                <FormItem prop="id" label="帐号">
-                    <Input v-model="editData.id" :maxlength="20" placeholder="输入帐号，5-20个字符" :disabled="inputDisable"/>
-                </FormItem>
-                <FormItem prop="name" label="名称">
-                    <Input v-model="editData.name" :maxlength="20" placeholder="输入帐号名称，2-10个中文字符"/>
-                </FormItem>
-            </Form>
-        </Modal>
     </dev-article>
 </template>
 
 <script>
-    import xcon from '../libs/xcon'
-
-    const editConst = {
-        id: '',
-        uid: '',
-        name: '',
-        group_id: '',
-    };
-
     export default {
         name: "Role",
         data() {
@@ -74,55 +48,21 @@
                 groups: [],
                 group_uid: '',
 
-                menus: [],
+                temp_menus: [],
                 menu_datas: [],
                 action_datas: [],
-                formLoading: true,
-
-                ajax_datas: [],
-                model: {edit: false},
-
-                editData: Object.assign({}, editConst),
-                editRule: {
-                    name: [
-                        {
-                            required: true, message: '用户名称不得为空', trigger: 'change'
-                        },
-                        {
-                            min: 2,
-                            max: 10,
-                            message: '长度最小2位，最大10位',
-                            trigger: 'change'
-                        },
-                        {
-                            pattern: /^[\u4e00-\u9fa5]+$/,
-                            message: '必须是汉字，不得有空格',
-                            trigger: 'change'
-                        },
-                    ],
-                    group_id: [
-                        {
-                            required: true, message: '请选择相应的权限用户', trigger: 'change'
-                        }
-                    ],
-                },
-
             }
         },
         methods: {
-
-            menuCheck(val) {
-                // 提交分组uid、所有的菜单uids的状态
+            menuCheck(arr, curr) {
+                // 提交分组uid、curr menu.uid
                 let uid = this.group_uid;
-                let checked = val.filter(menu => menu.is_menu);
                 let uids = {};
-                let menus = this.menus;
-                menus.forEach(menu => {
-                    uids[menu.uid] = checked.filter(item => item.id === menu.id).length > 0;
-                });
+                uids[curr.uid] = curr.checked;
+
                 this.$.posts('/role/upto', {uid, uids: JSON.stringify(uids)})
                     .then(res => {
-                        window.console.log(res);
+                        this.$Message.success(res + '条记录状态变更！');
                     })
                     .catch(error => {
                         this.$Message.error(error);
@@ -141,107 +81,42 @@
                 this.$.posts('/role/menus', {uid})
                     .then(res => {
                         let {types, menus, group_menus} = res;
-                        this.menus = menus;
-
                         // 合并分组菜单和所有菜单项
                         menus.forEach(menu => {
-                            menu.is_menu = true;
                             menu.checked = group_menus.filter(item => item.menu_id === menu.id).length > 0;
                         });
+                        let datas = [];
                         // 合并菜单分类和菜单项
-                        types.forEach(item => {
+                        types.forEach(type => {
+                            // 构造子菜单
+                            let children = [];
+                            let childs = menus.filter(menu => menu.type_id === type.type_id);
+                            childs.forEach(child => {
+                                let sub_item = {};
+                                sub_item.title = child.title;
+                                sub_item.uid = child.uid;
+                                sub_item.is_menu = true;
+                                sub_item.checked = child.checked;
+                                children.push(sub_item)
+                            });
+                            // 创建菜单项
+                            let item = {};
                             item.expand = true;
                             item.disabled = true;
-                            item.checked = false;
                             item.is_menu = false;
-                            item.disableCheckbox = true;
-                            item.children = menus.filter(menu => menu.type_id === item.type_id);
+                            item.title = type.title;
+                            item.children = children;
+                            datas.push(item)
                         });
 
-                        this.menu_datas = types;
+                        this.menu_datas = datas;
                     })
                     .catch(error => {
                         this.$Message.error(error);
                     });
             },
-
-            formEdit(index) {
-                this.formType = 'edit';
-                this.model.edit = true;
-                let data = this.datas[index];
-                let {id, uid, name, group_id} = data;
-                this.editData = Object.assign(editConst, {id, uid, name, group_id});
-            },
-
-            formOk(name) {
-                this.$refs[name].validate((valid) => {
-                    if (valid) {
-                        // 增加表单类型检测
-                        let data = null;
-                        switch (name) {
-                            case 'add':
-                                data = this.addData;
-                                break;
-                            case 'edit':
-                                data = this.editData;
-                                break;
-                            case 'pass':
-                                data = this.passData;
-                                break;
-                        }
-                        // 提交数据
-                        this.$.posts('/user/' + name, data)
-                            .then(res => {
-                                if (name === 'add') {
-                                    this.ajax_datas.push(res);
-                                } else if (name === 'edit') {
-                                    this.ajax_datas = xcon.arrsEdit(this.ajax_datas, 'id', res.id, res)
-                                } else {
-                                    // 重置密码，没有反馈
-                                }
-
-                                // 关闭窗口
-                                this.$set(this.model, name, false);
-                                this.$refs[name].resetFields();
-                                this.$Message.success(this.formTitle + '成功！');
-                            })
-                            .catch(error => {
-                                // 修改按钮状态
-                                this.formLoading = false;
-                                this.$nextTick(() => {
-                                    this.formLoading = true;
-                                });
-                                this.$Message.error(error);
-                            })
-                    } else {
-                        this.formLoading = false;
-                        this.$nextTick(() => {
-                            this.formLoading = true;
-                        });
-                        this.$Message.error('无法通过验证，请重新输入');
-                    }
-                });
-            },
-
-            formCancel(name) {
-                this.$refs[name].resetFields();
-            },
-
         },
-        computed: {
-            formTitle() {
-                let title = '';
-                switch (this.formType) {
-                    case 'edit':
-                        title = '名称修改';
-                        break;
-                }
-                return title;
-            },
-            inputDisable() {
-                return this.formType !== 'add'
-            },
-        },
+        computed: {},
         created() {
             this.$.gets('/role/')
                 .then(res => {
@@ -256,6 +131,7 @@
             window.onresize = function () {
                 if (that.$route.path !== '/vuerole') return;
 
+                // 分割条高度计算
                 let height = document.body.clientHeight - 60 - 36;
                 document.getElementById('roleSplit').style.height = height + 'px';
             };
