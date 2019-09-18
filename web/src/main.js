@@ -22,41 +22,28 @@ Vue.component('dev-article', devArticle);
 
 // 全局路由守卫
 router.beforeEach((to, from, next) => {
-
-    // 读取本地信息
+    // 本地信息
     store.replaceState(Object.assign({}, store.state, xcon.stateRead()));
-
-
+    // 菜单鉴权
     let menus = store.state.menus;
-    window.console.log(menus);
-
-    let normal = ['/vuelogin'];
-
-    window.console.log('to:normal--' + normal.filter(item => item === to.name).length);
-    window.console.log('to:menu--' + menus.filter(menu => menu.name === to.name).length);
-
+    let normal = ['/vlogin'];
     if (normal.filter(item => item === to.name).length === 0 && menus.filter(menu => menu.name === to.name).length === 0) {
         // 即不在首页、登录页，也不在菜单列表当中
         if (!from.name) {
             // 清除登录状态、强制登录
-            window.console.log('--next from null--');
             xcon.stateClear();
-            next('/vuelogin')
+            next('/vlogin')
         } else {
             if (menus.filter(menu => menu.name === from.name).length > 0) {
-                window.console.log('--next from --');
                 next(from.name)
             } else {
-                window.console.log('--next from not exist--');
                 xcon.stateClear();
-                next('/vuelogin')
+                next('/vlogin')
             }
         }
     } else {
-        window.console.log('--next--');
         next();
     }
-    window.console.log(from.name + '->' + to.name);
 });
 
 new Vue({

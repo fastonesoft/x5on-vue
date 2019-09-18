@@ -101,7 +101,7 @@
                                     this.$store.commit('roleSet', res.roles);
                                     // 写入本地
                                     xcon.stateWrite(this.$store.state);
-                                    this.$router.replace('/vuehome');
+                                    this.$router.replace('/vhome');
                                 })
                                 .catch(error => {
                                     this.$Message.error(error);
@@ -117,7 +117,7 @@
             let that = this;
             window.onresize = function () {
                 // 登录页面才要进行位置计算
-                if (that.$route.path !== '/vuelogin') return;
+                if (that.$route.path !== '/vlogin') return;
 
                 let awid = document.body.clientWidth;
                 let ahei = document.body.clientHeight;

@@ -7,73 +7,73 @@ const router = new Router({
     mode: 'history',
     routes: [
         {
-            path: '/vuelogin',
-            name: '/vuelogin',
+            path: '/vlogin',
+            name: '/vlogin',
             component: () => import('./views/Login.vue')
         },
         {
-            path: '/vuehome',
-            name: '/vuehome',
+            path: '/vhome',
+            name: '/vhome',
             component: () => import('./views/Home.vue')
         },
         {
-            path: '/vuearea',
-            name: '/vuearea',
+            path: '/varea',
+            name: '/varea',
             component: () => import('./views/Area.vue')
         },
         {
-            path: '/vuepart',
-            name: '/vuepart',
+            path: '/vpart',
+            name: '/vpart',
             component: () => import('./views/Part.vue')
         },
         {
-            path: '/vuegroup',
-            name: '/vuegroup',
+            path: '/vgroup',
+            name: '/vgroup',
             component: () => import('./views/Group.vue')
         },
         {
-            path: '/vueuser',
-            name: '/vueuser',
+            path: '/vuser',
+            name: '/vuser',
             component: () => import('./views/User.vue')
         },
         {
-            path: '/vueuserp',
-            name: '/vueuserp',
+            path: '/vuserp',
+            name: '/vuserp',
             component: () => import('./views/Userp.vue')
         },
         {
-            path: '/vuerole',
-            name: '/vuerole',
+            path: '/vrole',
+            name: '/vrole',
             component: () => import('./views/Role.vue')
         },
         {
-            path: '/vuegrid',
-            name: '/vuegrid',
+            path: '/vgrid',
+            name: '/vgrid',
             component: () => import('./views/Grid.vue')
         },
         {
-            path: '/vuedata',
-            name: '/vuedata',
+            path: '/vdata',
+            name: '/vdata',
             component: () => import('./views/Data.vue')
         },
         {
-            path: '/vuecount',
-            name: '/vuecount',
+            path: '/vcount',
+            name: '/vcount',
             component: () => import('./views/Count.vue')
         },
         {
-            path: '/vueback',
-            name: '/vueback',
+            path: '/vback',
+            name: '/vback',
             component: () => import('./views/Back.vue')
         },
         {
-            path: '/vueresult',
-            name: '/vueresult',
+            path: '/vresult',
+            name: '/vresult',
             component: () => import('./views/Result.vue')
         },
         {
             path: '/',
-            redirect: '/vuelogin'
+            redirect: '/vlogin'
         },
     ]
 });

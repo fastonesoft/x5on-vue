@@ -129,7 +129,7 @@
         mounted() {
             const that = this;
             window.onresize = function () {
-                if (that.$route.path !== '/vuerole') return;
+                if (that.$route.path !== '/vrole') return;
 
                 // 分割条高度计算
                 let height = document.body.clientHeight - 60 - 36;

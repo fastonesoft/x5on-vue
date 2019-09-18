@@ -50,8 +50,8 @@
   }
 
   .home-item .image {
-    width: 57px;
-    height: 57px;
+    width: 52px;
+    height: 52px;
     margin-bottom: 8px;
     border: none;
   }

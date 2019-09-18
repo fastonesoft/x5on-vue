@@ -23,7 +23,7 @@ ajax.gets = function (url, data) {
                     if (res.data.code !== -1) {
                         reject(res.data.data);
                     } else {
-                        router.replace('/vuelogin');
+                        router.replace('/vlogin');
                     }
                 } else {
                     resolve(res.data.data)
@@ -45,7 +45,7 @@ ajax.gets = function (url, data) {
                     if (res.data.code !== -1) {
                         reject(res.data.data);
                     } else {
-                        router.replace('/vuelogin');
+                        router.replace('/vlogin');
                     }
                 } else {
                     resolve(res.data.data)
@@ -71,7 +71,7 @@ ajax.posts = function (url, data) {
                 if (res.data.code !== -1) {
                     reject(res.data.data);
                 } else {
-                    router.replace('/vuelogin');
+                    router.replace('/vlogin');
                 }
 
             } else {
