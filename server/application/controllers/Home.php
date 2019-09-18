@@ -43,15 +43,14 @@ class Home extends XBASE_Controller
                 $user = Xcon::getById('xvUserAll', $id);
                 $last_visit_time = date('Y-m-d H:i:s');
                 Xcon::setById('xcUser', compact('last_visit_time'), $id);
-                // 2、权限列表
-                $roles = [];
+                // 2、权限列表（模块级的鉴权，暂时不做）
 
                 // 3、菜单
                 $user_id = $id;
-                $types = Xcon::getsBy('xvUserMenuType', compact('user_id'));
-                $menus = Xcon::getsBy('xvUserMenu', compact('user_id'));
+                $types = Xcon::getsBy('xvUserMenuType', compact('user_id'), 'type_id');
+                $menus = Xcon::getsBy('xvUserMenu', compact('user_id'), 'id');
 
-                Xcon::json(Xcon::NO_ERROR, compact('user', 'types', 'menus', 'roles'));
+                Xcon::json(Xcon::NO_ERROR, compact('user', 'types', 'menus'));
             } else {
                 Xcon::error(Xcon::ERROR_APP, '登录帐号、密码有误！');
             }

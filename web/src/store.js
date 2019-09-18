@@ -8,7 +8,6 @@ export default new Vuex.Store({
         user: null,
         types: [],
         menus: [],
-        roles: [],
     },
     mutations: {
         userSet(state, user) {

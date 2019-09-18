@@ -90,8 +90,8 @@
                             // 提交this.form服务器端认证
                             this.$.posts('/home/login', {
                                 id: this.form.id,
-                                pass: this.$md5(this.form.pass),
-                                token: this.$md5(this.token + this.$md5(this.form.pass))
+                                pass: xcon.md5(this.form.pass),
+                                token: xcon.md5(this.token + xcon.md5(this.form.pass))
                             })
                                 .then(res => {
                                     // 记录用户信息
