@@ -2,7 +2,6 @@ import axios from 'axios';
 import router from '../router'
 
 let axio = axios.create();
-
 let axio_local = axios.create({
     withCredentials: true,
     baseURL: 'http://localhost/',
@@ -48,6 +47,7 @@ ajax.gets = function (url, data) {
                         router.replace('/vlogin');
                     }
                 } else {
+                    // success => todo:条件判断要再考虑考虑
                     resolve(res.data.data)
                 }
             }).catch(error => {
@@ -73,8 +73,8 @@ ajax.posts = function (url, data) {
                 } else {
                     router.replace('/vlogin');
                 }
-
             } else {
+                // todo
                 resolve(res.data.data)
             }
         }).catch(error => {

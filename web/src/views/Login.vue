@@ -133,6 +133,7 @@
             window.onresize();
         },
         created() {
+            xcon.stateClear();
             this.$.gets('/home/token')
                 .then(res => {
                     // token
