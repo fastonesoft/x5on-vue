@@ -26,7 +26,9 @@ class Data extends XC_Controller
 
             // 重复编号检测
             $id = $params['id'];
+            $name = Xcon::array_key($params, 'name');
             Xcon::existById('xcData', $id);
+            Xcon::existBy('xcData', compact('name'), '“标的名称”重复！');
 
             // 添加数据
             Xcon::add('xcData', $params);

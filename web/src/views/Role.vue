@@ -48,7 +48,6 @@
                 groups: [],
                 group_uid: '',
 
-                temp_menus: [],
                 menu_datas: [],
                 action_datas: [],
             }
