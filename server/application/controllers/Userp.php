@@ -41,7 +41,7 @@ class Userp extends XC_Controller
             $params['uid'] = Xcon::uid();
 
             // 帐号、名称检测
-            $id = Xcon::array_key($params, 'id');
+            $id = strtolower(Xcon::array_key($params, 'id'));
             $name = Xcon::array_key($params, 'name');
             $pass = Xcon::array_key($params, 'pass');
             $group_id = Xcon::array_key($params, 'group_id');
@@ -67,7 +67,7 @@ class Userp extends XC_Controller
             $params = Xcon::params();
 
             // 帐号、名称检测
-            $id = Xcon::array_key($params, 'id');
+            $id = strtolower(Xcon::array_key($params, 'id'));
             $uid = Xcon::array_key($params, 'uid');
             $name = Xcon::array_key($params, 'name');
             $group_id = Xcon::array_key($params, 'group_id');
@@ -85,7 +85,7 @@ class Userp extends XC_Controller
             Xcon::json(Xcon::NO_ERROR, $result);
         });
     }
-    
+
     public function pass()
     {
         Xcon::loginCheck(function ($userinfor) {
@@ -120,11 +120,6 @@ class Userp extends XC_Controller
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
-    }
-
-    public function find()
-    {
-        echo '  --------find -------------';
     }
 
 }
