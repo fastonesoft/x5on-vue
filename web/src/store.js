@@ -8,6 +8,7 @@ export default new Vuex.Store({
         user: null,
         types: [],
         menus: [],
+        visit: null,
     },
     mutations: {
         userSet(state, user) {
@@ -19,8 +20,8 @@ export default new Vuex.Store({
         menuSet(state, menus) {
             state.menus = menus
         },
-        roleSet(state, roles) {
-            state.roles = roles
+        timeSet(state, visit) {
+            state.roles = visit
         },
     },
     actions: {}

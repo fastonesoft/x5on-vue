@@ -1,5 +1,4 @@
 import md5 from 'js-md5'
-
 let base64 = require('js-base64').Base64;
 
 // 日期格式
