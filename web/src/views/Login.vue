@@ -98,7 +98,7 @@
                                     this.$store.commit('userSet', res.user);
                                     this.$store.commit('typeSet', res.types);
                                     this.$store.commit('menuSet', res.menus);
-                                    this.$store.commit('roleSet', res.roles);
+                                    this.$store.commit('timeSet', new Date().toLocaleString());
                                     // 写入本地
                                     xcon.stateWrite(this.$store.state);
                                     this.$router.replace('/vhome');

@@ -108,7 +108,7 @@
                                 this.$store.commit('userSet', null);
                                 this.$store.commit('typeSet', []);
                                 this.$store.commit('menuSet', []);
-                                this.$store.commit('roleSet', []);
+                                this.$store.commit('timeSet', []);
                                 // 清楚session
                                 xcon.stateClear();
                                 this.$router.replace('/vlogin');
