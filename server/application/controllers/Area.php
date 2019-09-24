@@ -7,7 +7,20 @@ class Area extends XC_Controller
     public function index()
     {
         Xcon::loginCheck(function ($userinfor) {
-            $result = Xcon::gets('xcArea');
+            $datas = Xcon::gets('xvAreaTown');
+            $areas = Xcon::gets('xvArea');
+
+            Xcon::json(Xcon::NO_ERROR, compact('datas', 'areas'));
+        });
+    }
+
+    public function find()
+    {
+        Xcon::loginCheck(function ($userinfor) {
+            $params = Xcon::params();
+            $up_id = Xcon::array_key($params, 'area_id');
+
+            $result = Xcon::getsBy('xvAreaTown', compact('up_id'));
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
@@ -37,8 +50,9 @@ class Area extends XC_Controller
         Xcon::loginCheck(function ($userinfor) {
             $params = Xcon::params();
             $uid = Xcon::array_key($params, 'uid');
+            $name = Xcon::array_key($params, 'name');
 
-            Xcon::setByUid('xcArea', $params, $uid);
+            Xcon::setByUid('xcArea', compact('name'), $uid);
             $result = Xcon::getByUid('xcArea', $uid);
 
             Xcon::json(Xcon::NO_ERROR, $result);
@@ -51,13 +65,11 @@ class Area extends XC_Controller
             $params = Xcon::params();
             // 删除之前要确认一下
             $uid = Xcon::array_key($params, 'uid');
-            $part = Xcon::checkByUid('xcArea', $uid);
-            $part_id = $part->id;
+            $area = Xcon::checkByUid('xcArea', $uid);
+            $area_id = $area->id;
 
             // 检测分组列表
-            Xcon::existBy('xcGroup', compact('part_id'), '编号已存在分组列表');
-            // 检测用户列表
-            Xcon::existBy('xcUser', compact('part_id'), '编号已存在用户列表');
+            Xcon::existBy('xcData', compact('area_id'), '地区编号已存在标的清单');
 
             // 删除
             $result = Xcon::delByUid('xcArea', $uid);

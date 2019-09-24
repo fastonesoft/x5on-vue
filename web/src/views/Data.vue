@@ -114,8 +114,7 @@
         </FormItem>
         <FormItem prop="area_id" label="所属地区">
           <Select v-model="form.area_id" placeholder="地区选择..." style="width: 162px;" transfer>
-            <Option value="321204" key="321204">姜堰区</Option>
-            <Option value="999999" key="999999">其他地区</Option>
+            <Option :value="area.id" :key="area.id" v-for="area of areas" >{{area.up_name}},{{area.name}}</Option>
           </Select>
         </FormItem>
         <FormItem prop="area_build" label="建筑面积">
@@ -233,6 +232,7 @@
                 ],
                 ajax_datas: [],
                 datas: [],
+                areas: [],
                 rule: {
                     id: [
                         {
@@ -481,7 +481,8 @@
         created() {
             this.$.gets('/data/index')
                 .then(res => {
-                    this.datas = res;
+                    this.datas = res.datas;
+                    this.areas = res.areas;
                     this.tableLoading = false
                 })
                 .catch(error => {

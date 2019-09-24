@@ -8,8 +8,10 @@ class Data extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             // 标的清单
-            $result = Xcon::gets('xvDataNotConfirm');
-            Xcon::json(Xcon::NO_ERROR, $result);
+            $datas = Xcon::gets('xvDataNotConfirm');
+            // 地区列表
+            $areas = Xcon::gets('xvAreaTown');
+            Xcon::json(Xcon::NO_ERROR, compact('datas', 'areas'));
         });
     }
 

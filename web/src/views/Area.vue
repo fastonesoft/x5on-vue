@@ -11,22 +11,32 @@
             size="small"
             border stripe>
           </Table>
-          <Row class="margin-top16 hidden-nowrap align-right">
-            <Page
-              :total="ajax_datas.length"
-              :page-size="pageSize"
-              :page-size-opts="[10, 20, 50, 100]"
-              show-sizer
-              transfer
-              @on-change="pageChange"
-              @on-page-size-change="sizeChange"
-            />
+          <Row class="margin-top16 hidden-nowrap">
+            <i-col span="12" class="align-left">
+              <Button type="primary" size="small" @click="townAdd">乡镇添加</Button>
+            </i-col>
+            <i-col span="12" class="align-right">
+              <Page
+                :total="ajax_datas.length"
+                :page-size="pageSize"
+                :page-size-opts="[10, 20, 50, 100]"
+                show-sizer
+                transfer
+                @on-change="pageChange"
+                @on-page-size-change="sizeChange"
+              />
+            </i-col>
+
           </Row>
         </TabPane>
         <!--表头附加相关操作：-->
         <template slot="extra">
           <Row class="hidden-nowrap">
-            <Button type="primary" size="small" @click="formAdd">添加</Button>
+            <Select v-model="area_id" placeholder="地区选择..." style="width: 120px;" class="margin-right8"
+                    @on-change="areaChange" transfer>
+              <Option :value="area.id" :key="area.id" v-for="area of areas">{{area.name}}</Option>
+            </Select>
+            <Button type="primary" size="small" @click="formAdd">地区添加</Button>
           </Row>
         </template>
       </Tabs>
@@ -36,12 +46,30 @@
       v-model="formModel"
       :mask-closable="false"
       :loading="formLoading"
-      @on-ok="formOk('form')"
-      @on-cancel="formCancel"
+      @on-ok="formOk('form', 'formModel')"
+      @on-cancel="formCancel('form', 'formModel')"
     >
       <Form ref="form" :model="form" :rules="rule" label-position="top">
         <FormItem prop="id" label="编号">
           <Input v-model="form.id" :maxlength="6" placeholder="输入地区编号，6位数字" :disabled="inputDisable"/>
+        </FormItem>
+        <FormItem prop="name" label="名称">
+          <Input v-model="form.name" :maxlength="10" placeholder="输入地区名称，3-10个中文字符"/>
+        </FormItem>
+      </Form>
+    </Modal>
+
+    <Modal
+      :title="formTitle"
+      v-model="townModel"
+      :mask-closable="false"
+      :loading="formLoading"
+      @on-ok="formOk('town', 'townModel')"
+      @on-cancel="formCancel('town', 'townModel')"
+    >
+      <Form ref="town" :model="form" :rules="town_rule" label-position="top">
+        <FormItem prop="id" label="编号">
+          <Input v-model="form.id" :maxlength="8" placeholder="输入地区编号，8位数字" :disabled="inputDisable"/>
         </FormItem>
         <FormItem prop="name" label="名称">
           <Input v-model="form.name" :maxlength="10" placeholder="输入地区名称，3-10个中文字符"/>
@@ -118,6 +146,9 @@
                         }
                     }
                 ],
+
+                area_id: '',
+                areas: [],
                 ajax_datas: [],
 
                 formType: 'add',
@@ -131,12 +162,8 @@
                         },
                         {
                             len: 6,
-                            message: '长度6位',
-                            trigger: 'change'
-                        },
-                        {
                             pattern: /^\d{6}$/,
-                            message: '必须是数字',
+                            message: '长度6位，必须是数字',
                             trigger: 'change'
                         },
                     ],
@@ -157,6 +184,38 @@
                         },
                     ],
                 },
+
+                townModel: false,
+                town_rule: {
+                    id: [
+                        {
+                            required: true, message: '地区编号不得为空', trigger: 'blur'
+                        },
+                        {
+                            len: 8,
+                            pattern: /^\d{8}$/,
+                            message: '长度8位，必须是数字',
+                            trigger: 'change'
+                        },
+                    ],
+                    name: [
+                        {
+                            required: true, message: '地区名称不得为空', trigger: 'blur'
+                        },
+                        {
+                            min: 3,
+                            max: 10,
+                            message: '长度最小3位，最大10位',
+                            trigger: 'change'
+                        },
+                        {
+                            pattern: /^[\u4e00-\u9fa5]+$/,
+                            message: '必须是汉字，不得有空格',
+                            trigger: 'change'
+                        },
+                    ],
+                },
+
             }
         },
         methods: {
@@ -165,9 +224,14 @@
                 this.formModel = true;
                 this.form = Object.assign({}, formData)
             },
+            townAdd() {
+                this.formType = 'addTown';
+                this.townModel = true;
+                this.form = Object.assign({}, formData)
+            },
             formEdit(index) {
                 this.formType = 'edit';
-                this.formModel = true;
+                this.townModel = true;
                 let data = this.datas[index];
                 this.form = Object.assign({}, data);
             },
@@ -184,7 +248,7 @@
                         this.$Message.error(error);
                     })
             },
-            formOk(name) {
+            formOk(name, model) {
                 // 增加表单类型检测
                 let action = this.formType;
                 this.$refs[name].validate((valid) => {
@@ -192,13 +256,15 @@
                         this.$.posts('/area/' + action, this.form)
                             .then(res => {
                                 if (action === 'add') {
+                                    this.areas.push(res);
+                                } else if (action === 'addTown') {
                                     this.ajax_datas.push(res);
                                 } else {
                                     this.ajax_datas = xcon.arrsEdit(this.ajax_datas, 'id', res.id, res)
                                 }
 
-                                this.formModel = false;
-                                this.$refs['form'].resetFields();
+                                this[model] = false;
+                                this.$refs[name].resetFields();
                                 this.$Message.success(this.formTitle + '成功！');
                             })
                             .catch(error => {
@@ -219,8 +285,8 @@
                 });
             },
 
-            formCancel() {
-                this.$refs['form'].resetFields();
+            formCancel(name) {
+                this.$refs[name].resetFields();
             },
 
             pageChange(index) {
@@ -230,22 +296,47 @@
             sizeChange(size) {
                 this.pageSize = size;
             },
+
+            areaChange(val) {
+                this.tableLoading = true;
+                this.$.posts('/area/find', {area_id: val})
+                    .then(res => {
+                        this.ajax_datas = res;
+                        this.tableLoading = false;
+                    })
+                    .catch(error => {
+                        this.$Message.error(error);
+                    })
+            },
         },
         computed: {
             datas() {
                 return xcon.pageData(this.ajax_datas, this.pageIndex, this.pageSize)
             },
             formTitle() {
-                return this.formType === 'add' ? '地区添加' : '地区修改'
+                let title;
+                switch (this.formType) {
+                    case 'add' :
+                        title = '地区添加';
+                        break;
+                    case 'addTown':
+                        title = '乡镇添加';
+                        break;
+                    case 'edit':
+                        title = '地区修改';
+                        break;
+                }
+                return title;
             },
             inputDisable() {
-                return this.formType !== 'add'
+                return this.formType === 'edit'
             }
         },
         created() {
             this.$.gets('/area/')
                 .then(res => {
-                    this.ajax_datas = res;
+                    this.ajax_datas = res.datas;
+                    this.areas = res.areas;
                     this.tableLoading = false;
                 })
                 .catch(error => {
