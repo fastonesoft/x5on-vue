@@ -225,7 +225,7 @@
                 this.form = Object.assign({}, formData)
             },
             townAdd() {
-                this.formType = 'addTown';
+                this.formType = 'addtown';
                 this.townModel = true;
                 this.form = Object.assign({}, formData)
             },
@@ -257,7 +257,7 @@
                             .then(res => {
                                 if (action === 'add') {
                                     this.areas.push(res);
-                                } else if (action === 'addTown') {
+                                } else if (action === 'addtown') {
                                     this.ajax_datas.push(res);
                                 } else {
                                     this.ajax_datas = xcon.arrsEdit(this.ajax_datas, 'id', res.id, res)
@@ -319,11 +319,11 @@
                     case 'add' :
                         title = '地区添加';
                         break;
-                    case 'addTown':
+                    case 'addtown':
                         title = '乡镇添加';
                         break;
                     case 'edit':
-                        title = '地区修改';
+                        title = '乡镇修改';
                         break;
                 }
                 return title;

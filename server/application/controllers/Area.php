@@ -45,6 +45,25 @@ class Area extends XC_Controller
         });
     }
 
+    public function addtown()
+    {
+        Xcon::loginCheck(function ($userinfor) {
+            $params = Xcon::params();
+            $params['uid'] = Xcon::uid();
+
+            // 重复编号检测
+            Xcon::existById('xcArea', Xcon::array_key($params, 'id'));
+            // 重复名称检测
+            $name = Xcon::array_key($params, 'name');
+            Xcon::existBy('xcArea', compact('name'), '“名称”重复');
+
+            Xcon::add('xcArea', $params);
+            $result = Xcon::getByUid('xcArea', $params['uid']);
+
+            Xcon::json(Xcon::NO_ERROR, $result);
+        });
+    }
+
     public function edit()
     {
         Xcon::loginCheck(function ($userinfor) {
