@@ -49,16 +49,17 @@ class Area extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             $params = Xcon::params();
-            $params['uid'] = Xcon::uid();
+            $id = Xcon::array_key($params, 'id');
+            $name = Xcon::array_key($params, 'name');
 
             // 重复编号检测
-            Xcon::existById('xcArea', Xcon::array_key($params, 'id'));
+            Xcon::existById('xcArea', $id);
             // 重复名称检测
-            $name = Xcon::array_key($params, 'name');
             Xcon::existBy('xcArea', compact('name'), '“名称”重复');
 
-            Xcon::add('xcArea', $params);
-            $result = Xcon::getByUid('xcArea', $params['uid']);
+            $uid = Xcon::uid();
+            Xcon::add('xcArea', compact('id', 'uid', 'name'));
+            $result = Xcon::getByUid('xvAreaTown', $uid);
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
@@ -72,7 +73,7 @@ class Area extends XC_Controller
             $name = Xcon::array_key($params, 'name');
 
             Xcon::setByUid('xcArea', compact('name'), $uid);
-            $result = Xcon::getByUid('xcArea', $uid);
+            $result = Xcon::getByUid('xvAreaTown', $uid);
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
