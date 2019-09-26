@@ -57,6 +57,11 @@ const router = new Router({
             component: () => import('./views/Data.vue')
         },
         {
+            path: '/vdataed',
+            name: '/vdataed',
+            component: () => import('./views/Dataed.vue')
+        },
+        {
             path: '/vcount',
             name: '/vcount',
             component: () => import('./views/Count.vue')

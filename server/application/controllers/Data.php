@@ -4,15 +4,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Data extends XC_Controller
 {
 
+    /**
+     * 返回值：
+     * 添加、修改、查询：对象、数组
+     * ----
+     * 删除、提交：个数
+     */
+
     public function index()
     {
         Xcon::loginCheck(function ($userinfor) {
             // 标的清单
-            $data = 0;
-            $datas = Xcon::getsBy('xvData', compact('data'));
+            $datas = Xcon::getsBy('xvData', 'data=0');
             // 地区列表
             $areas = Xcon::gets('xvAreaTown');
-            Xcon::json(Xcon::NO_ERROR, compact('datas', 'areas'));
+            // 统计结果
+            $ajax = Xcon::getBy('xvDataCount', null);
+            Xcon::json(Xcon::NO_ERROR, compact('datas', 'areas', 'ajax'));
         });
     }
 
@@ -45,7 +53,16 @@ class Data extends XC_Controller
 
     public function edit()
     {
-        echo '  --------edit ---------';
+        Xcon::loginCheck(function ($userinfor) {
+            $params = Xcon::params();
+            $uid = Xcon::array_key($params, 'uid');
+
+            // 修改
+            Xcon::setByUid('xcData', $params, $uid);
+
+            $result = Xcon::getByUid('xvData', $uid);
+            Xcon::json(Xcon::NO_ERROR, $result);
+        });
     }
 
     public function del()
@@ -56,11 +73,12 @@ class Data extends XC_Controller
             $uid_string = Xcon::array_key($params, 'uids');
 
             $uids = explode(',', $uid_string);
+            $result = 0;
             foreach ($uids as $uid) {
                 Xcon::delByUid('xcData', $uid);
+                $result++;
             }
 
-            $result = Xcon::gets('xvDataNotConfirm');
             Xcon::json(Xcon::NO_ERROR, $result);
         });
     }
@@ -73,7 +91,7 @@ class Data extends XC_Controller
             $begin = Xcon::array_key($params, 'begin');
             $end = Xcon::array_key($params, 'end');
 
-            $result = Xcon::getsBy('xvDataNotConfirm', "create_time between '$begin' and '$end'");
+            $result = Xcon::getsBy('xvData', "data = 0 and create_time between '$begin' and '$end'");
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
@@ -86,14 +104,26 @@ class Data extends XC_Controller
             $params = Xcon::params();
             $uid_string = Xcon::array_key($params, 'uids');
 
+            $result = 0;
             $uids = explode(',', $uid_string);
             foreach ($uids as $uid) {
-                $confirm_time = date('Y-m-d');
-                $confirm_user_id = $userinfor->id;
-                Xcon::setByUid('xcData', compact('confirm_time', 'confirm_user_id'), $uid);
-            }
+                $user_id = $userinfor->id;
+                $exam_id = Xcon::EXAM_DATA;
+                $exam_time = date('Y-m-d H:i:s');
 
-            $result = Xcon::gets('xvDataNotConfirm');
+                // 检测标的是否存在
+                $data = Xcon::checkByUid('xcData', $uid);
+                $data_id = $data->id;
+
+                // 检测标的是否已经提交审核
+                Xcon::existBy('xcDataExam', compact('data_id', 'exam_id'), '“标的”已经提交审核！');
+
+                // 提交
+                $uid = Xcon::uid();
+                Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time'));
+
+                $result++;
+            }
             Xcon::json(Xcon::NO_ERROR, $result);
         });
     }

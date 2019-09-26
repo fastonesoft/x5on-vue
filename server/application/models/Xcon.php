@@ -11,7 +11,18 @@ class Xcon
     const ERROR_NOT_LOGIN = -1;
     const ERROR_APP = 1;
     const ERROR_DB = 2;
+
+    // TO-KEN
     const TO_KEN = '#30ca5d5fd85b11e98f5870f395158687#';
+
+    // EXAM-CODE
+    const EXAM_DATA = 1;
+    const EXAM_DATAED = 2;
+    const EXAM_COUNT = 4;
+    const EXAM_COUNTED = 8;
+    const EXAM_BACK = 16;
+    const EXAM_BACKED = 32;
+
 
     public static function cros()
     {
@@ -151,6 +162,13 @@ class Xcon
         $CI =& get_instance();
         $CI->db->order_by($orderbyKeys);
         return $CI->db->get_where($table, $where, $limit, $offset);
+    }
+
+    // 统计记录数
+    public static function count($table, $where) {
+        $CI =& get_instance();
+        $CI->db->get_where($table, $where);
+        return $CI->db->count_all_results();
     }
 
     // 多记录查询结果
