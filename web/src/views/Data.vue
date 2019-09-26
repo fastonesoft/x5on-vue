@@ -180,7 +180,6 @@
                     price_begin: '',
                     price_ass: '',
                     price_shoot: '',
-
                 },
                 cols: [
                     {
@@ -409,7 +408,7 @@
                         // 提交this.form服务器端认证
                         this.$.posts('/data/add', this.form)
                             .then(res => {
-                                Object.keys(res).length && this.datas.push(res);
+                                xcon.isNotNull(res) && this.datas.push(res);
 
                                 this.formAdd = false;
                                 // 重置表单

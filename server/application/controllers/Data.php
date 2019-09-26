@@ -8,7 +8,8 @@ class Data extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             // 标的清单
-            $datas = Xcon::gets('xvDataNotConfirm');
+            $data = 0;
+            $datas = Xcon::getsBy('xvData', compact('data'));
             // 地区列表
             $areas = Xcon::gets('xvAreaTown');
             Xcon::json(Xcon::NO_ERROR, compact('datas', 'areas'));
@@ -36,7 +37,7 @@ class Data extends XC_Controller
             Xcon::add('xcData', $params);
 
             // 查询出添加数据
-            $result = Xcon::getByUid('xvDataNotConfirm', $uid);
+            $result = Xcon::getByUid('xvData', $uid);
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
