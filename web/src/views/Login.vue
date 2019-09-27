@@ -40,8 +40,8 @@
             return {
                 token: '',
                 form: {
-                    id: 'admin',
-                    pass: 'stone',
+                    id: '',
+                    pass: '',
                 },
                 rule: {
                     id: [

@@ -7,7 +7,7 @@
           <Tag color="green" slot="extra">的</Tag>
           <Row class="data-collect hidden-nowrap">总数：{{ count.data_total }}</Row>
           <Divider size="small" dashed></Divider>
-          <Row class="data-collect_not">已审核：{{ count.data_not }}</Row>
+          <Row class="data-collect_not">未审核清单：{{ count.data_not }}</Row>
         </Card>
       </i-col>
       <i-col span="5">
@@ -397,6 +397,7 @@
                         this.tableLoading = false;
                     })
                     .catch(error => {
+                                     this.tableLoading = false;
                         this.$Message.error(error);
                     })
             },
@@ -428,6 +429,8 @@
                 this.formType = 'add';
                 this.formModel = true;
                 this.form = Object.assign({}, formConst)
+
+                window.console.log(this.count)
             },
             formEdit(index) {
                 this.formType = 'edit';
@@ -506,14 +509,12 @@
                 let uids = arrs.join(',');
 
                 // 提交审核
-                this.tableLoading = true;
                 this.$.posts('/data/upto', {uids})
                     .then(res => {
                         let that = this;
                         arrs.forEach(function (item) {
                             xcon.arrsDel(that.ajaxs, 'uid', item);
                         });
-                        this.tableLoading = false;
                         this.ajax_count.data_not = Number(this.ajax_count.data_not) + res;
                         this.$Message.success(res + '条数据提交成功！');
                     })
@@ -535,14 +536,12 @@
                 let uids = arrs.join(',');
 
                 // 删除数据
-                this.tableLoading = true;
                 this.$.posts('/data/del', {uids})
                     .then(res => {
                         let that = this;
                         arrs.forEach(function (item) {
                             xcon.arrsDel(that.ajaxs, 'uid', item);
                         });
-                        this.tableLoading = false;
                         this.$Message.success(res + '条数据删除成功！');
                     })
                     .catch(error => {
