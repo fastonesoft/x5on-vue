@@ -19,8 +19,8 @@ class Data extends XC_Controller
             // 地区列表
             $areas = Xcon::gets('xvAreaTown');
             // 统计结果
-            $ajax = Xcon::getBy('xvDataCount', null);
-            Xcon::json(Xcon::NO_ERROR, compact('datas', 'areas', 'ajax'));
+            $count = Xcon::getBy('xvDataCount', null);
+            Xcon::json(Xcon::NO_ERROR, compact('datas', 'areas', 'count'));
         });
     }
 

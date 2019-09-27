@@ -1,81 +1,79 @@
 <template>
-    <dev-article>
-        <div id="Split">
-            <Split v-model="split1" class="split">
-                <div slot="left" class="slot-left">
-                    <Tabs value="table">
-                        <TabPane label="标的清单" name="table">
-                            <Table
-                                    :columns="cols"
-                                    :data="datas"
-                                    :loading="tableLoading"
-                                    ref="table"
-                                    size="small"
-                                    @on-current-change="selectChange"
-                                    highlight-row
-                                    border stripe>
-                            </Table>
-                            <Row class="margin-top16 hidden-nowrap align-right">
-                                <Page
-                                        :total="ajaxs.length"
-                                        :page-size="pageSize"
-                                        :page-size-opts="[10, 20, 50, 100]"
-                                        show-sizer
-                                        transfer
-                                        @on-change="pageChange"
-                                        @on-page-size-change="sizeChange"
-                                />
-                            </Row>
-                        </TabPane>
-                        <!--表头附加相关操作：-->
-                        <template slot="extra">
-                            <Row class="hidden-nowrap">
-                                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
-                                    <Radio label="day">今日</Radio>
-                                    <Radio label="week">周</Radio>
-                                    <Radio label="month">月</Radio>
-                                    <Radio label="year">年</Radio>
-                                </RadioGroup>
-                                <DatePicker
-                                        v-model="countDate"
-                                        type="daterange"
-                                        style="width: 180px"
-                                        @on-change="dateChange"
-                                        transfer>
-                                </DatePicker>
-                                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
-                                </Button>
-                            </Row>
-                        </template>
-                    </Tabs>
-                </div>
-                <div slot="right" class="slot-right">
-                    <Tabs value="menus">
-                        <TabPane label="标的详情" name="menus">
-                            <CellGroup v-if="current">
-                                <Cell title="编号：" :extra="current.id"/>
-                                <Cell title="标的名称：" :extra="current.name"/>
-                                <Cell title="产权性质：" :extra="current.area_type"/>
-                                <Cell title="所属地区：" :extra="current.area_name"/>
-                                <Cell title="建筑面积：" :extra="current.area_build"/>
-                                <Cell title="土地面积：" :extra="current.area_soil"/>
-                                <Cell title="使用年限：" :extra="current.use_year"/>
-                                <Cell title="初始价格：" :extra="current.price_begin"/>
-                                <Cell title="评价价格：" :extra="current.price_ass"/>
-                                <Cell title="起拍价格：" :extra="current.price_shoot"/>
-                                <Row style="text-align: right;">
-                                    <Button type="error" class="margin-top16" @click="backClick">退回</Button>
-                                    <Button type="primary" class="margin-top16 margin-left16" @click="examClick">审核
-                                    </Button>
-                                </Row>
-                            </CellGroup>
-
-                        </TabPane>
-                    </Tabs>
-                </div>
-            </Split>
+  <dev-article>
+    <div id="Split">
+      <Split v-model="split1" class="split">
+        <div slot="left" class="slot-left">
+          <Tabs value="table">
+            <TabPane label="标的清单" name="table">
+              <Table
+                :columns="cols"
+                :data="datas"
+                :loading="tableLoading"
+                ref="table"
+                size="small"
+                @on-current-change="selectChange"
+                highlight-row
+                border stripe>
+              </Table>
+              <Row class="margin-top16 hidden-nowrap align-right">
+                <Page
+                  :total="ajaxs.length"
+                  :page-size="pageSize"
+                  :page-size-opts="[10, 20, 50, 100]"
+                  show-sizer
+                  transfer
+                  @on-change="pageChange"
+                  @on-page-size-change="sizeChange"
+                />
+              </Row>
+            </TabPane>
+            <!--表头附加相关操作：-->
+            <template slot="extra">
+              <Row class="hidden-nowrap">
+                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
+                  <Radio label="day">今日</Radio>
+                  <Radio label="week">周</Radio>
+                  <Radio label="month">月</Radio>
+                  <Radio label="year">年</Radio>
+                </RadioGroup>
+                <DatePicker
+                  v-model="countDate"
+                  type="daterange"
+                  style="width: 180px"
+                  @on-change="dateChange"
+                  transfer>
+                </DatePicker>
+                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
+                </Button>
+              </Row>
+            </template>
+          </Tabs>
         </div>
-    </dev-article>
+        <div slot="right" class="slot-right">
+          <Tabs value="menus">
+            <TabPane label="标的详情" name="menus">
+              <CellGroup v-if="current">
+                <Cell title="编号：" :extra="current.id"/>
+                <Cell title="标的名称：" :extra="current.name"/>
+                <Cell title="产权性质：" :extra="current.area_type"/>
+                <Cell title="所属地区：" :extra="current.area_name"/>
+                <Cell title="建筑面积：" :extra="current.area_build"/>
+                <Cell title="土地面积：" :extra="current.area_soil"/>
+                <Cell title="使用年限：" :extra="current.use_year"/>
+                <Cell title="初始价格：" :extra="current.price_begin"/>
+                <Cell title="评价价格：" :extra="current.price_ass"/>
+                <Cell title="起拍价格：" :extra="current.price_shoot"/>
+                <Row style="text-align: right;">
+                  <Button type="error" class="margin-top16" @click="backClick">退回修改</Button>
+                  <Button type="primary" class="margin-top16 margin-left16" @click="examClick">审核通过</Button>
+                </Row>
+              </CellGroup>
+            </TabPane>
+          </Tabs>
+        </div>
+      </Split>
+    </div>
+  </dev-article>
 </template>
 
 <script>
@@ -243,29 +241,29 @@
 
 <style scoped>
 
-    .split {
-        border: 1px solid #e8eaec;
-        border-radius: 4px;
-        background: #fff;
-        transition: all .2s ease-in-out;
-    }
+  .split {
+    border: 1px solid #e8eaec;
+    border-radius: 4px;
+    background: #fff;
+    transition: all .2s ease-in-out;
+  }
 
-    .split:hover {
-        border-color: #eee;
-        box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
-        transition: all .2s ease-in-out;
-    }
+  .split:hover {
+    border-color: #eee;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+    transition: all .2s ease-in-out;
+  }
 
-    .slot-left {
-        padding: 16px;
-    }
+  .slot-left {
+    padding: 16px;
+  }
 
-    .slot-right {
-        padding: 16px 16px 16px 20px;
-    }
+  .slot-right {
+    padding: 16px 16px 16px 20px;
+  }
 
-    .ivu-cell {
-        border-bottom: dashed #dcdee2 1px;
-    }
+  .ivu-cell {
+    border-bottom: dashed #dcdee2 1px;
+  }
 
 </style>

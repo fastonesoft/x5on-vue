@@ -3,7 +3,6 @@
     <Row :gutter="16">
       <i-col span="5">
         <Card title="标的清单">
-          <!--数据采集完毕的数据 confirmed-->
           <Tag color="green" slot="extra">的</Tag>
           <Row class="data-collect hidden-nowrap">总数：{{ count.data_total }}</Row>
           <Divider size="small" dashed></Divider>
@@ -15,28 +14,28 @@
           <Tag color="red" slot="extra">算</Tag>
           <Row class="data-collect hidden-nowrap">待测：{{ count.count_num }}</Row>
           <Divider size="small" dashed></Divider>
-          <Progress status="success" :percent="count.count_all" hide-info></Progress>
+          <Progress status="success" :percent="count.count_percent" hide-info></Progress>
         </Card>
       </i-col>
       <i-col span="5">
         <Card title="测算反馈">
           <Tag color="geekblue" slot="extra">馈</Tag>
-          <Row class="data-collect hidden-nowrap">{{ count.back_num }}%</Row>
+          <Row class="data-collect hidden-nowrap">反馈：{{ count.back_num }}</Row>
           <Divider size="small" dashed></Divider>
-          <Progress status="active" :percent="count.back_all" hide-info></Progress>
+          <Progress status="active" :percent="count.back_percent" hide-info></Progress>
         </Card>
       </i-col>
       <i-col span="5">
         <Card title="协作成果">
           <Tag color="blue" slot="extra">果</Tag>
-          <Row class="data-collect hidden-nowrap">{{ count.result_num }}%</Row>
+          <Row class="data-collect hidden-nowrap">完成：{{ count.result_num }}</Row>
           <Divider size="small" dashed></Divider>
-          <Progress status="wrong" :percent="count.result_all" hide-info></Progress>
+          <Progress status="wrong" :percent="count.result_percent" hide-info></Progress>
         </Card>
       </i-col>
       <i-col span="4">
         <Card title="快捷操作">
-          <Row class="data-collect align-center margin-bottom22 hidden-nowrap">添加标的数据</Row>
+          <Row class="data-collect align-center margin-bottom22 hidden-nowrap">添加标的</Row>
           <Button type="primary" icon="md-add" @click="formAdd" long>添加</Button>
         </Card>
       </i-col>
@@ -397,7 +396,7 @@
                         this.tableLoading = false;
                     })
                     .catch(error => {
-                                     this.tableLoading = false;
+                        this.tableLoading = false;
                         this.$Message.error(error);
                     })
             },
@@ -425,12 +424,11 @@
                 }
                 this.countDate = [new Date(date), new Date(today)];
             },
+
             formAdd() {
                 this.formType = 'add';
                 this.formModel = true;
                 this.form = Object.assign({}, formConst)
-
-                window.console.log(this.count)
             },
             formEdit(index) {
                 this.formType = 'edit';
@@ -485,12 +483,10 @@
                         this.$nextTick(() => {
                             this.formLoading = true;
                         });
-
                         this.$Message.error('表单验证无法通过，请重新输入');
                     }
                 });
             },
-
             formCancel(name) {
                 this.$refs[name].resetFields();
                 this.$Message.warning('表单添加取消！');
@@ -562,23 +558,46 @@
             count() {
                 if (this.ajax_count === null) {
                     return {
-                        data_total: 0,
                         data_not: 0,
+                        data_total: 0,
                         count_num: 0,
                         count_all: 0,
+                        count_percent: 0,
                         back_num: 0,
                         back_all: 0,
+                        back_percent: 0,
                         result_num: 0,
-                        result_all: 0
+                        result_percent: 0,
                     }
                 } else {
-                    let {data_total, data_not, count_num, count_all, back_num, back_all, result_num, result_all} = this.ajax_count;
-                    data_not = Number(data_not);
-                    count_all = Number(count_all) ? Number(count_num) / Number(count_all) * 100 : 0;
-                    back_all = Number(back_all) ? Number(back_num) / Number(back_all) * 100 : 0;
-                    result_all = Number(result_all) ? Number(result_num) / Number(result_all) * 100 : 0;
+                    let {data_total, data_not, count_num, count_all, back_num, back_all, result_num} = this.ajax_count;
 
-                    return {data_total, data_not, count_num, count_all, back_num, back_all, result_num, result_all};
+                    data_not = Number(data_not);
+                    data_total = Number(data_total);
+
+                    count_all = Number(count_all);
+                    count_num = Number(count_num);
+                    let count_percent = count_all ? (count_all - count_num) / count_all * 100 : 0;
+
+                    back_all = Number(back_all);
+                    back_num = Number(back_num);
+                    let back_percent = back_all ? (back_all - back_num) / back_all * 100 : 0;
+
+                    result_num = Number(result_num);
+                    let result_percent = data_total ? result_num / data_total * 100 : 0;
+
+                    return {
+                        data_total,
+                        data_not,
+                        count_num,
+                        count_all,
+                        back_num,
+                        back_all,
+                        result_num,
+                        count_percent,
+                        back_percent,
+                        result_percent
+                    };
                 }
             },
             datas() {
@@ -597,7 +616,7 @@
                 .then(res => {
                     this.ajaxs = res.datas;
                     this.areas = res.areas;
-                    this.ajax_count = res.ajax;
+                    this.ajax_count = res.count;
                     this.tableLoading = false
                 })
                 .catch(error => {

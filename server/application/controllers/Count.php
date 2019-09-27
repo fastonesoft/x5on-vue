@@ -8,21 +8,25 @@ class Count extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             // 测算清单
-            $result = Xcon::gets('xvDataNotGuess');
-            Xcon::json(Xcon::NO_ERROR, $result);
+            $datas = Xcon::getsBy('xvData', 'dataed=1 and count=0');
+            // 统计结果
+            $count = Xcon::getBy('xvDataCount', null);
+            Xcon::json(Xcon::NO_ERROR, compact('datas', 'count'));
         });
     }
 
-    public function add()
+    public function find()
     {
         Xcon::loginCheck(function ($userinfor) {
+            // 标的查询
+            $params = Xcon::params();
+            $begin = Xcon::array_key($params, 'begin');
+            $end = Xcon::array_key($params, 'end');
 
+            $result = Xcon::getsBy('xvData', "dataed=1 and count=0 and create_time between '$begin' and '$end'");
+
+            Xcon::json(Xcon::NO_ERROR, $result);
         });
-    }
-
-    public function edit()
-    {
-        echo '  --------edit ---------';
     }
 
     public function del()
@@ -42,19 +46,7 @@ class Count extends XC_Controller
         });
     }
 
-    public function find()
-    {
-        Xcon::loginCheck(function ($userinfor) {
-            // 标的查询
-            $params = Xcon::params();
-            $begin = Xcon::array_key($params, 'begin');
-            $end = Xcon::array_key($params, 'end');
 
-            $result = Xcon::getsBy('xvDataNotGuess', "create_time between '$begin' and '$end'");
-
-            Xcon::json(Xcon::NO_ERROR, $result);
-        });
-    }
 
     public function upto()
     {

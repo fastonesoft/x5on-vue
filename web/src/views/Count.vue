@@ -1,120 +1,124 @@
 <template>
-    <dev-article>
-        <Row :gutter="16">
-            <i-col span="8">
-                <Card title="标的清单">
-                    <!--数据采集完毕的数据 confirmed-->
-                    <Tag color="green" slot="extra">的</Tag>
-                    <Row class="data-collect hidden-nowrap">{{ count.collect.num }}%</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Row class="data-collect_not">剩余总数 {{ count.collect.not }}</Row>
-                </Card>
-            </i-col>
-            <i-col span="8">
-                <Card title="税率测算">
-                    <!--<Tooltip content="完成税率测算的数据占比" slot="extra" placement="top" transfer>-->
-                    <!--<Icon type="ios-alert-outline" size="18"/>-->
-                    <!--</Tooltip>-->
-                    <Tag color="red" slot="extra">算</Tag>
-                    <Row class="data-collect hidden-nowrap">{{ count.count.num }}%</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Progress status="success" :percent="count.count.num" hide-info></Progress>
-                </Card>
-            </i-col>
-            <i-col span="8">
-                <Card title="协作成果">
-                    <Tag color="blue" slot="extra">果</Tag>
-                    <Row class="data-collect hidden-nowrap">{{ count.result.num }}%</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Progress status="wrong" :percent="count.result.num" hide-info></Progress>
-                </Card>
-            </i-col>
-        </Row>
-        <Row class="margin-top16" :gutter="16">
-            <i-col :span="this.countId?'16':'24'" style="transition: all .2s ease-in-out;">
-                <Card>
-                    <Tabs value="table">
-                        <TabPane label="测算标的" name="table">
-                            <Table
-                                    :columns="cols"
-                                    :data="datas"
-                                    :loading="tableLoading"
-                                    ref="selection"
-                                    size="small"
-                                    highlight-row border stripe>
-                            </Table>
-                            <Row class="margin-top16">
-                                <i-col class="hidden-nowrap align-right">
-                                    <Page :total="datas.length" show-sizer transfer/>
-                                </i-col>
-                            </Row>
-                        </TabPane>
-                        <!--表头附加相关操作：-->
-                        <template slot="extra">
-                            <Row class="hidden-nowrap">
-                                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
-                                    <Radio label="day">今日</Radio>
-                                    <Radio label="week">周</Radio>
-                                    <Radio label="month">月</Radio>
-                                    <Radio label="year">年</Radio>
-                                </RadioGroup>
-                                <DatePicker
-                                        v-model="countDate"
-                                        type="daterange"
-                                        style="width: 180px"
-                                        @on-change="dateChange"
-                                        transfer>
-                                </DatePicker>
-                                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
-                                </Button>
-                            </Row>
-                        </template>
-                    </Tabs>
-                </Card>
-            </i-col>
-            <i-col :span="this.countId?'8':'0'" style="transition: all .2s ease-in-out;">
-                <Card>
-                    <Tabs value="table">
-                        <TabPane label="测算清单" name="table">
-                            <Table
-                                    :columns="count_cols"
-                                    :data="counts"
-                                    :loading="countLoading"
-                                    ref="count_sec"
-                                    size="small"
-                                    border stripe>
-                            </Table>
-                        </TabPane>
-                        <!--表头附加相关操作：-->
-                        <template slot="extra">
-                            <Row class="hidden-nowrap">
-                                <Button type="error" size="small" @click="countDoneClick">完成</Button>
-                                <Button class="margin-left8" type="primary" size="small" @click="countAddClick">添加
-                                </Button>
-                            </Row>
-                        </template>
-                    </Tabs>
-                </Card>
-            </i-col>
-        </Row>
-    </dev-article>
+  <dev-article>
+    <Row :gutter="16">
+      <i-col span="6">
+        <Card title="标的清单">
+          <Tag color="green" slot="extra">的</Tag>
+          <Row class="data-collect hidden-nowrap">总数：{{ count.data_total }}</Row>
+          <Divider size="small" dashed></Divider>
+          <Row class="data-collect_not">未审核清单：{{ count.data_not }}</Row>
+        </Card>
+      </i-col>
+      <i-col span="6">
+        <Card title="税率测算">
+          <Tag color="red" slot="extra">算</Tag>
+          <Row class="data-collect hidden-nowrap">待测：{{ count.count_num }}</Row>
+          <Divider size="small" dashed></Divider>
+          <Progress status="success" :percent="count.count_percent" hide-info></Progress>
+        </Card>
+      </i-col>
+      <i-col span="6">
+        <Card title="测算反馈">
+          <Tag color="geekblue" slot="extra">馈</Tag>
+          <Row class="data-collect hidden-nowrap">反馈：{{ count.back_num }}</Row>
+          <Divider size="small" dashed></Divider>
+          <Progress status="active" :percent="count.back_percent" hide-info></Progress>
+        </Card>
+      </i-col>
+      <i-col span="6">
+        <Card title="协作成果">
+          <Tag color="blue" slot="extra">果</Tag>
+          <Row class="data-collect hidden-nowrap">完成：{{ count.result_num }}</Row>
+          <Divider size="small" dashed></Divider>
+          <Progress status="wrong" :percent="count.result_percent" hide-info></Progress>
+        </Card>
+      </i-col>
+    </Row>
+    <Row class="margin-top16" :gutter="16">
+      <i-col :span="this.countId?'16':'24'" style="transition: all .2s ease-in-out;">
+        <Card>
+          <Tabs value="table">
+            <TabPane label="测算标的" name="table">
+              <Table
+                :columns="cols"
+                :data="datas"
+                :loading="tableLoading"
+                ref="selection"
+                size="small"
+                highlight-row border stripe>
+              </Table>
+              <Row class="margin-top16">
+                <i-col class="hidden-nowrap align-right">
+                  <Page :total="ajaxs.length" show-sizer transfer/>
+                </i-col>
+              </Row>
+            </TabPane>
+            <!--表头附加相关操作：-->
+            <template slot="extra">
+              <Row class="hidden-nowrap">
+                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
+                  <Radio label="day">今日</Radio>
+                  <Radio label="week">周</Radio>
+                  <Radio label="month">月</Radio>
+                  <Radio label="year">年</Radio>
+                </RadioGroup>
+                <DatePicker
+                  v-model="countDate"
+                  type="daterange"
+                  style="width: 180px"
+                  @on-change="dateChange"
+                  transfer>
+                </DatePicker>
+                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
+                </Button>
+              </Row>
+            </template>
+          </Tabs>
+        </Card>
+      </i-col>
+      <i-col :span="this.countId?'8':'0'" style="transition: all .2s ease-in-out;">
+        <Card>
+          <Tabs value="table">
+            <TabPane label="测算清单" name="table">
+              <Table
+                :columns="count_cols"
+                :data="counts"
+                :loading="countLoading"
+                ref="count_sec"
+                size="small"
+                border stripe>
+              </Table>
+            </TabPane>
+            <!--表头附加相关操作：-->
+            <template slot="extra">
+              <Row class="hidden-nowrap">
+                <Button type="error" size="small" @click="countDoneClick">完成</Button>
+                <Button class="margin-left8" type="primary" size="small" @click="countAddClick">添加
+                </Button>
+              </Row>
+            </template>
+          </Tabs>
+        </Card>
+      </i-col>
+    </Row>
+  </dev-article>
 </template>
 
 <script>
+    import xcon from '../libs/xcon'
+
     export default {
         name: "Count",
         data() {
             return {
-                count: {
-                    collect: {num: 30, not: 20},
-                    count: {num: 60, not: 10},
-                    result: {num: 90, not: 20}
-                },
-                formAdd: false,
+                // count
+                ajax_count: null,
 
+                // date
                 dateType: 'day',
                 countDate: [new Date(), new Date()],
-                tableLoading: true,
+
+                // table
                 cols: [
                     {
                         width: 50,
@@ -135,7 +139,7 @@
                     },
                     {
                         title: '产权性质',
-                        key: 'type_name',
+                        key: 'area_type',
                     },
                     {
                         title: '所属地区',
@@ -165,32 +169,14 @@
                         title: '起拍价格',
                         key: 'price_shoot',
                     },
-                    {
-                        title: '操作',
-                        key: 'action',
-                        width: 80,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.dataCount(params.index)
-                                        }
-                                    }
-                                }, '测算')
-                            ]);
-                        }
-                    }
                 ],
-                datas: [],
+                ajaxs: [],
+                pageIndex: 1,
+                pageSize: 10,
+                tableLoading: true,
+
+                // form
+                formModel: false,
 
                 countLoading: false,
                 count_cols: [
@@ -242,16 +228,17 @@
         },
         methods: {
             countDateClick() {
-                let begin = this.countDate[0] instanceof Date ? this.countDate[0].format('yyyy-MM-dd') : this.countDate[0];
-                let end = this.countDate[1] instanceof Date ? this.countDate[1].format('yyyy-MM-dd') : this.countDate[1];
+                let begin = xcon.dateFormat(this.countDate[0], 'yyyy-MM-dd');
+                let end = xcon.dateFormat(this.countDate[1], 'yyyy-MM-dd');
 
                 this.tableLoading = true;
                 this.$.posts('/count/find', {begin, end})
                     .then(res => {
-                        this.datas = res;
+                        this.ajaxs = res;
                         this.tableLoading = false;
                     })
                     .catch(error => {
+                        this.tableLoading = false;
                         this.$Message.error(error);
                     })
             },
@@ -277,19 +264,13 @@
                         date = today - 86400000 * 365;
                         break;
                 }
-                this.countDate = [new Date(date), new Date(today)]
+                this.countDate = [new Date(date), new Date(today)];
             },
 
             // 开启测算
             dataCount(index) {
-                this.countId = this.datas[index].id;
-                this.countUid = this.datas[index].uid;
-                // 读取测算数据
-
-                // this.$Modal.info({
-                //     title: '测算信息',
-                //     content: `标的名称：${this.datas[index].name}<br>标的测试：${this.datas[index].value}`
-                // })
+                this.countId = this.ajaxs[index].id;
+                this.countUid = this.ajaxs[index].uid;
             },
 
             // 添加清单
@@ -306,7 +287,7 @@
                 this.countLoading = true;
                 this.$.posts('/count/upto', {uid})
                     .then(res => {
-                        this.datas = res;
+                        this.ajaxs = res;
                         this.countLoading = false;
                     })
                     .catch(error => {
@@ -314,14 +295,65 @@
                     })
             },
         },
+        computed: {
+            count() {
+                if (this.ajax_count === null) {
+                    return {
+                        data_not: 0,
+                        data_total: 0,
+                        count_num: 0,
+                        count_all: 0,
+                        count_percent: 0,
+                        back_num: 0,
+                        back_all: 0,
+                        back_percent: 0,
+                        result_num: 0,
+                        result_percent: 0,
+                    }
+                } else {
+                    let {data_total, data_not, count_num, count_all, back_num, back_all, result_num} = this.ajax_count;
+
+                    data_not = Number(data_not);
+                    data_total = Number(data_total);
+
+                    count_all = Number(count_all);
+                    count_num = Number(count_num);
+                    let count_percent = count_all ? (count_all - count_num) / count_all * 100 : 0;
+
+                    back_all = Number(back_all);
+                    back_num = Number(back_num);
+                    let back_percent = back_all ? (back_all - back_num) / back_all * 100 : 0;
+
+                    result_num = Number(result_num);
+                    let result_percent = data_total ? result_num / data_total * 100 : 0;
+
+                    return {
+                        data_total,
+                        data_not,
+                        count_num,
+                        count_all,
+                        back_num,
+                        back_all,
+                        result_num,
+                        count_percent,
+                        back_percent,
+                        result_percent
+                    };
+                }
+            },
+            datas() {
+                return xcon.pageData(this.ajaxs, this.pageIndex, this.pageSize)
+            },
+        },
         created() {
-            this.tableLoading = true;
             this.$.gets('/count/index')
                 .then(res => {
-                    this.datas = res;
+                    this.ajaxs = res.datas;
+                    this.ajax_count = res.count;
                     this.tableLoading = false
                 })
                 .catch(error => {
+                    this.tableLoading = false;
                     this.$Message.error(error);
                 })
         }
