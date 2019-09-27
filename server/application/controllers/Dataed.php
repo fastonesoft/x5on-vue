@@ -37,41 +37,37 @@ class Dataed extends XC_Controller
 
             // 查询标的
             $data = Xcon::checkByUid('xvData', $uid);
-            
+            $data_id = $data->id;
+            $exam_id = Xcon::EXAM_DATA;
 
-            $result = Xcon::getsBy('xvData', "data=1 and dataed=0 and create_time between '$begin' and '$end'");
+            $result = Xcon::delBy('xcDataExam', compact('data_id', 'exam_id'));
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
     }
 
-    public function upto()
+    public function exam()
     {
         Xcon::loginCheck(function ($userinfor) {
-            // 提交测算
             $params = Xcon::params();
-            $uid_string = Xcon::array_key($params, 'uids');
+            $uid = Xcon::array_key($params, 'uid');
 
-            $result = 0;
-            $uids = explode(',', $uid_string);
-            foreach ($uids as $uid) {
-                $user_id = $userinfor->id;
-                $exam_id = Xcon::EXAM_DATA;
-                $exam_time = date('Y-m-d H:i:s');
+            // 检测标的是否存在
+            $data = Xcon::checkByUid('xcData', $uid);
+            $data_id = $data->id;
 
-                // 检测标的是否存在
-                $data = Xcon::checkByUid('xcData', $uid);
-                $data_id = $data->id;
+            // 审核，提交测算
+            $user_id = $userinfor->id;
+            $exam_id = Xcon::EXAM_DATAED;
+            $exam_time = date('Y-m-d H:i:s');
 
-                // 检测标的是否已经提交审核
-                Xcon::existBy('xcDataExam', compact('data_id', 'exam_id'), '“标的”已经提交审核！');
+            // 检测标的是否通过审核
+            Xcon::existBy('xcDataExam', compact('data_id', 'exam_id'), '“标的”已经通过审核！');
 
-                // 提交
-                $uid = Xcon::uid();
-                Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time'));
+            // 提交
+            $uid = Xcon::uid();
+            $result = Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time'));
 
-                $result++;
-            }
             Xcon::json(Xcon::NO_ERROR, $result);
         });
     }
