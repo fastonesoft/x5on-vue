@@ -67,6 +67,11 @@ const router = new Router({
             component: () => import('./views/Count.vue')
         },
         {
+            path: '/vcounted',
+            name: '/vcounted',
+            component: () => import('./views/Counted.vue')
+        },
+        {
             path: '/vback',
             name: '/vback',
             component: () => import('./views/Back.vue')

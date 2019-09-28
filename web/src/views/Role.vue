@@ -1,7 +1,7 @@
 <template>
     <dev-article>
         <div id="roleSplit">
-            <Split v-model="split1" class="split" min="400" max="600">
+            <Split v-model="split1" class="split" min="300" max="600">
                 <div slot="left" class="slot-left">
                     <Tabs value="menus">
                         <TabPane label="菜单鉴权" name="menus">
@@ -43,7 +43,7 @@
         data() {
             return {
 
-                split1: 0.4,
+                split1: 0.3,
 
                 groups: [],
                 group_uid: '',

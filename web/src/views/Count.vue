@@ -39,7 +39,7 @@
     </Row>
     <br>
     <div id="Split">
-      <Split v-model="split1" class="split" min="1000" max="400">
+      <Split v-model="split1" class="split" min="600" max="300">
         <div slot="left" class="slot-left">
           <Tabs value="table">
             <TabPane label="测算标的" name="table">
@@ -93,9 +93,9 @@
                   border stripe>
                 </Table>
                 <br>
-                <Row v-if="counts.length">
+                <Row v-if="counts.length" class="hidden-nowrap">
                   <Tag color="success">测算合计：{{amounts}}</Tag>
-                  <Button class="margin-left16 hidden-nowrap" type="error" @click="countExam">提交审核</Button>
+                  <Button class="margin-left16" type="error" @click="countUpto">提交审核</Button>
                 </Row>
               </div>
             </TabPane>
@@ -395,7 +395,7 @@
 
                                 this.formModel = false;
                                 this.$refs[name].resetFields();
-                                this.$Message.success('税种税额添加成功！');
+                                this.$Message.success('税种、税额添加成功！');
                             })
                             .catch(error => {
                                 this.formLoading = false;
@@ -420,11 +420,11 @@
 
 
             // 测算结束，提交审核
-            countExam() {
+            countUpto() {
                 let row = this.current;
                 this.countLoading = true;
 
-                this.$.posts('/count/exam', {uid: row.uid})
+                this.$.posts('/count/upto', {uid: row.uid})
                     .then(res => {
                         this.current = null;
                         this.countLoading = false;

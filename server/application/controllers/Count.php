@@ -78,7 +78,7 @@ class Count extends XC_Controller
     }
 
 
-    public function exam()
+    public function upto()
     {
         Xcon::loginCheck(function ($userinfor) {
             $params = Xcon::params();
