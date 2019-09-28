@@ -9,16 +9,18 @@ class Count extends XC_Controller
         Xcon::loginCheck(function ($userinfor) {
             // 测算清单
             $datas = Xcon::getsBy('xvData', 'dataed=1 and count=0');
+            // 税种列表
+            $taxs = Xcon::gets('xcTax');
             // 统计结果
             $count = Xcon::getBy('xvDataCount', null);
-            Xcon::json(Xcon::NO_ERROR, compact('datas', 'count'));
+            Xcon::json(Xcon::NO_ERROR, compact('datas', 'taxs', 'count'));
         });
     }
 
     public function find()
     {
         Xcon::loginCheck(function ($userinfor) {
-            // 标的查询
+            // 测算标的查询
             $params = Xcon::params();
             $begin = Xcon::array_key($params, 'begin');
             $end = Xcon::array_key($params, 'end');
@@ -29,37 +31,75 @@ class Count extends XC_Controller
         });
     }
 
+    public function tax()
+    {
+        Xcon::loginCheck(function ($userinfor) {
+            // 测算列表
+            $params = Xcon::params();
+            $data_id = Xcon::array_key($params, 'data_id');
+
+            $result = Xcon::getsBy('xvDataTax', compact('data_id'));
+            Xcon::json(Xcon::NO_ERROR, $result);
+        });
+    }
+
+    public function add()
+    {
+        Xcon::loginCheck(function ($userinfor) {
+            // 添加测算数据
+            $params = Xcon::params();
+            $data_id = Xcon::array_key($params, 'data_id');
+            $tax_id = Xcon::array_key($params, 'tax_id');
+            $tax_percent = Xcon::array_key($params, 'tax_percent');
+            $tax_amount = Xcon::array_key($params, 'tax_amount');
+            $uid = Xcon::uid();
+
+            // 检测税种是否已添加
+            Xcon::existBy('xcDataTax', compact('data_id', 'tax_id'), '当前税种已添加！');
+
+            Xcon::add('xcDataTax', compact('uid', 'data_id', 'tax_id', 'tax_percent', 'tax_amount'));
+
+            $result = Xcon::getByUid('xvDataTax', $uid);
+            Xcon::json(Xcon::NO_ERROR, $result);
+        });
+    }
+
     public function del()
     {
         Xcon::loginCheck(function ($userinfor) {
-            // 提交测算
+            // 删除测算税种
             $params = Xcon::params();
-            $uid_string = Xcon::array_key($params, 'uids');
+            $uid = Xcon::array_key($params, 'uid');
 
-            $uids = explode(',', $uid_string);
-            foreach ($uids as $uid) {
-                Xcon::delByUid('xcData', $uid);
-            }
+            $result = Xcon::delByUid('xcDataTax', $uid);
 
-            $result = Xcon::gets('xvDataNotGuess');
             Xcon::json(Xcon::NO_ERROR, $result);
         });
     }
 
 
-
-    public function upto()
+    public function exam()
     {
         Xcon::loginCheck(function ($userinfor) {
-            // 测算结束
             $params = Xcon::params();
             $uid = Xcon::array_key($params, 'uid');
 
-            $guess_time = date('Y-m-d');
-            $guess_user_id = $userinfor->id;
-            Xcon::setByUid('xcData', compact('guess_time', 'guess_user_id'), $uid);
+            // 检测标的是否存在
+            $data = Xcon::checkByUid('xcData', $uid);
+            $data_id = $data->id;
 
-            $result = Xcon::gets('xvDataNotGuess');
+            // 测算，提交审核
+            $user_id = $userinfor->id;
+            $exam_id = Xcon::EXAM_COUNT;
+            $exam_time = date('Y-m-d H:i:s');
+
+            // 检测标的是否通过测算
+            Xcon::existBy('xcDataExam', compact('data_id', 'exam_id'), '“标的”已经通过测算！');
+
+            // 提交
+            $uid = Xcon::uid();
+            $result = Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time'));
+
             Xcon::json(Xcon::NO_ERROR, $result);
         });
     }

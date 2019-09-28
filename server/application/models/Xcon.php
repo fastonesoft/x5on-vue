@@ -413,11 +413,13 @@ class Xcon
 
     public static function delById($table, $id)
     {
+        self::checkById($table, $id);
         return self::delBy($table, compact('id'));
     }
 
     public static function delByUid($table, $uid)
     {
+        self::checkByUid($table, $uid);
         return self::delBy($table, compact('uid'));
     }
 

@@ -1,7 +1,7 @@
 <template>
   <dev-article>
     <div id="Split">
-      <Split v-model="split1" class="split">
+      <Split v-model="split1" class="split" min="600" max="400">
         <div slot="left" class="slot-left">
           <Tabs value="table">
             <TabPane label="标的清单" name="table">
@@ -240,27 +240,6 @@
 </script>
 
 <style scoped>
-
-  .split {
-    border: 1px solid #e8eaec;
-    border-radius: 4px;
-    background: #fff;
-    transition: all .2s ease-in-out;
-  }
-
-  .split:hover {
-    border-color: #eee;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
-    transition: all .2s ease-in-out;
-  }
-
-  .slot-left {
-    padding: 16px;
-  }
-
-  .slot-right {
-    padding: 16px 16px 16px 20px;
-  }
 
   .ivu-cell {
     border-bottom: dashed #dcdee2 1px;

@@ -267,4 +267,25 @@
   .ivu-divider-horizontal {
     margin: 16px 0;
   }
+
+  .split {
+    border: 1px solid #e8eaec;
+    border-radius: 4px;
+    background: #fff;
+    transition: all .2s ease-in-out;
+  }
+
+  .split:hover {
+    border-color: #eee;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+    transition: all .2s ease-in-out;
+  }
+
+  .slot-left {
+    padding: 16px;
+  }
+
+  .slot-right {
+    padding: 16px 16px 16px 20px;
+  }
 </style>
