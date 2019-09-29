@@ -4,7 +4,7 @@
       <Split v-model="split1" class="split" min="600" max="300">
         <div slot="left" class="slot-left">
           <Tabs value="table">
-            <TabPane label="测算标的" name="table">
+            <TabPane label="标的清单" name="table">
               <Table
                 :columns="cols"
                 :data="datas"
@@ -44,29 +44,18 @@
         </div>
         <div slot="right" class="slot-right">
           <Tabs value="table">
-            <TabPane label="税费清单" name="table">
+            <TabPane label="协作进展" name="table">
               <div v-if="current">
-                <Table
-                  :columns="count_cols"
-                  :data="counts"
-                  :loading="countLoading"
-                  ref="count_sec"
-                  size="small"
-                  border stripe>
-                </Table>
-                <br>
-                <Row v-if="counts.length" class="hidden-nowrap">
-                  <Tag color="success">测算合计：{{amounts}}</Tag>
-                  <Button class="margin-left16" type="primary" @click="countExam">通过审核</Button>
-                </Row>
+                <Steps :current="step_value" direction="vertical">
+                  <Step title="标的清单" content="法院采集标的基本信息"></Step>
+                  <Step title="清单审核" content="法院管理完成标的审核"></Step>
+                  <Step title="税费测算" content="税务部门测算标的涉税金额"></Step>
+                  <Step title="测算审核" content="税务管理审核涉税信息"></Step>
+                  <Step title="反馈执行" content="法院采集成交、税费信息"></Step>
+                  <Step title="执行审核" content="法院管理审核成交、税费信息"></Step>
+                </Steps>
               </div>
             </TabPane>
-            <!--表头附加相关操作：-->
-            <template slot="extra">
-              <Row class="hidden-nowrap">
-                <Button type="error" size="small" @click="countBack" v-if="current">退回修改</Button>
-              </Row>
-            </template>
           </Tabs>
         </div>
       </Split>
@@ -78,11 +67,11 @@
     import xcon from '../libs/xcon'
 
     export default {
-        name: "Count",
+        name: "Stepp",
         data() {
             return {
                 // split
-                split1: 0.7,
+                split1: 0.8,
 
                 // date
                 dateType: 'day',
@@ -127,18 +116,6 @@
                         title: '使用年限',
                         key: 'use_year',
                     },
-                    {
-                        title: '初始价格',
-                        key: 'price_begin',
-                    },
-                    {
-                        title: '评价价格',
-                        key: 'price_ass',
-                    },
-                    {
-                        title: '起拍价格',
-                        key: 'price_shoot',
-                    },
                 ],
                 ajaxs: [],
                 pageIndex: 1,
@@ -146,7 +123,6 @@
                 tableLoading: true,
                 current: null,
 
-                countLoading: false,
                 count_cols: [
                     {
                         width: 50,
@@ -178,7 +154,7 @@
 
                 let begin = xcon.dateFormat(this.countDate[0], 'yyyy-MM-dd');
                 let end = xcon.dateFormat(this.countDate[1], 'yyyy-MM-dd');
-                this.$.posts('/counted/find', {begin, end})
+                this.$.posts('/step/find', {begin, end})
                     .then(res => {
                         this.ajaxs = res;
                         this.tableLoading = false;
@@ -215,75 +191,28 @@
             // 表格选择
             selectChange(row) {
                 this.current = row;
-                this.countLoading = true;
-                // 查询标的对应测算税种列表
-                this.$.posts('/counted/tax', {data_id: row.id})
-                    .then(res => {
-                        this.counts = res;
-                        this.countLoading = false
-                    })
-                    .catch(error => {
-                        this.countLoading = false;
-                        this.$Message.error(error);
-                    });
-            },
-
-            // 退回测算标的
-            countBack() {
-                let row = this.current;
-                if (row === null) {
-                    this.$Message.error('没有选择测算标的！');
-                    return
-                }
-                this.$.posts('/counted/back', {uid: row.uid})
-                    .then(res => {
-                        // 删除
-                        xcon.arrsDel(this.ajaxs, 'uid', row.uid);
-
-                        this.current = null;
-                        this.$Message.success(res + '条“标的”测算已退回！');
-                    })
-                    .catch(error => {
-                        this.$Message.error(error);
-                    });
-            },
-            // 测算结束，提交审核
-            countExam() {
-                let row = this.current;
-                if (row === null) {
-                    this.$Message.error('没有选择测算标的！');
-                    return
-                }
-                this.countLoading = true;
-
-                this.$.posts('/counted/exam', {uid: row.uid})
-                    .then(res => {
-                        this.current = null;
-                        this.countLoading = false;
-
-                        xcon.arrsDel(this.ajaxs, 'uid', row.uid);
-                        this.$Message.success(res + '条测算标的审核通过！');
-                    })
-                    .catch(error => {
-                        this.countLoading = false;
-                        this.$Message.error(error);
-                    })
             },
         },
         computed: {
             datas() {
                 return xcon.pageData(this.ajaxs, this.pageIndex, this.pageSize)
             },
-            amounts() {
-                let total = 0.0;
-                this.counts.forEach(item => {
-                    total += parseFloat(item.tax_amount)
-                });
-                return total
+            step_value() {
+                let value = 0;
+                let row = this.current;
+                if (row) {
+                    value += parseInt(row.data);
+                    value += parseInt(row.dataed);
+                    value += parseInt(row.count);
+                    value += parseInt(row.counted);
+                    value += parseInt(row.back);
+                    value += parseInt(row.backed);
+                }
+                return value;
             },
         },
         created() {
-            this.$.gets('/counted/index')
+            this.$.gets('/step/index')
                 .then(res => {
                     this.ajaxs = res;
                     this.tableLoading = false
@@ -296,7 +225,7 @@
         mounted() {
             const that = this;
             window.onresize = function () {
-                if (that.$route.path !== '/vcounted') return;
+                if (that.$route.path !== '/vstep') return;
 
                 // 分割条高度计算
                 let height = document.body.clientHeight - 60 - 36;

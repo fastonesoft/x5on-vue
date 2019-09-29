@@ -77,6 +77,16 @@ const router = new Router({
             component: () => import('./views/Back.vue')
         },
         {
+            path: '/vbacked',
+            name: '/vbacked',
+            component: () => import('./views/Backed.vue')
+        },
+        {
+            path: '/vstep',
+            name: '/vstep',
+            component: () => import('./views/Stepp.vue')
+        },
+        {
             path: '/vresult',
             name: '/vresult',
             component: () => import('./views/Result.vue')

@@ -4,20 +4,27 @@
       <Split v-model="split1" class="split" min="600" max="300">
         <div slot="left" class="slot-left">
           <Tabs value="table">
-            <TabPane label="测算标的" name="table">
+            <TabPane label="标的反馈" name="table">
               <Table
                 :columns="cols"
                 :data="datas"
                 :loading="tableLoading"
-                ref="selection"
+                ref="table"
                 size="small"
                 @on-current-change="selectChange"
-                highlight-row border stripe>
+                highlight-row
+                border stripe>
               </Table>
-              <Row class="margin-top16">
-                <i-col class="hidden-nowrap align-right">
-                  <Page :total="ajaxs.length" show-sizer transfer/>
-                </i-col>
+              <Row class="margin-top16 hidden-nowrap align-right">
+                <Page
+                  :total="ajaxs.length"
+                  :page-size="pageSize"
+                  :page-size-opts="[10, 20, 50, 100]"
+                  show-sizer
+                  transfer
+                  @on-change="pageChange"
+                  @on-page-size-change="sizeChange"
+                />
               </Row>
             </TabPane>
             <!--表头附加相关操作：-->
@@ -43,28 +50,32 @@
           </Tabs>
         </div>
         <div slot="right" class="slot-right">
-          <Tabs value="table">
-            <TabPane label="税费清单" name="table">
-              <div v-if="current">
-                <Table
-                  :columns="count_cols"
-                  :data="counts"
-                  :loading="countLoading"
-                  ref="count_sec"
-                  size="small"
-                  border stripe>
-                </Table>
-                <br>
-                <Row v-if="counts.length" class="hidden-nowrap">
-                  <Tag color="success">测算合计：{{amounts}}</Tag>
-                  <Button class="margin-left16" type="primary" @click="countExam">通过审核</Button>
+          <Tabs value="menus">
+            <TabPane label="反馈详情" name="menus">
+              <CellGroup v-if="current">
+                <Cell title="编号：" :extra="current.id"/>
+                <Cell title="标的名称：" :extra="current.name"/>
+                <Cell title="产权性质：" :extra="current.area_type"/>
+                <Cell title="所属地区：" :extra="current.area_name"/>
+                <Cell title="建筑面积：" :extra="current.area_build"/>
+                <Cell title="土地面积：" :extra="current.area_soil"/>
+                <Cell title="使用年限：" :extra="current.use_year"/>
+                <Cell title="初始价格：" :extra="current.price_begin"/>
+                <Cell title="评价价格：" :extra="current.price_ass"/>
+                <Cell title="起拍价格：" :extra="current.price_shoot"/>
+                <Cell title="反馈审核" disabled/>
+                <Cell title="成交价格：" :extra="current.price_end"/>
+                <Cell title="应征税费：" :extra="current.price_tax"/>
+                <Cell title="最终价格：" :extra="current.price"/>
+                <Row class="margin-top16 align-right">
+                  <Button type="primary" class="margin-left16" @click="backedExam">审核通过</Button>
                 </Row>
-              </div>
+              </CellGroup>
             </TabPane>
             <!--表头附加相关操作：-->
             <template slot="extra">
               <Row class="hidden-nowrap">
-                <Button type="error" size="small" @click="countBack" v-if="current">退回修改</Button>
+                <Button type="error" size="small" @click="backedBack" v-if="current">退回修改</Button>
               </Row>
             </template>
           </Tabs>
@@ -78,17 +89,17 @@
     import xcon from '../libs/xcon'
 
     export default {
-        name: "Count",
+        name: "Role",
         data() {
             return {
-                // split
+
                 split1: 0.7,
 
-                // date
+                pageIndex: 1,
+                pageSize: 10,
                 dateType: 'day',
                 countDate: [new Date(), new Date()],
 
-                // table
                 cols: [
                     {
                         width: 50,
@@ -104,71 +115,19 @@
                         key: 'name',
                     },
                     {
+                        title: '涉税类型',
+                        key: 'sell_type',
+                    },
+                    {
                         title: '产权人',
                         key: 'owner',
                     },
-                    {
-                        title: '产权性质',
-                        key: 'area_type',
-                    },
-                    {
-                        title: '所属地区',
-                        key: 'area_name',
-                    },
-                    {
-                        title: '建筑面积',
-                        key: 'area_build',
-                    },
-                    {
-                        title: '土地面积',
-                        key: 'area_soil',
-                    },
-                    {
-                        title: '使用年限',
-                        key: 'use_year',
-                    },
-                    {
-                        title: '初始价格',
-                        key: 'price_begin',
-                    },
-                    {
-                        title: '评价价格',
-                        key: 'price_ass',
-                    },
-                    {
-                        title: '起拍价格',
-                        key: 'price_shoot',
-                    },
+
                 ],
                 ajaxs: [],
-                pageIndex: 1,
-                pageSize: 10,
-                tableLoading: true,
                 current: null,
 
-                countLoading: false,
-                count_cols: [
-                    {
-                        width: 50,
-                        type: 'index',
-                        align: 'center',
-                    },
-                    {
-                        title: '税种',
-                        key: 'tax_name',
-                    },
-                    {
-                        title: '税率',
-                        key: 'tax_percent',
-                        align: 'right',
-                    },
-                    {
-                        title: '税额',
-                        key: 'tax_amount',
-                        align: 'right',
-                    },
-                ],
-                counts: [],
+                tableLoading: true,
             }
         },
         methods: {
@@ -178,7 +137,7 @@
 
                 let begin = xcon.dateFormat(this.countDate[0], 'yyyy-MM-dd');
                 let end = xcon.dateFormat(this.countDate[1], 'yyyy-MM-dd');
-                this.$.posts('/counted/find', {begin, end})
+                this.$.posts('/backed/find', {begin, end})
                     .then(res => {
                         this.ajaxs = res;
                         this.tableLoading = false;
@@ -212,91 +171,72 @@
                 this.countDate = [new Date(date), new Date(today)];
             },
 
-            // 表格选择
-            selectChange(row) {
-                this.current = row;
-                this.countLoading = true;
-                // 查询标的对应测算税种列表
-                this.$.posts('/counted/tax', {data_id: row.id})
-                    .then(res => {
-                        this.counts = res;
-                        this.countLoading = false
-                    })
-                    .catch(error => {
-                        this.countLoading = false;
-                        this.$Message.error(error);
-                    });
+            pageChange(index) {
+                this.pageIndex = index;
+            },
+            sizeChange(size) {
+                this.pageSize = size;
             },
 
-            // 退回测算标的
-            countBack() {
+            selectChange(row) {
+                this.current = row;
+            },
+            backedBack() {
                 let row = this.current;
                 if (row === null) {
-                    this.$Message.error('没有选择测算标的！');
+                    this.$Message.error('没有选择反馈记录！');
                     return
                 }
-                this.$.posts('/counted/back', {uid: row.uid})
+                this.$.posts('/backed/back', {uid: row.uid})
                     .then(res => {
                         // 删除
                         xcon.arrsDel(this.ajaxs, 'uid', row.uid);
 
                         this.current = null;
-                        this.$Message.success(res + '条“标的”测算已退回！');
+                        this.$Message.success(res + '条“反馈”标的已退回！');
                     })
                     .catch(error => {
                         this.$Message.error(error);
                     });
             },
-            // 测算结束，提交审核
-            countExam() {
+            backedExam() {
                 let row = this.current;
                 if (row === null) {
-                    this.$Message.error('没有选择测算标的！');
+                    this.$Message.error('没有选择标的记录！');
                     return
                 }
-                this.countLoading = true;
-
-                this.$.posts('/counted/exam', {uid: row.uid})
+                this.$.posts('/backed/exam', {uid: row.uid})
                     .then(res => {
-                        this.current = null;
-                        this.countLoading = false;
-
+                        // 审核
                         xcon.arrsDel(this.ajaxs, 'uid', row.uid);
-                        this.$Message.success(res + '条测算标的审核通过！');
+
+                        this.current = null;
+                        this.$Message.success(res + '条“反馈”标的已审核！');
                     })
                     .catch(error => {
-                        this.countLoading = false;
                         this.$Message.error(error);
-                    })
-            },
+                    });
+            }
         },
         computed: {
             datas() {
                 return xcon.pageData(this.ajaxs, this.pageIndex, this.pageSize)
             },
-            amounts() {
-                let total = 0.0;
-                this.counts.forEach(item => {
-                    total += parseFloat(item.tax_amount)
-                });
-                return total
-            },
         },
         created() {
-            this.$.gets('/counted/index')
+            this.$.gets('/backed/index')
                 .then(res => {
                     this.ajaxs = res;
                     this.tableLoading = false
                 })
                 .catch(error => {
-                    this.tableLoading = false;
                     this.$Message.error(error);
                 });
         },
         mounted() {
             const that = this;
             window.onresize = function () {
-                if (that.$route.path !== '/vcounted') return;
+                if (that.$route.path !== '/vbacked') return;
 
                 // 分割条高度计算
                 let height = document.body.clientHeight - 60 - 36;
@@ -308,5 +248,9 @@
 </script>
 
 <style scoped>
+
+  .ivu-cell {
+    border-bottom: dashed #dcdee2 1px;
+  }
 
 </style>

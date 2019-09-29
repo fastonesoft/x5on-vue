@@ -77,7 +77,6 @@ class Count extends XC_Controller
         });
     }
 
-
     public function upto()
     {
         Xcon::loginCheck(function ($userinfor) {

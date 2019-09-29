@@ -4,33 +4,34 @@
       <i-col span="5">
         <Card title="标的清单">
           <Tag color="green" slot="extra">的</Tag>
-          <Row class="data-collect hidden-nowrap">总数：{{ count.data_total }}</Row>
+          <Row class="data-collect hidden-nowrap">总数：{{ dataCount.data_total }}</Row>
           <Divider size="small" dashed></Divider>
-          <Row class="data-collect_not">未审核清单：{{ count.data_not }}</Row>
+          <Row class="data-collect_not">未审核清单：{{ dataCount.data_not }}</Row>
+          <Progress status="success" :percent="dataCount.count_percent" hide-info></Progress>
         </Card>
       </i-col>
       <i-col span="5">
         <Card title="税率测算">
           <Tag color="red" slot="extra">算</Tag>
-          <Row class="data-collect hidden-nowrap">待测：{{ count.count_num }}</Row>
+          <Row class="data-collect hidden-nowrap">待测：{{ dataCount.count_num }}</Row>
           <Divider size="small" dashed></Divider>
-          <Progress status="success" :percent="count.count_percent" hide-info></Progress>
+          <Progress status="success" :percent="dataCount.count_percent" hide-info></Progress>
         </Card>
       </i-col>
       <i-col span="5">
         <Card title="测算反馈">
           <Tag color="geekblue" slot="extra">馈</Tag>
-          <Row class="data-collect hidden-nowrap">反馈：{{ count.back_num }}</Row>
+          <Row class="data-collect hidden-nowrap">反馈：{{ dataCount.back_num }}</Row>
           <Divider size="small" dashed></Divider>
-          <Progress status="active" :percent="count.back_percent" hide-info></Progress>
+          <Progress status="active" :percent="dataCount.back_percent" hide-info></Progress>
         </Card>
       </i-col>
       <i-col span="5">
         <Card title="协作成果">
           <Tag color="blue" slot="extra">果</Tag>
-          <Row class="data-collect hidden-nowrap">完成：{{ count.result_num }}</Row>
+          <Row class="data-collect hidden-nowrap">完成：{{ dataCount.result_num }}</Row>
           <Divider size="small" dashed></Divider>
-          <Progress status="wrong" :percent="count.result_percent" hide-info></Progress>
+          <Progress status="wrong" :percent="dataCount.result_percent" hide-info></Progress>
         </Card>
       </i-col>
       <i-col span="4">
@@ -105,8 +106,8 @@
         <FormItem prop="id" label="编号">
           <Input v-model="form.id" placeholder="输入标的编号" :maxlength="20" :disabled="inputDisable"/>
         </FormItem>
-        <FormItem prop="name" label="拍卖标的">
-          <Input v-model="form.name" placeholder="输入拍卖标的相关说明" :maxlength="20" :disabled="inputDisable"/>
+        <FormItem prop="name" label="标的名称">
+          <Input v-model="form.name" placeholder="输入标的名称相关说明" :maxlength="20" :disabled="inputDisable"/>
         </FormItem>
         <FormItem prop="sell_type" label="涉税类型">
           <Select v-model="form.sell_type" placeholder="涉税类型选择..." style="width: 162px;" transfer>
@@ -555,36 +556,38 @@
         },
 
         computed: {
-            count() {
+            dataCount() {
                 if (this.ajax_count === null) {
                     return {
-                        data_not: 0,
-                        data_total: 0,
-                        count_num: 0,
-                        count_all: 0,
-                        count_percent: 0,
-                        back_num: 0,
-                        back_all: 0,
-                        back_percent: 0,
-                        result_num: 0,
-                        result_percent: 0,
+                        total: 0,
+                        data: 0,
+                        dataed: 0,
+                        count: 0,
+                        counted: 0,
+                        back: 0,
+                        backed: 0,
+                        result: 0,
+                        data_per: 0,
+                        count_per: 0,
+                        back_per: 0,
                     }
                 } else {
-                    let {data_total, data_not, count_num, count_all, back_num, back_all, result_num} = this.ajax_count;
+                    let {total, data, dataed, count, counted, back, backed, result} = this.ajax_count;
 
-                    data_not = Number(data_not);
-                    data_total = Number(data_total);
+                    total = Number(total);
+                    data = Number(data);
+                    dataed = Number(dataed);
+                    count = Number(count);
+                    counted = Number(counted);
+                    back = Number(back);
+                    backed = Number(backed);
+                    result = Number(result);
 
-                    count_all = Number(count_all);
-                    count_num = Number(count_num);
-                    let count_percent = count_all ? (count_all - count_num) / count_all * 100 : 0;
+                    let data_per = data + dataed ? data / (data + dataed) * 100 : 0;
 
-                    back_all = Number(back_all);
-                    back_num = Number(back_num);
-                    let back_percent = back_all ? (back_all - back_num) / back_all * 100 : 0;
-
-                    result_num = Number(result_num);
-                    let result_percent = data_total ? result_num / data_total * 100 : 0;
+                    let count_per = count+counted ? (back_all - back_num) / back_all * 100 : 0;
+                    let back_per = data_total ? result_num / data_total * 100 : 0;
+                    let result_per = total ? result / total * 100 : 0;
 
                     return {
                         data_total,

@@ -63,12 +63,17 @@
                 <Cell title="初始价格：" :extra="current.price_begin"/>
                 <Cell title="评价价格：" :extra="current.price_ass"/>
                 <Cell title="起拍价格：" :extra="current.price_shoot"/>
-                <Row style="text-align: right;">
-                  <Button type="error" class="margin-top16" @click="backClick">退回修改</Button>
-                  <Button type="primary" class="margin-top16 margin-left16" @click="examClick">审核通过</Button>
+                <Row class="margin-top16 align-right">
+                  <Button type="primary" class="margin-left16" @click="dataedExam">审核通过</Button>
                 </Row>
               </CellGroup>
             </TabPane>
+            <!--表头附加相关操作：-->
+            <template slot="extra">
+              <Row class="hidden-nowrap">
+                <Button type="error" size="small" @click="dataedBack" v-if="current">退回修改</Button>
+              </Row>
+            </template>
           </Tabs>
         </div>
       </Split>
@@ -173,7 +178,7 @@
             selectChange(row) {
                 this.current = row;
             },
-            backClick() {
+            dataedBack() {
                 let row = this.current;
                 if (row === null) {
                     this.$Message.error('没有选择标的记录！');
@@ -191,7 +196,7 @@
                         this.$Message.error(error);
                     });
             },
-            examClick() {
+            dataedExam() {
                 let row = this.current;
                 if (row === null) {
                     this.$Message.error('没有选择标的记录！');

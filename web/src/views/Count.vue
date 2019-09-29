@@ -6,8 +6,7 @@
           <Tag color="green" slot="extra">的</Tag>
           <Row class="data-collect hidden-nowrap">总数：{{ count.data_total }}</Row>
           <Divider size="small" dashed></Divider>
-          <Row class="data-collect_not">未审核：{{ count.data_not }}</Row>
-          <Progress :percent="count.data_percent" hide-info></Progress>
+          <Progress :percent="count.data_percent" stroke-color="#19be6b" hide-info></Progress>
         </Card>
       </i-col>
       <i-col span="6">
@@ -15,8 +14,7 @@
           <Tag color="red" slot="extra">算</Tag>
           <Row class="data-collect hidden-nowrap">待测：{{ count.count_num }}</Row>
           <Divider size="small" dashed></Divider>
-          <Progress :stroke-width="5" stroke-color="red" :percent="count.count_percent" hide-info></Progress>
-          <Progress status="success" :percent="count.count_not_percent" hide-info></Progress>
+          <Progress :percent="count.count_not_percent" stroke-color="red" hide-info></Progress>
         </Card>
       </i-col>
       <i-col span="6">
@@ -24,8 +22,7 @@
           <Tag color="geekblue" slot="extra">馈</Tag>
           <Row class="data-collect hidden-nowrap">反馈：{{ count.back_num }}</Row>
           <Divider size="small" dashed></Divider>
-          <Progress :stroke-width="5" stroke-color="geekblue" :percent="count.back_not_percent" hide-info></Progress>
-          <Progress status="active" :percent="count.back_percent" hide-info></Progress>
+          <Progress :percent="count.back_percent" stroke-color="geekblue" hide-info></Progress>
         </Card>
       </i-col>
       <i-col span="6">
@@ -33,7 +30,7 @@
           <Tag color="blue" slot="extra">果</Tag>
           <Row class="data-collect hidden-nowrap">完成：{{ count.result_num }}</Row>
           <Divider size="small" dashed></Divider>
-          <Progress status="wrong" :percent="count.result_percent" hide-info></Progress>
+          <Progress :percent="count.result_percent" stroke-color="red" hide-info></Progress>
         </Card>
       </i-col>
     </Row>
@@ -95,7 +92,7 @@
                 <br>
                 <Row v-if="counts.length" class="hidden-nowrap">
                   <Tag color="success">测算合计：{{amounts}}</Tag>
-                  <Button class="margin-left16" type="error" @click="countUpto">提交审核</Button>
+                  <Button class="margin-left16" type="primary" @click="countUpto">提交审核</Button>
                 </Row>
               </div>
             </TabPane>
@@ -417,7 +414,6 @@
                 this.$refs[name].resetFields();
                 this.$Message.warning('表单添加取消！');
             },
-
 
             // 测算结束，提交审核
             countUpto() {
