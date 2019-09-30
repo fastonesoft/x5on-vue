@@ -130,29 +130,6 @@
                 pageSize: 10,
                 tableLoading: true,
                 current: null,
-
-                count_cols: [
-                    {
-                        width: 50,
-                        type: 'index',
-                        align: 'center',
-                    },
-                    {
-                        title: '税种',
-                        key: 'tax_name',
-                    },
-                    {
-                        title: '税率',
-                        key: 'tax_percent',
-                        align: 'right',
-                    },
-                    {
-                        title: '税额',
-                        key: 'tax_amount',
-                        align: 'right',
-                    },
-                ],
-                counts: [],
             }
         },
         methods: {

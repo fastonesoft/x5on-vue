@@ -36,7 +36,7 @@
       <Header class="header">
         <Row>
           <i-col span="19" class="header-title">
-            <!--税收合作 -->合作共赢（Tax Coperation）
+            税收合作 合作共赢（Tax Coperation）
           </i-col>
           <i-col span="5" class="hidden-nowrap" style="text-align: right;">
             <Tooltip placement="left" transfer>

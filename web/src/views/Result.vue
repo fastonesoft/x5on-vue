@@ -1,62 +1,73 @@
 <template>
-    <dev-article>
-        <Card>
-            <Tabs value="table">
-                <TabPane label="统计清单" name="table">
-                    <Table
-                            :columns="cols"
-                            :data="datas"
-                            :loading="tableLoading"
-                            ref="selection"
-                            size="small"
-                            @on-current-change="selectChange"
-                            border stripe>
-                    </Table>
-                    <Row class="margin-top16 hidden-nowrap">
-                        <i-col span="6">
-                            <Tag color="success">税费合计：{{amounts}}</Tag>
-                        </i-col>
-                        <i-col span="18" class="align-right">
-                            <Page
-                                    :total="ajaxs.length"
-                                    :page-size="pageSize"
-                                    :page-size-opts="[10, 20, 50, 100]"
-                                    show-sizer
-                                    transfer
-                                    @on-change="pageChange"
-                                    @on-page-size-change="sizeChange"
-                            />
-                        </i-col>
-                    </Row>
-                </TabPane>
-                <!--表头附加相关操作：-->
-                <template slot="extra">
-                    <Row class="hidden-nowrap">
-                        <RadioGroup v-model="dateType" @on-change="dateTypeChange">
-                            <Radio label="day">今日</Radio>
-                            <Radio label="week">周</Radio>
-                            <Radio label="month">月</Radio>
-                            <Radio label="year">年</Radio>
-                        </RadioGroup>
-                        <DatePicker
-                                v-model="countDate"
-                                type="daterange"
-                                style="width: 180px"
-                                @on-change="dateChange"
-                                transfer>
-                        </DatePicker>
-                        <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
-                        </Button>
-                    </Row>
-                </template>
-            </Tabs>
-        </Card>
+  <dev-article>
+    <Card>
+      <Tabs value="table">
+        <TabPane label="统计清单" name="table">
+          <Table
+            :columns="cols"
+            :data="datas"
+            :loading="tableLoading"
+            ref="selection"
+            size="small"
+            border stripe>
+          </Table>
+          <Row class="margin-top16 hidden-nowrap">
+            <i-col span="6">
+              <Tag color="success">税费合计：{{amounts}}</Tag>
+            </i-col>
+            <i-col span="18" class="align-right">
+              <Page
+                :total="ajaxs.length"
+                :page-size="pageSize"
+                :page-size-opts="[10, 20, 50, 100]"
+                show-sizer
+                transfer
+                @on-change="pageChange"
+                @on-page-size-change="sizeChange"
+              />
+            </i-col>
+          </Row>
+        </TabPane>
+        <!--表头附加相关操作：-->
+        <template slot="extra">
+          <Row class="hidden-nowrap">
+            <RadioGroup v-model="dateType" @on-change="dateTypeChange">
+              <Radio label="day">今日</Radio>
+              <Radio label="week">周</Radio>
+              <Radio label="month">月</Radio>
+              <Radio label="year">年</Radio>
+            </RadioGroup>
+            <DatePicker
+              v-model="countDate"
+              type="daterange"
+              style="width: 180px"
+              @on-change="dateChange"
+              transfer>
+            </DatePicker>
+            <Dropdown class="margin-left8" @on-click="countResult" transfer>
+              <Button type="primary" size="small">
+                {{resultTitle}}
+                <Icon type="ios-arrow-down"></Icon>
+              </Button>
+              <DropdownMenu slot="list">
+                <DropdownItem name="sell_type,拍卖">拍卖</DropdownItem>
+                <DropdownItem name="sell_type,变卖">变卖</DropdownItem>
+                <DropdownItem name="up_id,321204" divided>姜堰区</DropdownItem>
+                <DropdownItem name="up_id,999999">其他地区</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </Row>
+        </template>
+      </Tabs>
+    </Card>
 
-    </dev-article>
+  </dev-article>
 </template>
 
 <script>
     import xcon from '../libs/xcon'
+
+    const titleConst = '统计...';
 
     export default {
         name: "Result",
@@ -137,50 +148,12 @@
                 pageIndex: 1,
                 pageSize: 10,
                 tableLoading: true,
-                current: null,
 
-                countLoading: false,
-                count_cols: [
-                    {
-                        width: 50,
-                        type: 'index',
-                        align: 'center',
-                    },
-                    {
-                        title: '税种',
-                        key: 'tax_name',
-                    },
-                    {
-                        title: '税率',
-                        key: 'tax_percent',
-                        align: 'right',
-                    },
-                    {
-                        title: '税额',
-                        key: 'tax_amount',
-                        align: 'right',
-                    },
-                ],
-                counts: [],
+                // 统计菜单
+                resultTitle: titleConst,
             }
         },
         methods: {
-            countDateClick() {
-                this.current = null;
-                this.tableLoading = true;
-
-                let begin = xcon.dateFormat(this.countDate[0], 'yyyy-MM-dd');
-                let end = xcon.dateFormat(this.countDate[1], 'yyyy-MM-dd');
-                this.$.posts('/result/find', {begin, end})
-                    .then(res => {
-                        this.ajaxs = res;
-                        this.tableLoading = false;
-                    })
-                    .catch(error => {
-                        this.tableLoading = false;
-                        this.$Message.error(error);
-                    })
-            },
             dateChange(val) {
                 this.dateType = '';
                 this.countDate = val;
@@ -211,6 +184,24 @@
             },
             sizeChange(size) {
                 this.pageSize = size;
+            },
+
+            // count
+            countResult(name) {
+                this.tableLoading = true;
+                let begin = xcon.dateFormat(this.countDate[0], 'yyyy-MM-dd');
+                let end = xcon.dateFormat(this.countDate[1], 'yyyy-MM-dd');
+
+                let items = name.split(',');
+                this.$.posts('/result/count', {begin, end, key: items[0], value: items[1]})
+                    .then(res => {
+                        this.ajaxs = res;
+                        this.tableLoading = false
+                    })
+                    .catch(error => {
+                        this.tableLoading = false;
+                        this.$Message.error(error);
+                    });
             },
         },
         computed: {
