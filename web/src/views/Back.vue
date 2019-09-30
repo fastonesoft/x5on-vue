@@ -1,100 +1,109 @@
 <template>
-  <dev-article>
-    <div id="Split">
-      <Split v-model="split1" class="split" min="600" max="300">
-        <div slot="left" class="slot-left">
-          <Tabs value="table">
-            <TabPane label="标的反馈" name="table">
-              <Table
-                :columns="cols"
-                :data="datas"
-                :loading="tableLoading"
-                ref="selection"
-                size="small"
-                @on-current-change="selectChange"
-                highlight-row border stripe>
-              </Table>
-              <Row class="margin-top16">
-                <i-col class="hidden-nowrap align-right">
-                  <Page :total="ajaxs.length" show-sizer transfer/>
-                </i-col>
-              </Row>
-            </TabPane>
-            <!--表头附加相关操作：-->
-            <template slot="extra">
-              <Row class="hidden-nowrap">
-                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
-                  <Radio label="day">今日</Radio>
-                  <Radio label="week">周</Radio>
-                  <Radio label="month">月</Radio>
-                  <Radio label="year">年</Radio>
-                </RadioGroup>
-                <DatePicker
-                  v-model="countDate"
-                  type="daterange"
-                  style="width: 180px"
-                  @on-change="dateChange"
-                  transfer>
-                </DatePicker>
-                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
-                </Button>
-              </Row>
-            </template>
-          </Tabs>
-        </div>
-        <div slot="right" class="slot-right">
-          <Tabs value="count1">
-            <TabPane label="税费清单" name="count1">
-              <div v-if="current">
-                <Table
-                  :columns="count_cols"
-                  :data="counts"
-                  :loading="countLoading"
-                  ref="count_sec"
-                  size="small"
-                  border stripe>
-                </Table>
-                <br>
-                <Row v-if="counts.length" class="hidden-nowrap">
-                  <Tag color="success">税费合计：{{amounts}}</Tag>
-                  <Button class="margin-left16" type="primary" @click="endPrice">成交价</Button>
-                </Row>
-              </div>
+    <dev-article>
+        <div id="Split">
+            <Split v-model="split1" class="split" min="600" max="300">
+                <div slot="left" class="slot-left">
+                    <Tabs value="table">
+                        <TabPane label="标的反馈" name="table">
+                            <Table
+                                    :columns="cols"
+                                    :data="datas"
+                                    :loading="tableLoading"
+                                    ref="selection"
+                                    size="small"
+                                    @on-current-change="selectChange"
+                                    highlight-row border stripe>
+                            </Table>
+                            <Row class="margin-top16">
+                                <i-col class="hidden-nowrap align-right">
+                                    <Page
+                                            :total="ajaxs.length"
+                                            :page-size="pageSize"
+                                            :page-size-opts="[10, 20, 50, 100]"
+                                            show-sizer
+                                            transfer
+                                            @on-change="pageChange"
+                                            @on-page-size-change="sizeChange"
+                                    />
+                                </i-col>
+                            </Row>
+                        </TabPane>
+                        <!--表头附加相关操作：-->
+                        <template slot="extra">
+                            <Row class="hidden-nowrap">
+                                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
+                                    <Radio label="day">今日</Radio>
+                                    <Radio label="week">周</Radio>
+                                    <Radio label="month">月</Radio>
+                                    <Radio label="year">年</Radio>
+                                </RadioGroup>
+                                <DatePicker
+                                        v-model="countDate"
+                                        type="daterange"
+                                        style="width: 180px"
+                                        @on-change="dateChange"
+                                        transfer>
+                                </DatePicker>
+                                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
+                                </Button>
+                            </Row>
+                        </template>
+                    </Tabs>
+                </div>
+                <div slot="right" class="slot-right">
+                    <Tabs value="count1">
+                        <TabPane label="税费清单" name="count1">
+                            <div v-if="current">
+                                <Table
+                                        :columns="count_cols"
+                                        :data="counts"
+                                        :loading="countLoading"
+                                        ref="count_sec"
+                                        size="small"
+                                        border stripe>
+                                </Table>
+                                <br>
+                                <Row v-if="counts.length" class="hidden-nowrap">
+                                    <Tag color="success">税费合计：{{amounts}}</Tag>
+                                    <Button class="margin-left16" type="primary" @click="endPrice">成交价</Button>
+                                </Row>
+                            </div>
 
-            </TabPane>
-            <!--表头附加相关操作：-->
-            <template slot="extra">
-              <Row class="hidden-nowrap">
-                <Button type="error" size="small" @click="backUpto" v-if="current && current.price_end>0">提交审核
-                </Button>
-              </Row>
-            </template>
-          </Tabs>
+                        </TabPane>
+                        <!--表头附加相关操作：-->
+                        <template slot="extra">
+                            <Row class="hidden-nowrap">
+                                <Button type="error" size="small" @click="backUpto"
+                                        v-if="current && current.price_end>0">提交审核
+                                </Button>
+                            </Row>
+                        </template>
+                    </Tabs>
+                </div>
+            </Split>
         </div>
-      </Split>
-    </div>
-    <Modal
-      title="成交价格"
-      v-model="formModel"
-      :mask-closable="false"
-      :loading="formLoading"
-      @on-ok="formOk('form')"
-      @on-cancel="formCancel('form')"
-      width="550"
-    >
-      <Form ref="form" :model="form" :rules="rule" label-position="top">
-        <FormItem prop="id" label="编号">
-          <Input v-model="form.id" placeholder="输入标的编号" :maxlength="20" disabled="disabled"/>
-        </FormItem>
-        <FormItem prop="name" label="标的名称">
-          <Input v-model="form.name" placeholder="输入标的名称相关说明" :maxlength="20" disabled="disabled"/>
-        </FormItem>
-        <FormItem prop="price_end" label="成交价格">
-          <Input v-model="form.price_end" placeholder="输入标的成交价格" :maxlength="16"/>
-        </FormItem>
-      </Form>
-    </Modal>
-  </dev-article>
+        <Modal
+                title="成交价格"
+                v-model="formModel"
+                :mask-closable="false"
+                :loading="formLoading"
+                @on-ok="formOk('form')"
+                @on-cancel="formCancel('form')"
+                width="550"
+        >
+            <Form ref="form" :model="form" :rules="rule" label-position="top">
+                <FormItem prop="id" label="编号">
+                    <Input v-model="form.id" placeholder="输入标的编号" :maxlength="20" disabled="disabled"/>
+                </FormItem>
+                <FormItem prop="name" label="标的名称">
+                    <Input v-model="form.name" placeholder="输入标的名称相关说明" :maxlength="20" disabled="disabled"/>
+                </FormItem>
+                <FormItem prop="price_end" label="成交价格">
+                    <Input v-model="form.price_end" placeholder="输入标的成交价格" :maxlength="16"/>
+                </FormItem>
+            </Form>
+        </Modal>
+    </dev-article>
 </template>
 
 <script>
@@ -288,6 +297,14 @@
                         break;
                 }
                 this.countDate = [new Date(date), new Date(today)];
+            },
+
+            // page
+            pageChange(index) {
+                this.pageIndex = index;
+            },
+            sizeChange(size) {
+                this.pageSize = size;
             },
 
             // 表格选择

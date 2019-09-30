@@ -1,142 +1,150 @@
 <template>
-  <dev-article>
-    <Row :gutter="16">
-      <i-col span="6">
-        <Card title="标的清单">
-          <Tag color="green" slot="extra">的</Tag>
-          <Row class="data-collect hidden-nowrap">总数：{{ count.data_total }}</Row>
-          <Divider size="small" dashed></Divider>
-          <Progress :percent="count.data_percent" stroke-color="#19be6b" hide-info></Progress>
-        </Card>
-      </i-col>
-      <i-col span="6">
-        <Card title="税率测算">
-          <Tag color="red" slot="extra">算</Tag>
-          <Row class="data-collect hidden-nowrap">待测：{{ count.count_num }}</Row>
-          <Divider size="small" dashed></Divider>
-          <Progress :percent="count.count_not_percent" stroke-color="red" hide-info></Progress>
-        </Card>
-      </i-col>
-      <i-col span="6">
-        <Card title="测算反馈">
-          <Tag color="geekblue" slot="extra">馈</Tag>
-          <Row class="data-collect hidden-nowrap">反馈：{{ count.back_num }}</Row>
-          <Divider size="small" dashed></Divider>
-          <Progress :percent="count.back_percent" stroke-color="geekblue" hide-info></Progress>
-        </Card>
-      </i-col>
-      <i-col span="6">
-        <Card title="协作成果">
-          <Tag color="blue" slot="extra">果</Tag>
-          <Row class="data-collect hidden-nowrap">完成：{{ count.result_num }}</Row>
-          <Divider size="small" dashed></Divider>
-          <Progress :percent="count.result_percent" stroke-color="red" hide-info></Progress>
-        </Card>
-      </i-col>
-    </Row>
-    <br>
-    <div id="Split">
-      <Split v-model="split1" class="split" min="600" max="300">
-        <div slot="left" class="slot-left">
-          <Tabs value="table">
-            <TabPane label="测算标的" name="table">
-              <Table
-                :columns="cols"
-                :data="datas"
-                :loading="tableLoading"
-                ref="selection"
-                size="small"
-                @on-current-change="selectChange"
-                highlight-row border stripe>
-              </Table>
-              <Row class="margin-top16">
-                <i-col class="hidden-nowrap align-right">
-                  <Page :total="ajaxs.length" show-sizer transfer/>
-                </i-col>
-              </Row>
-            </TabPane>
-            <!--表头附加相关操作：-->
-            <template slot="extra">
-              <Row class="hidden-nowrap">
-                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
-                  <Radio label="day">今日</Radio>
-                  <Radio label="week">周</Radio>
-                  <Radio label="month">月</Radio>
-                  <Radio label="year">年</Radio>
-                </RadioGroup>
-                <DatePicker
-                  v-model="countDate"
-                  type="daterange"
-                  style="width: 180px"
-                  @on-change="dateChange"
-                  transfer>
-                </DatePicker>
-                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
-                </Button>
-              </Row>
-            </template>
-          </Tabs>
+    <dev-article>
+        <Row :gutter="16">
+            <i-col span="6">
+                <Card title="标的清单">
+                    <Tag color="green" slot="extra">的</Tag>
+                    <Row class="data-collect hidden-nowrap">总计：{{ dataCount.total }}</Row>
+                    <Divider size="small" dashed></Divider>
+                    <Progress :percent="dataCount.data_per" stroke-color="#19be6b" hide-info></Progress>
+                </Card>
+            </i-col>
+            <i-col span="6">
+                <Card title="税率测算">
+                    <Tag color="red" slot="extra">算</Tag>
+                    <Row class="data-collect hidden-nowrap">测算：{{ dataCount.count }}</Row>
+                    <Divider size="small" dashed></Divider>
+                    <Progress :percent="dataCount.count_per" stroke-color="#2db7f5" hide-info></Progress>
+                </Card>
+            </i-col>
+            <i-col span="6">
+                <Card title="测算反馈">
+                    <Tag color="geekblue" slot="extra">馈</Tag>
+                    <Row class="data-collect hidden-nowrap">反馈：{{ dataCount.back }}</Row>
+                    <Divider size="small" dashed></Divider>
+                    <Progress :percent="dataCount.back_per" stroke-color="#ff9900" hide-info></Progress>
+                </Card>
+            </i-col>
+            <i-col span="6">
+                <Card title="协作成果">
+                    <Tag color="blue" slot="extra">果</Tag>
+                    <Row class="data-collect hidden-nowrap">完成：{{ dataCount.backed }}</Row>
+                    <Divider size="small" dashed></Divider>
+                    <Progress :percent="dataCount.result_per" stroke-color="#ed4014" hide-info></Progress>
+                </Card>
+            </i-col>
+        </Row>
+        <br>
+        <div id="Split">
+            <Split v-model="split1" class="split" min="600" max="300">
+                <div slot="left" class="slot-left">
+                    <Tabs value="table">
+                        <TabPane label="测算标的" name="table">
+                            <Table
+                                    :columns="cols"
+                                    :data="datas"
+                                    :loading="tableLoading"
+                                    ref="selection"
+                                    size="small"
+                                    @on-current-change="selectChange"
+                                    highlight-row border stripe>
+                            </Table>
+                            <Row class="margin-top16">
+                                <i-col class="hidden-nowrap align-right">
+                                    <Page
+                                            :total="ajaxs.length"
+                                            :page-size="pageSize"
+                                            :page-size-opts="[10, 20, 50, 100]"
+                                            show-sizer
+                                            transfer
+                                            @on-change="pageChange"
+                                            @on-page-size-change="sizeChange"
+                                    />
+                                </i-col>
+                            </Row>
+                        </TabPane>
+                        <!--表头附加相关操作：-->
+                        <template slot="extra">
+                            <Row class="hidden-nowrap">
+                                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
+                                    <Radio label="day">今日</Radio>
+                                    <Radio label="week">周</Radio>
+                                    <Radio label="month">月</Radio>
+                                    <Radio label="year">年</Radio>
+                                </RadioGroup>
+                                <DatePicker
+                                        v-model="countDate"
+                                        type="daterange"
+                                        style="width: 180px"
+                                        @on-change="dateChange"
+                                        transfer>
+                                </DatePicker>
+                                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
+                                </Button>
+                            </Row>
+                        </template>
+                    </Tabs>
+                </div>
+                <div slot="right" class="slot-right">
+                    <Tabs value="table">
+                        <TabPane label="税费清单" name="table">
+                            <div v-if="current">
+                                <Table
+                                        :columns="count_cols"
+                                        :data="counts"
+                                        :loading="countLoading"
+                                        ref="count_sec"
+                                        size="small"
+                                        border stripe>
+                                </Table>
+                                <br>
+                                <Row v-if="counts.length" class="hidden-nowrap">
+                                    <Tag color="success">测算合计：{{amounts}}</Tag>
+                                    <Button class="margin-left16" type="primary" @click="countUpto">提交审核</Button>
+                                </Row>
+                            </div>
+                        </TabPane>
+                        <!--表头附加相关操作：-->
+                        <template slot="extra">
+                            <Row class="hidden-nowrap">
+                                <Button
+                                        class="margin-left8"
+                                        type="primary"
+                                        size="small"
+                                        v-if="current"
+                                        @click="countAdd">添加
+                                </Button>
+                            </Row>
+                        </template>
+                    </Tabs>
+                </div>
+            </Split>
         </div>
-        <div slot="right" class="slot-right">
-          <Tabs value="table">
-            <TabPane label="税费清单" name="table">
-              <div v-if="current">
-                <Table
-                  :columns="count_cols"
-                  :data="counts"
-                  :loading="countLoading"
-                  ref="count_sec"
-                  size="small"
-                  border stripe>
-                </Table>
-                <br>
-                <Row v-if="counts.length" class="hidden-nowrap">
-                  <Tag color="success">测算合计：{{amounts}}</Tag>
-                  <Button class="margin-left16" type="primary" @click="countUpto">提交审核</Button>
-                </Row>
-              </div>
-            </TabPane>
-            <!--表头附加相关操作：-->
-            <template slot="extra">
-              <Row class="hidden-nowrap">
-                <Button
-                  class="margin-left8"
-                  type="primary"
-                  size="small"
-                  v-if="current"
-                  @click="countAdd">添加
-                </Button>
-              </Row>
-            </template>
-          </Tabs>
-        </div>
-      </Split>
-    </div>
-    <Modal
-      title="税种添加"
-      v-model="formModel"
-      :mask-closable="false"
-      :loading="formLoading"
-      @on-ok="formOk('form')"
-      @on-cancel="formCancel('form')"
-      width="550"
-    >
-      <Form ref="form" :model="form" :rules="rule" label-position="top">
-        <FormItem prop="tax_id" label="税种">
-          <Select v-model="form.tax_id" placeholder="税种选择..." transfer>
-            <Option :value="tax.id" :key="tax.id" v-for="tax of taxs">{{tax.name}}
-            </Option>
-          </Select>
-        </FormItem>
-        <FormItem prop="tax_percent" label="税率">
-          <Input v-model="form.tax_percent" placeholder="输入税种对应税率"/>
-        </FormItem>
-        <FormItem prop="tax_amount" label="税额">
-          <Input v-model="form.tax_amount" placeholder="输入税种对应税额"/>
-        </FormItem>
-      </Form>
-    </Modal>
-  </dev-article>
+        <Modal
+                title="税种添加"
+                v-model="formModel"
+                :mask-closable="false"
+                :loading="formLoading"
+                @on-ok="formOk('form')"
+                @on-cancel="formCancel('form')"
+                width="550"
+        >
+            <Form ref="form" :model="form" :rules="rule" label-position="top">
+                <FormItem prop="tax_id" label="税种">
+                    <Select v-model="form.tax_id" placeholder="税种选择..." transfer>
+                        <Option :value="tax.id" :key="tax.id" v-for="tax of taxs">{{tax.name}}
+                        </Option>
+                    </Select>
+                </FormItem>
+                <FormItem prop="tax_percent" label="税率">
+                    <Input v-model="form.tax_percent" placeholder="输入税种对应税率"/>
+                </FormItem>
+                <FormItem prop="tax_amount" label="税额">
+                    <Input v-model="form.tax_amount" placeholder="输入税种对应税额"/>
+                </FormItem>
+            </Form>
+        </Modal>
+    </dev-article>
 </template>
 
 <script>
@@ -343,6 +351,14 @@
                 this.countDate = [new Date(date), new Date(today)];
             },
 
+            // page
+            pageChange(index) {
+                this.pageIndex = index;
+            },
+            sizeChange(size) {
+                this.pageSize = size;
+            },
+
             // 表格选择
             selectChange(row) {
                 this.current = row;
@@ -424,7 +440,7 @@
                     .then(res => {
                         this.current = null;
                         this.countLoading = false;
-                        this.ajax_count.count_num--;
+                        this.ajax_count.count--;
 
                         xcon.arrsDel(this.ajaxs, 'uid', row.uid);
                         this.$Message.success(res + '条测算标的提交审核成功！');
@@ -436,56 +452,41 @@
             },
         },
         computed: {
-            count() {
+            dataCount() {
                 if (this.ajax_count === null) {
                     return {
-                        data_not: 0,
-                        data_total: 0,
-                        data_percent: 0,
-                        count_num: 0,
-                        count_all: 0,
-                        count_percent: 0,
-                        back_num: 0,
-                        back_all: 0,
-                        back_percent: 0,
-                        result_num: 0,
-                        result_percent: 0,
+                        total: 0,
+                        count: 0,
+                        counted: 0,
+                        back: 0,
+                        backed: 0,
+                        data_per: 0,
+                        count_per: 0,
+                        back_per: 0,
+                        result_per: 0,
                     }
                 } else {
-                    let {data_total, data_not, count_num, count_all, back_num, back_all, result_num} = this.ajax_count;
-
-                    data_not = parseFloat(data_not);
-                    data_total = parseFloat(data_total);
-                    count_num = parseFloat(count_num);
-                    count_all = parseFloat(count_all);
-                    back_num = parseFloat(back_num);
-                    back_all = parseFloat(back_all);
-                    result_num = parseFloat(result_num);
-
-                    let data_percent = count_all + data_not > 0 ? count_all / (count_all + data_not) * 100 : 0;
-
-                    let count_percent = count_all ? (count_all - count_num) / count_all * 100 : 0;
-                    let count_not_percent = count_all + back_num > 0 ? back_num / (count_all + back_num) * 100 : 0;
-
-                    let back_percent = back_all ? (back_all - back_num) / back_all * 100 : 0;
-                    let back_not_percent = back_all + result_num > 0 ? result_num / (back_all + result_num) * 100 : 0;
-
-                    let result_percent = data_total ? result_num / data_total * 100 : 0;
-
+                    let {total, dataed, count, counted, back, backed} = this.ajax_count;
+                    total = Number(total);
+                    dataed = Number(dataed);
+                    count = Number(count);
+                    counted = Number(counted);
+                    back = Number(back);
+                    backed = Number(backed);
+                    let data_per = total > 0 ? dataed / total * 100 : 0;
+                    let count_per = dataed ? counted / dataed * 100 : 0;
+                    let back_per = counted ? backed / counted * 100 : 0;
+                    let result_per = total ? backed / total * 100 : 0;
                     return {
-                        data_not,
-                        data_total,
-                        data_percent,
-                        count_num,
-                        count_all,
-                        count_not_percent,
-                        back_num,
-                        back_all,
-                        back_not_percent,
-                        result_num,
-                        count_percent,
-                        back_percent,
-                        result_percent
+                        total,
+                        count,
+                        counted,
+                        back,
+                        backed,
+                        data_per,
+                        count_per,
+                        back_per,
+                        result_per,
                     };
                 }
             },

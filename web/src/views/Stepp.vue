@@ -1,66 +1,74 @@
 <template>
-  <dev-article>
-    <div id="Split">
-      <Split v-model="split1" class="split" min="600" max="300">
-        <div slot="left" class="slot-left">
-          <Tabs value="table">
-            <TabPane label="标的清单" name="table">
-              <Table
-                :columns="cols"
-                :data="datas"
-                :loading="tableLoading"
-                ref="selection"
-                size="small"
-                @on-current-change="selectChange"
-                highlight-row border stripe>
-              </Table>
-              <Row class="margin-top16">
-                <i-col class="hidden-nowrap align-right">
-                  <Page :total="ajaxs.length" show-sizer transfer/>
-                </i-col>
-              </Row>
-            </TabPane>
-            <!--表头附加相关操作：-->
-            <template slot="extra">
-              <Row class="hidden-nowrap">
-                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
-                  <Radio label="day">今日</Radio>
-                  <Radio label="week">周</Radio>
-                  <Radio label="month">月</Radio>
-                  <Radio label="year">年</Radio>
-                </RadioGroup>
-                <DatePicker
-                  v-model="countDate"
-                  type="daterange"
-                  style="width: 180px"
-                  @on-change="dateChange"
-                  transfer>
-                </DatePicker>
-                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
-                </Button>
-              </Row>
-            </template>
-          </Tabs>
+    <dev-article>
+        <div id="Split">
+            <Split v-model="split1" class="split" min="600" max="300">
+                <div slot="left" class="slot-left">
+                    <Tabs value="table">
+                        <TabPane label="标的清单" name="table">
+                            <Table
+                                    :columns="cols"
+                                    :data="datas"
+                                    :loading="tableLoading"
+                                    ref="selection"
+                                    size="small"
+                                    @on-current-change="selectChange"
+                                    highlight-row border stripe>
+                            </Table>
+                            <Row class="margin-top16">
+                                <i-col class="hidden-nowrap align-right">
+                                    <Page
+                                            :total="ajaxs.length"
+                                            :page-size="pageSize"
+                                            :page-size-opts="[10, 20, 50, 100]"
+                                            show-sizer
+                                            transfer
+                                            @on-change="pageChange"
+                                            @on-page-size-change="sizeChange"
+                                    />
+                                </i-col>
+                            </Row>
+                        </TabPane>
+                        <!--表头附加相关操作：-->
+                        <template slot="extra">
+                            <Row class="hidden-nowrap">
+                                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
+                                    <Radio label="day">今日</Radio>
+                                    <Radio label="week">周</Radio>
+                                    <Radio label="month">月</Radio>
+                                    <Radio label="year">年</Radio>
+                                </RadioGroup>
+                                <DatePicker
+                                        v-model="countDate"
+                                        type="daterange"
+                                        style="width: 180px"
+                                        @on-change="dateChange"
+                                        transfer>
+                                </DatePicker>
+                                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
+                                </Button>
+                            </Row>
+                        </template>
+                    </Tabs>
+                </div>
+                <div slot="right" class="slot-right">
+                    <Tabs value="table">
+                        <TabPane label="协作进展" name="table">
+                            <div v-if="current">
+                                <Steps :current="step_value" direction="vertical">
+                                    <Step title="标的清单" content="法院采集标的基本信息"></Step>
+                                    <Step title="清单审核" content="法院管理完成标的审核"></Step>
+                                    <Step title="税费测算" content="税务部门测算标的涉税金额"></Step>
+                                    <Step title="测算审核" content="税务管理审核涉税信息"></Step>
+                                    <Step title="反馈执行" content="法院采集成交、税费信息"></Step>
+                                    <Step title="执行审核" content="法院管理审核成交、税费信息"></Step>
+                                </Steps>
+                            </div>
+                        </TabPane>
+                    </Tabs>
+                </div>
+            </Split>
         </div>
-        <div slot="right" class="slot-right">
-          <Tabs value="table">
-            <TabPane label="协作进展" name="table">
-              <div v-if="current">
-                <Steps :current="step_value" direction="vertical">
-                  <Step title="标的清单" content="法院采集标的基本信息"></Step>
-                  <Step title="清单审核" content="法院管理完成标的审核"></Step>
-                  <Step title="税费测算" content="税务部门测算标的涉税金额"></Step>
-                  <Step title="测算审核" content="税务管理审核涉税信息"></Step>
-                  <Step title="反馈执行" content="法院采集成交、税费信息"></Step>
-                  <Step title="执行审核" content="法院管理审核成交、税费信息"></Step>
-                </Steps>
-              </div>
-            </TabPane>
-          </Tabs>
-        </div>
-      </Split>
-    </div>
-  </dev-article>
+    </dev-article>
 </template>
 
 <script>
@@ -191,6 +199,14 @@
             // 表格选择
             selectChange(row) {
                 this.current = row;
+            },
+
+            pageChange(index) {
+                this.pageIndex = index;
+            },
+
+            sizeChange(size) {
+                this.pageSize = size;
             },
         },
         computed: {

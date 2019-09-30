@@ -1,77 +1,85 @@
 <template>
-  <dev-article>
-    <div id="Split">
-      <Split v-model="split1" class="split" min="600" max="300">
-        <div slot="left" class="slot-left">
-          <Tabs value="table">
-            <TabPane label="测算标的" name="table">
-              <Table
-                :columns="cols"
-                :data="datas"
-                :loading="tableLoading"
-                ref="selection"
-                size="small"
-                @on-current-change="selectChange"
-                highlight-row border stripe>
-              </Table>
-              <Row class="margin-top16">
-                <i-col class="hidden-nowrap align-right">
-                  <Page :total="ajaxs.length" show-sizer transfer/>
-                </i-col>
-              </Row>
-            </TabPane>
-            <!--表头附加相关操作：-->
-            <template slot="extra">
-              <Row class="hidden-nowrap">
-                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
-                  <Radio label="day">今日</Radio>
-                  <Radio label="week">周</Radio>
-                  <Radio label="month">月</Radio>
-                  <Radio label="year">年</Radio>
-                </RadioGroup>
-                <DatePicker
-                  v-model="countDate"
-                  type="daterange"
-                  style="width: 180px"
-                  @on-change="dateChange"
-                  transfer>
-                </DatePicker>
-                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
-                </Button>
-              </Row>
-            </template>
-          </Tabs>
+    <dev-article>
+        <div id="Split">
+            <Split v-model="split1" class="split" min="600" max="300">
+                <div slot="left" class="slot-left">
+                    <Tabs value="table">
+                        <TabPane label="测算标的" name="table">
+                            <Table
+                                    :columns="cols"
+                                    :data="datas"
+                                    :loading="tableLoading"
+                                    ref="selection"
+                                    size="small"
+                                    @on-current-change="selectChange"
+                                    highlight-row border stripe>
+                            </Table>
+                            <Row class="margin-top16">
+                                <i-col class="hidden-nowrap align-right">
+                                    <Page
+                                            :total="ajaxs.length"
+                                            :page-size="pageSize"
+                                            :page-size-opts="[10, 20, 50, 100]"
+                                            show-sizer
+                                            transfer
+                                            @on-change="pageChange"
+                                            @on-page-size-change="sizeChange"
+                                    />
+                                </i-col>
+                            </Row>
+                        </TabPane>
+                        <!--表头附加相关操作：-->
+                        <template slot="extra">
+                            <Row class="hidden-nowrap">
+                                <RadioGroup v-model="dateType" @on-change="dateTypeChange">
+                                    <Radio label="day">今日</Radio>
+                                    <Radio label="week">周</Radio>
+                                    <Radio label="month">月</Radio>
+                                    <Radio label="year">年</Radio>
+                                </RadioGroup>
+                                <DatePicker
+                                        v-model="countDate"
+                                        type="daterange"
+                                        style="width: 180px"
+                                        @on-change="dateChange"
+                                        transfer>
+                                </DatePicker>
+                                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
+                                </Button>
+                            </Row>
+                        </template>
+                    </Tabs>
+                </div>
+                <div slot="right" class="slot-right">
+                    <Tabs value="table">
+                        <TabPane label="税费清单" name="table">
+                            <div v-if="current">
+                                <Table
+                                        :columns="count_cols"
+                                        :data="counts"
+                                        :loading="countLoading"
+                                        ref="count_sec"
+                                        size="small"
+                                        border stripe>
+                                </Table>
+                                <br>
+                                <Row v-if="counts.length" class="hidden-nowrap">
+                                    <Tag color="success">测算合计：{{amounts}}</Tag>
+                                    <Button class="margin-left16" type="primary" @click="countExam">通过审核</Button>
+                                </Row>
+                            </div>
+                        </TabPane>
+                        <!--表头附加相关操作：-->
+                        <template slot="extra">
+                            <Row class="hidden-nowrap">
+                                <Button type="error" size="small" @click="countBack" v-if="current">退回修改</Button>
+                            </Row>
+                        </template>
+                    </Tabs>
+                </div>
+            </Split>
         </div>
-        <div slot="right" class="slot-right">
-          <Tabs value="table">
-            <TabPane label="税费清单" name="table">
-              <div v-if="current">
-                <Table
-                  :columns="count_cols"
-                  :data="counts"
-                  :loading="countLoading"
-                  ref="count_sec"
-                  size="small"
-                  border stripe>
-                </Table>
-                <br>
-                <Row v-if="counts.length" class="hidden-nowrap">
-                  <Tag color="success">测算合计：{{amounts}}</Tag>
-                  <Button class="margin-left16" type="primary" @click="countExam">通过审核</Button>
-                </Row>
-              </div>
-            </TabPane>
-            <!--表头附加相关操作：-->
-            <template slot="extra">
-              <Row class="hidden-nowrap">
-                <Button type="error" size="small" @click="countBack" v-if="current">退回修改</Button>
-              </Row>
-            </template>
-          </Tabs>
-        </div>
-      </Split>
-    </div>
-  </dev-article>
+    </dev-article>
 </template>
 
 <script>
@@ -210,6 +218,14 @@
                         break;
                 }
                 this.countDate = [new Date(date), new Date(today)];
+            },
+
+            // page
+            pageChange(index) {
+                this.pageIndex = index;
+            },
+            sizeChange(size) {
+                this.pageSize = size;
             },
 
             // 表格选择

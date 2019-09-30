@@ -1,50 +1,58 @@
 <template>
-  <dev-article>
-    <Card>
-      <Tabs value="table">
-        <TabPane label="统计清单" name="table">
-          <Table
-            :columns="cols"
-            :data="datas"
-            :loading="tableLoading"
-            ref="selection"
-            size="small"
-            @on-current-change="selectChange"
-            border stripe>
-          </Table>
-          <Row class="margin-top16 hidden-nowrap">
-            <i-col span="6">
-              <Tag color="success">税费合计：{{amounts}}</Tag>
-            </i-col>
-            <i-col span="18" class="align-right">
-              <Page :total="ajaxs.length" show-sizer transfer/>
-            </i-col>
-          </Row>
-        </TabPane>
-        <!--表头附加相关操作：-->
-        <template slot="extra">
-          <Row class="hidden-nowrap">
-            <RadioGroup v-model="dateType" @on-change="dateTypeChange">
-              <Radio label="day">今日</Radio>
-              <Radio label="week">周</Radio>
-              <Radio label="month">月</Radio>
-              <Radio label="year">年</Radio>
-            </RadioGroup>
-            <DatePicker
-              v-model="countDate"
-              type="daterange"
-              style="width: 180px"
-              @on-change="dateChange"
-              transfer>
-            </DatePicker>
-            <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
-            </Button>
-          </Row>
-        </template>
-      </Tabs>
-    </Card>
+    <dev-article>
+        <Card>
+            <Tabs value="table">
+                <TabPane label="统计清单" name="table">
+                    <Table
+                            :columns="cols"
+                            :data="datas"
+                            :loading="tableLoading"
+                            ref="selection"
+                            size="small"
+                            @on-current-change="selectChange"
+                            border stripe>
+                    </Table>
+                    <Row class="margin-top16 hidden-nowrap">
+                        <i-col span="6">
+                            <Tag color="success">税费合计：{{amounts}}</Tag>
+                        </i-col>
+                        <i-col span="18" class="align-right">
+                            <Page
+                                    :total="ajaxs.length"
+                                    :page-size="pageSize"
+                                    :page-size-opts="[10, 20, 50, 100]"
+                                    show-sizer
+                                    transfer
+                                    @on-change="pageChange"
+                                    @on-page-size-change="sizeChange"
+                            />
+                        </i-col>
+                    </Row>
+                </TabPane>
+                <!--表头附加相关操作：-->
+                <template slot="extra">
+                    <Row class="hidden-nowrap">
+                        <RadioGroup v-model="dateType" @on-change="dateTypeChange">
+                            <Radio label="day">今日</Radio>
+                            <Radio label="week">周</Radio>
+                            <Radio label="month">月</Radio>
+                            <Radio label="year">年</Radio>
+                        </RadioGroup>
+                        <DatePicker
+                                v-model="countDate"
+                                type="daterange"
+                                style="width: 180px"
+                                @on-change="dateChange"
+                                transfer>
+                        </DatePicker>
+                        <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询
+                        </Button>
+                    </Row>
+                </template>
+            </Tabs>
+        </Card>
 
-  </dev-article>
+    </dev-article>
 </template>
 
 <script>
@@ -195,6 +203,14 @@
                         break;
                 }
                 this.countDate = [new Date(date), new Date(today)];
+            },
+
+            // page
+            pageChange(index) {
+                this.pageIndex = index;
+            },
+            sizeChange(size) {
+                this.pageSize = size;
             },
         },
         computed: {
