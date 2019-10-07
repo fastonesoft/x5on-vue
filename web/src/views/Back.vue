@@ -65,7 +65,7 @@
                                 <br>
                                 <Row v-if="counts.length" class="hidden-nowrap">
                                     <Tag color="success">税费合计：{{amounts}}</Tag>
-                                    <Button class="margin-left16" type="primary" @click="endPrice">成交价</Button>
+                                    <Button class="margin-left16" type="primary" size="small" @click="endPrice">成交价</Button>
                                 </Row>
                             </div>
 

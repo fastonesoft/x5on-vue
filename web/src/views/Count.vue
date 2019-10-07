@@ -100,7 +100,7 @@
                                 <br>
                                 <Row v-if="counts.length" class="hidden-nowrap">
                                     <Tag color="success">测算合计：{{amounts}}</Tag>
-                                    <Button class="margin-left16" type="primary" @click="countUpto">提交审核</Button>
+                                    <Button class="margin-left16" type="primary" size="small" @click="countUpto">提交审核</Button>
                                 </Row>
                             </div>
                         </TabPane>
@@ -131,7 +131,7 @@
         >
             <Form ref="form" :model="form" :rules="rule" label-position="top">
                 <FormItem prop="tax_id" label="税种">
-                    <Select v-model="form.tax_id" placeholder="税种选择..." transfer>
+                    <Select v-model="form.tax_id" placeholder="税种选择..." filterable transfer>
                         <Option :value="tax.id" :key="tax.id" v-for="tax of taxs">{{tax.name}}
                         </Option>
                     </Select>

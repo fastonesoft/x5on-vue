@@ -16,7 +16,7 @@ ajax.gets = function (url, data) {
         return new Promise(function (resolve, reject) {
             ajax.get(url).then(res => {
                 // 输出请求结果，调试用
-                window.console.log(res);
+                // window.console.log(res);
                 if (res && res.data && res.data.code) {
                     // code != 0 => error
                     if (res.data.code !== -1) {
@@ -38,7 +38,7 @@ ajax.gets = function (url, data) {
         return new Promise(function (resolve, reject) {
             ajax.get(url, {params: data}).then(res => {
                 // 输出请求结果，调试用
-                window.console.log(res);
+                // window.console.log(res);
                 if (res && res.data && res.data.code) {
                     // code != 0 => error
                     if (res.data.code !== -1) {
@@ -65,7 +65,7 @@ ajax.posts = function (url, data) {
     return new Promise(function (resolve, reject) {
         ajax.post(url, param).then(res => {
             // 输出请求结果，调试用
-            window.console.log(res);
+            // window.console.log(res);
             if (res && res.data && res.data.code) {
                 // code != 0 => error
                 if (res.data.code !== -1) {

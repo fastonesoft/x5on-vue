@@ -65,7 +65,7 @@
                                 <br>
                                 <Row v-if="counts.length" class="hidden-nowrap">
                                     <Tag color="success">测算合计：{{amounts}}</Tag>
-                                    <Button class="margin-left16" type="primary" @click="countExam">通过审核</Button>
+                                    <Button class="margin-left16" type="primary" size="small" @click="countExam">通过审核</Button>
                                 </Row>
                             </div>
                         </TabPane>
