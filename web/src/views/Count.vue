@@ -100,7 +100,7 @@
                                 <br>
                                 <Row v-if="counts.length" class="hidden-nowrap">
                                     <Tag color="success">测算合计：{{amounts}}</Tag>
-                                    <Button class="margin-left16" type="primary" size="small" @click="countUpto">提交审核</Button>
+                                    <Button class="margin-left8" type="primary" size="small" @click="countUpto">提交审核</Button>
                                 </Row>
                             </div>
                         </TabPane>
@@ -244,8 +244,8 @@
                             required: true, message: '税率不得为空', trigger: 'blur'
                         },
                         {
-                            pattern: /^\d+(\.\d{1,3})?$/,
-                            message: '数值型，可以带3位小数',
+                            pattern: /^\d+(\.\d{1,4})?$/,
+                            message: '数值型，可以带4位小数',
                             trigger: 'change'
                         }
                     ],
@@ -498,7 +498,7 @@
                 this.counts.forEach(item => {
                     total += Number(item.tax_amount)
                 });
-                return total
+                return total.toFixed(2)
             },
         },
         created() {
@@ -520,7 +520,7 @@
                 if (that.$route.path !== '/vcount') return;
 
                 // 分割条高度计算
-                let height = document.body.clientHeight - 60 - 36 - 196 - 20;
+                let height = document.body.clientHeight - 64 - 32 - 175 - 20;
                 document.getElementById('Split').style.height = height + 'px';
             };
             window.onresize();

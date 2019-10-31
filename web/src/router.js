@@ -87,6 +87,11 @@ const router = new Router({
             component: () => import('./views/Stepp.vue')
         },
         {
+            path: '/vstepm',
+            name: '/vstepm',
+            component: () => import('./views/Stepm.vue')
+        },
+        {
             path: '/vresult',
             name: '/vresult',
             component: () => import('./views/Result.vue')

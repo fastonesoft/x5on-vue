@@ -53,15 +53,13 @@
                 <div slot="right" class="slot-right">
                     <Tabs value="table">
                         <TabPane label="协作进展" name="table">
-                            <div v-if="current">
-                                <Steps :current="step_value" direction="vertical">
-                                    <Step title="标的清单" content="法院采集标的基本信息"></Step>
-                                    <Step title="清单审核" content="法院管理完成标的审核"></Step>
-                                    <Step title="税费测算" content="税务部门测算标的涉税金额"></Step>
-                                    <Step title="测算审核" content="税务管理审核涉税信息"></Step>
-                                    <Step title="反馈执行" content="法院采集成交、税费信息"></Step>
-                                    <Step title="执行审核" content="法院管理审核成交、税费信息"></Step>
+                            <div v-if="exam_user.length>0">
+                                <Steps :current="exam_user.length" direction="vertical">
+                                    <Step :title="item.exam_name" :content="item.user_name + ' ' + item.exam_time" v-for="item of exam_user" :key="item.data_id"></Step>
                                 </Steps>
+                                <div class="align-right">
+                                    <Button type="error" size="small" @click="countBackClick">撤销</Button>
+                                </div>
                             </div>
                         </TabPane>
                     </Tabs>
@@ -75,7 +73,7 @@
     import xcon from '../libs/xcon'
 
     export default {
-        name: "Stepp",
+        name: "Stepm",
         data() {
             return {
                 // split
@@ -130,6 +128,7 @@
                 pageSize: 10,
                 tableLoading: true,
                 current: null,
+                exam_user: [],
             }
         },
         methods: {
@@ -139,7 +138,7 @@
 
                 let begin = xcon.dateFormat(this.countDate[0], 'yyyy-MM-dd');
                 let end = xcon.dateFormat(this.countDate[1], 'yyyy-MM-dd');
-                this.$.posts('/step/find', {begin, end})
+                this.$.posts('/stepm/find', {begin, end})
                     .then(res => {
                         this.ajaxs = res;
                         this.tableLoading = false;
@@ -176,14 +175,28 @@
             // 表格选择
             selectChange(row) {
                 this.current = row;
+
+                // 获取审核用户
+                this.$.posts('/stepm/user', {data_uid: row.uid})
+                    .then(res => {
+                        this.exam_user = res;
+                        this.tableLoading = false;
+                    })
+                    .catch(error => {
+                        this.tableLoading = false;
+                        this.$Message.error(error);
+                    })
             },
 
             pageChange(index) {
                 this.pageIndex = index;
             },
-
             sizeChange(size) {
                 this.pageSize = size;
+            },
+
+            countBackClick() {
+                let row = this.current
             },
         },
         computed: {
@@ -205,7 +218,7 @@
             },
         },
         created() {
-            this.$.gets('/step/index')
+            this.$.gets('/stepm/index')
                 .then(res => {
                     this.ajaxs = res;
                     this.tableLoading = false
@@ -218,7 +231,7 @@
         mounted() {
             const that = this;
             window.onresize = function () {
-                if (that.$route.path !== '/vstep') return;
+                if (that.$route.path !== '/vstepm') return;
 
                 // 分割条高度计算
                 let height = document.body.clientHeight - 64 - 32;

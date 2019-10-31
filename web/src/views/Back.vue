@@ -65,7 +65,7 @@
                                 <br>
                                 <Row v-if="counts.length" class="hidden-nowrap">
                                     <Tag color="success">税费合计：{{amounts}}</Tag>
-                                    <Button class="margin-left16" type="primary" size="small" @click="endPrice">成交价</Button>
+                                    <Button class="margin-left8" type="primary" size="small" @click="endPrice">成交价</Button>
                                 </Row>
                             </div>
 
@@ -340,6 +340,7 @@
                         this.$.posts('/back/edit', this.form)
                             .then(res => {
                                 xcon.arrsEdit(this.ajaxs, 'uid', res.uid, res);
+                                this.current = res;
 
                                 this.formModel = false;
                                 this.$refs[name].resetFields();
@@ -395,7 +396,7 @@
                 this.counts.forEach(item => {
                     total += parseFloat(item.tax_amount)
                 });
-                return total
+                return total.toFixed(2)
             },
         },
         created() {

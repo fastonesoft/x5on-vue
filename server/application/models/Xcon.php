@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Xcon
 {
     // 跨域支持，上传的时候要禁用
-    const CROS = 0;
+    const CROS = 1;
 
     // ERROR-CODE
     const NO_ERROR = 0;

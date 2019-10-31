@@ -116,12 +116,14 @@
                     </Select>
                 </FormItem>
                 <FormItem prop="owner" label="产权人">
-                    <Input v-model="form.owner" placeholder="输入产权人姓名" :maxlength="4"/>
+                    <Input v-model="form.owner" placeholder="输入产权人姓名" :maxlength="30"/>
                 </FormItem>
                 <FormItem prop="area_type" label="产权性质">
                     <Select v-model="form.area_type" placeholder="产权性质选择..." style="width: 162px;" transfer>
                         <Option value="国有" key="国有">国有</Option>
                         <Option value="集体" key="集体">集体</Option>
+                        <Option value="有限公司" key="有限公司">有限公司</Option>
+                        <Option value="其它个人" key="其它个人">其它个人</Option>
                     </Select>
                 </FormItem>
                 <FormItem prop="area_id" label="所属地区">
@@ -302,8 +304,8 @@
                             required: true, message: '产权人姓名不得为空', trigger: 'blur'
                         },
                         {
-                            pattern: /^[\u4e00-\u9fa5]{2,4}$/,
-                            message: '2-4位，汉字，不得有空格',
+                            pattern: /^[\u4e00-\u9fa5]{2,30}$/,
+                            message: '2-30位，汉字，不得有空格',
                             trigger: 'change'
                         },
                     ],

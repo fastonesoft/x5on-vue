@@ -213,7 +213,7 @@
                 this.ajaxs.forEach(item => {
                     total += parseFloat(item.price_tax)
                 });
-                return total
+                return total.toFixed(2)
             },
         },
         created() {
