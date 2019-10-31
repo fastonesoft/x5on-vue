@@ -7,7 +7,7 @@ class Stepm extends XC_Controller
     public function index()
     {
         Xcon::loginCheck(function ($userinfor) {
-            // 协作清单（未完成）
+            // 协作清单
             $result = Xcon::getsBy('xvData', 'backed=0');
 
             Xcon::json(Xcon::NO_ERROR, $result);
@@ -61,7 +61,7 @@ class Stepm extends XC_Controller
             $exam_id = pow(2, $value);
 
             // 删除审核用户
-            Xcon::delBy('xcDataExamUser', compact('data_id', 'exam_id'));
+            Xcon::delBy('xcDataExam', compact('data_id', 'exam_id'));
 
             $result = Xcon::getsBy('xvDataExamUser', compact('data_id'), 'exam_id');
 

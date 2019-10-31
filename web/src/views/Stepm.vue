@@ -1,7 +1,7 @@
 <template>
     <dev-article>
         <div id="Split">
-            <Split v-model="split1" class="split" min="600" max="300">
+            <Split v-model="split1" class="split" min="300" max="300">
                 <div slot="left" class="slot-left">
                     <Tabs value="table">
                         <TabPane label="标的清单" name="table">
@@ -55,10 +55,11 @@
                         <TabPane label="协作进展" name="table">
                             <div v-if="exam_user.length>0">
                                 <Steps :current="exam_user.length" direction="vertical">
-                                    <Step :title="item.exam_name" :content="item.user_name + ' ' + item.exam_time" v-for="item of exam_user" :key="item.data_id"></Step>
+                                    <Step :title="item.exam_name" :content="'协作人：' + item.user_name + '，' + item.exam_time" v-for="item of exam_user" :key="item.exam_id"></Step>
                                 </Steps>
+                                <Divider dashed />
                                 <div class="align-right">
-                                    <Button type="error" size="small" @click="countBackClick">撤销</Button>
+                                    <Button type="error" size="small" @click="countBackClick">撤销最近</Button>
                                 </div>
                             </div>
                         </TabPane>
@@ -129,11 +130,13 @@
                 tableLoading: true,
                 current: null,
                 exam_user: [],
+                minWidth: 100,
             }
         },
         methods: {
             countDateClick() {
                 this.current = null;
+                this.exam_user = [];
                 this.tableLoading = true;
 
                 let begin = xcon.dateFormat(this.countDate[0], 'yyyy-MM-dd');
@@ -175,16 +178,16 @@
             // 表格选择
             selectChange(row) {
                 this.current = row;
-
                 // 获取审核用户
+                this.$Loading.start();
                 this.$.posts('/stepm/user', {data_uid: row.uid})
                     .then(res => {
                         this.exam_user = res;
-                        this.tableLoading = false;
+                        this.$Loading.finish();
                     })
                     .catch(error => {
-                        this.tableLoading = false;
                         this.$Message.error(error);
+                        this.$Loading.error();
                     })
             },
 
@@ -196,7 +199,18 @@
             },
 
             countBackClick() {
-                let row = this.current
+                let {uid} = this.current;
+                let value = this.exam_user.length;
+                this.$Loading.start();
+                this.$.posts('/stepm/back', {data_uid: uid, value})
+                    .then(res => {
+                        this.exam_user = res;
+                        this.$Loading.finish();
+                    })
+                    .catch(error => {
+                        this.$Message.error(error);
+                        this.$Loading.error();
+                    })
             },
         },
         computed: {
@@ -235,7 +249,7 @@
 
                 // 分割条高度计算
                 let height = document.body.clientHeight - 64 - 32;
-                document.getElementById('Split').style.height = height + 'px';
+                document.getElementById('Split').style.height = height + 'px';                
             };
             window.onresize();
         },
