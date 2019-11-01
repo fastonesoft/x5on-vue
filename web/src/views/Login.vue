@@ -11,7 +11,7 @@
             <Form ref="form" :model="form" :rules="rule">
               <FormItem prop="id">
                 <Input type="text" prefix="md-contact" v-model="form.id" size="large" :maxlength="20"
-                       placeholder="输入帐号，5-20个字符"/>
+                       placeholder="输入帐号，5-20个字符" :autofocus="true"/>
               </FormItem>
               <FormItem prop="pass">
                 <Input type="password" prefix="ios-eye" v-model="form.pass" size="large" :maxlength="20"

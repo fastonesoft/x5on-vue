@@ -55,7 +55,7 @@
                         <TabPane label="协作进展" name="table">
                             <div v-if="exam_user.length>0">
                                 <Steps :current="exam_user.length" direction="vertical">
-                                    <Step :title="item.exam_name" :content="'协作人：' + item.user_name + '，' + item.exam_time" v-for="item of exam_user" :key="item.exam_id"></Step>
+                                    <Step :title="item.exam_name" :content="'协作执行：' + item.user_name + '，' + item.exam_time" v-for="item of exam_user" :key="item.exam_id"></Step>
                                 </Steps>
                                 <Divider dashed />
                                 <div class="align-right">

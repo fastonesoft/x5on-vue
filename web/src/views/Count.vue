@@ -136,11 +136,14 @@
                         </Option>
                     </Select>
                 </FormItem>
+                <FormItem prop="tax_base" label="计税依据">
+                    <Input v-model="form.tax_base" placeholder="输入计税依据"/>
+                </FormItem>
                 <FormItem prop="tax_percent" label="税率">
-                    <Input v-model="form.tax_percent" placeholder="输入税种对应税率"/>
+                    <Input v-model="form.tax_percent" placeholder="输入对应税率"/>
                 </FormItem>
                 <FormItem prop="tax_amount" label="税额">
-                    <Input v-model="form.tax_amount" placeholder="输入税种对应税额"/>
+                    <Input v-model="form.tax_amount" placeholder="输入对应税额"/>
                 </FormItem>
             </Form>
         </Modal>
@@ -239,6 +242,16 @@
                             required: true, message: '请选择相应的税种', trigger: 'change'
                         }
                     ],
+                    tax_base: [
+                        {
+                            required: true, message: '计税依据不得为空', trigger: 'blur'
+                        },
+                        {
+                            pattern: /^\d+(\.\d{1,2})?$/,
+                            message: '数值型，可以带2位小数',
+                            trigger: 'change'
+                        }
+                    ],                    
                     tax_percent: [
                         {
                             required: true, message: '税率不得为空', trigger: 'blur'
