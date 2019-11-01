@@ -1,7 +1,7 @@
 <template>
     <dev-article>
         <div id="Split">
-            <Split v-model="split1" class="split" min="150" max="150">
+            <Split v-model="split1" class="split" min="600" max="150">
                 <div slot="left" class="slot-left">
                     <Tabs value="table">
                         <TabPane label="测算标的" name="table">
