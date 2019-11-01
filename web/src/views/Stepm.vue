@@ -1,7 +1,7 @@
 <template>
     <dev-article>
         <div id="Split">
-            <Split v-model="split1" class="split" min="300" max="300">
+            <Split v-model="split1" class="split" min="600" max="150">
                 <div slot="left" class="slot-left">
                     <Tabs value="table">
                         <TabPane label="标的清单" name="table">
@@ -199,18 +199,25 @@
             },
 
             countBackClick() {
-                let {uid} = this.current;
-                let value = this.exam_user.length;
-                this.$Loading.start();
-                this.$.posts('/stepm/back', {data_uid: uid, value})
-                    .then(res => {
-                        this.exam_user = res;
-                        this.$Loading.finish();
-                    })
-                    .catch(error => {
-                        this.$Message.error(error);
-                        this.$Loading.error();
-                    })
+                this.$Modal.confirm({
+                    title: '确认提示',
+                    content: '是否确认撤消当前“标的”最近一次协作执行记录？',
+                    onOk: () => {
+                        let {uid} = this.current;
+                        let value = this.exam_user.length;
+
+                        this.$Loading.start();
+                        this.$.posts('/stepm/back', {data_uid: uid, value})
+                            .then(res => {
+                                this.exam_user = res;
+                                this.$Loading.finish();
+                            })
+                            .catch(error => {
+                                this.$Message.error(error);
+                                this.$Loading.error();
+                            })
+                    },
+                })
             },
         },
         computed: {

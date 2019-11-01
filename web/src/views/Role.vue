@@ -1,7 +1,7 @@
 <template>
     <dev-article>
         <div id="roleSplit">
-            <Split v-model="split1" class="split" min="300" max="600">
+            <Split v-model="split1" class="split" min="300" max="150">
                 <div slot="left" class="slot-left">
                     <Tabs value="menus">
                         <TabPane label="菜单鉴权" name="menus">
@@ -140,26 +140,5 @@
 </script>
 
 <style scoped>
-
-    .split {
-        border: 1px solid #e8eaec;
-        border-radius: 4px;
-        background: #fff;
-        transition: all .2s ease-in-out;
-    }
-
-    .split:hover {
-        border-color: #eee;
-        box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
-        transition: all .2s ease-in-out;
-    }
-
-    .slot-left {
-        padding: 16px;
-    }
-
-    .slot-right {
-        padding: 16px 16px 16px 20px;
-    }
 
 </style>
