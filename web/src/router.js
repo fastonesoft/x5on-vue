@@ -52,6 +52,11 @@ const router = new Router({
             component: () => import('./views/Grid.vue')
         },
         {
+            path: '/vtask',
+            name: '/vtask',
+            component: () => import('./views/Task.vue')
+        },
+        {
             path: '/vdata',
             name: '/vdata',
             component: () => import('./views/Data.vue')
