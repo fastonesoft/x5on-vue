@@ -162,6 +162,7 @@
 <script>
     import xcon from '../libs/xcon'
     import html2canvas from 'html2canvas';
+    import print from '../libs/print';
 
     const formConst = {
         id: '',
@@ -514,16 +515,20 @@
                 // 获取区域设置
                 // let ref = this.$refs['print'];
                 // let width = ref.width;
-                // let height = ref.height;
+                let height = 1024;
 
 
                 // 打印测试
                 html2canvas(document.getElementById('print'), {
-                    backgroundColor: null
+                    backgroundColor: null,
+                    height,
                 }).then(canvas => {
-                    this.imgData = canvas.toDataURL("image/png")
-                })
+                    let imgData = canvas.toDataURL("image/png")
+                    print.printImage('打印标题', imgData)
 
+
+
+                })
 
 return false;
                 let select = this.$refs.table.getSelection();
