@@ -178,7 +178,7 @@
             // 表格选择
             selectChange(row) {
                 this.current = row;
-                // 获取审核用户
+                // 获取复核用户
                 this.$Loading.start();
                 this.$.posts('/stepm/user', {data_uid: row.uid})
                     .then(res => {

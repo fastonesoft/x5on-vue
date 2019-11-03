@@ -26,8 +26,12 @@
             v-for="menu of menus.filter(menu => menu.type_id === type.type_id)"
             v-bind:key="menu.id"
             replace>
-            <Icon :type="menu.icon"/>
-            <span>{{menu.title}}</span>
+
+            <Tooltip :content="menu.title" placement="right" transfer>
+                <Icon :type="menu.icon"/>
+                <span class="margin-left8">{{menu.title}}</span>
+            </Tooltip>
+
           </MenuItem>
         </MenuGroup>
       </Menu>

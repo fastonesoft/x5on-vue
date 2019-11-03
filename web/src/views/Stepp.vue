@@ -56,11 +56,11 @@
                             <div v-if="current">
                                 <Steps :current="step_value" direction="vertical">
                                     <Step title="标的清单" content="法院采集标的基本信息"></Step>
-                                    <Step title="清单审核" content="法院管理完成标的审核"></Step>
+                                    <Step title="清单复核" content="法院管理完成标的复核"></Step>
                                     <Step title="税费测算" content="税务部门测算标的涉税金额"></Step>
-                                    <Step title="测算审核" content="税务管理审核涉税信息"></Step>
+                                    <Step title="测算复核" content="税务管理复核涉税信息"></Step>
                                     <Step title="反馈执行" content="法院采集成交、税费信息"></Step>
-                                    <Step title="执行审核" content="法院管理审核成交、税费信息"></Step>
+                                    <Step title="执行复核" content="法院管理复核成交、税费信息"></Step>
                                 </Steps>
                             </div>
                         </TabPane>

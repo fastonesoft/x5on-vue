@@ -50,6 +50,7 @@ class Count extends XC_Controller
             $params = Xcon::params();
             $data_id = Xcon::array_key($params, 'data_id');
             $tax_id = Xcon::array_key($params, 'tax_id');
+            $tax_base = Xcon::array_key($params, 'tax_base');
             $tax_percent = Xcon::array_key($params, 'tax_percent');
             $tax_amount = Xcon::array_key($params, 'tax_amount');
             $uid = Xcon::uid();
@@ -57,7 +58,7 @@ class Count extends XC_Controller
             // 检测税种是否已添加
             Xcon::existBy('xcDataTax', compact('data_id', 'tax_id'), '当前税种已添加！');
 
-            Xcon::add('xcDataTax', compact('uid', 'data_id', 'tax_id', 'tax_percent', 'tax_amount'));
+            Xcon::add('xcDataTax', compact('uid', 'data_id', 'tax_id', 'tax_base', 'tax_percent', 'tax_amount'));
 
             $result = Xcon::getByUid('xvDataTax', $uid);
             Xcon::json(Xcon::NO_ERROR, $result);

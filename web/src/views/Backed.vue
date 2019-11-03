@@ -63,12 +63,12 @@
                 <Cell title="初始价格：" :extra="current.price_begin"/>
                 <Cell title="评价价格：" :extra="current.price_ass"/>
                 <Cell title="起拍价格：" :extra="current.price_shoot"/>
-                <Cell title="反馈审核" disabled/>
+                <Cell title="反馈复核" disabled/>
                 <Cell title="成交价格：" :extra="current.price_end"/>
                 <Cell title="应征税费：" :extra="current.price_tax"/>
                 <Cell title="最终价格：" :extra="current.price"/>
                 <Row class="margin-top16 align-right">
-                  <Button type="primary" class="margin-left16" @click="backedExam">审核通过</Button>
+                  <Button type="primary" class="margin-left16" @click="backedExam">复核通过</Button>
                 </Row>
               </CellGroup>
             </TabPane>
@@ -207,11 +207,11 @@
                 }
                 this.$.posts('/backed/exam', {uid: row.uid})
                     .then(res => {
-                        // 审核
+                        // 复核
                         xcon.arrsDel(this.ajaxs, 'uid', row.uid);
 
                         this.current = null;
-                        this.$Message.success(res + '条“反馈”标的已审核！');
+                        this.$Message.success(res + '条“反馈”标的已复核！');
                     })
                     .catch(error => {
                         this.$Message.error(error);

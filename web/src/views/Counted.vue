@@ -1,7 +1,7 @@
 <template>
     <dev-article>
         <div id="Split">
-            <Split v-model="split1" class="split" min="600" max="150">
+            <Split v-model="split1" class="split" min="600" max="300">
                 <div slot="left" class="slot-left">
                     <Tabs value="table">
                         <TabPane label="测算标的" name="table">
@@ -65,7 +65,7 @@
                                 <br>
                                 <Row v-if="counts.length" class="hidden-nowrap">
                                     <Tag color="success">测算合计：{{amounts}}</Tag>
-                                    <Button class="margin-left8" type="primary" size="small" @click="countExam">通过审核</Button>
+                                    <Button class="margin-left8" type="primary" size="small" @click="countExam">通过复核</Button>
                                 </Row>
                             </div>
                         </TabPane>
@@ -166,6 +166,11 @@
                         key: 'tax_name',
                     },
                     {
+                        title: '依据',
+                        key: 'tax_base',
+                        align: 'right',
+                    },
+                    {
                         title: '税率',
                         key: 'tax_percent',
                         align: 'right',
@@ -263,7 +268,7 @@
                         this.$Message.error(error);
                     });
             },
-            // 测算结束，提交审核
+            // 测算结束，提交复核
             countExam() {
                 let row = this.current;
                 if (row === null) {
@@ -278,7 +283,7 @@
                         this.countLoading = false;
 
                         xcon.arrsDel(this.ajaxs, 'uid', row.uid);
-                        this.$Message.success(res + '条测算标的审核通过！');
+                        this.$Message.success(res + '条测算标的复核通过！');
                     })
                     .catch(error => {
                         this.countLoading = false;

@@ -74,7 +74,7 @@
                         <template slot="extra">
                             <Row class="hidden-nowrap">
                                 <Button type="error" size="small" @click="backUpto"
-                                        v-if="current && current.price_end>0">提交审核
+                                        v-if="current && current.price_end>0">提交复核
                                 </Button>
                             </Row>
                         </template>
@@ -368,7 +368,7 @@
                 this.$refs[name].resetFields();
                 this.$Message.warning('表单添加取消！');
             },
-            // 提交审核
+            // 提交复核
             backUpto() {
                 let row = this.current;
                 this.countLoading = true;
@@ -379,7 +379,7 @@
                         this.countLoading = false;
 
                         xcon.arrsDel(this.ajaxs, 'uid', row.uid);
-                        this.$Message.success(res + '条反馈标的提交审核成功！');
+                        this.$Message.success(res + '条反馈标的提交复核成功！');
                     })
                     .catch(error => {
                         this.countLoading = false;

@@ -1,5 +1,6 @@
 <template>
     <dev-article>
+        <div id="print">
         <Row :gutter="16">
             <i-col span="5">
                 <Card title="标的清单">
@@ -54,7 +55,7 @@
                         </Table>
                         <Row class="margin-top16">
                             <i-col span="12" class="hidden-nowrap align-left">
-                                <Button type="primary" @click="uptoExam">提交审核</Button>
+                                <Button type="primary" @click="uptoExam">提交复核</Button>
                                 <Button type="error" class="margin-left16" v-if="ajaxs.length>0" @click="delData">删除记录
                                 </Button>
                             </i-col>
@@ -153,11 +154,14 @@
                 </FormItem>
             </Form>
         </Modal>
+        </div>
+        <img :src="imgData" />
     </dev-article>
 </template>
 
 <script>
     import xcon from '../libs/xcon'
+    import html2canvas from 'html2canvas';
 
     const formConst = {
         id: '',
@@ -179,6 +183,8 @@
         name: "Data",
         data() {
             return {
+                imgData: null,
+
                 ajax_count: null,
 
                 dateType: 'day',
@@ -504,6 +510,22 @@
             },
 
             uptoExam() {
+
+                // 获取区域设置
+                // let ref = this.$refs['print'];
+                // let width = ref.width;
+                // let height = ref.height;
+
+
+                // 打印测试
+                html2canvas(document.getElementById('print'), {
+                    backgroundColor: null
+                }).then(canvas => {
+                    this.imgData = canvas.toDataURL("image/png")
+                })
+
+
+return false;
                 let select = this.$refs.table.getSelection();
                 if (select.length === 0) {
                     this.$Message.error('先选择相应“标的”');
@@ -515,7 +537,7 @@
                 });
                 let uids = arrs.join(',');
 
-                // 提交审核
+                // 提交复核
                 this.$.posts('/data/upto', {uids})
                     .then(res => {
                         let that = this;

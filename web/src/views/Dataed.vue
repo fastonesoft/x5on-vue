@@ -64,7 +64,7 @@
                 <Cell title="评价价格：" :extra="current.price_ass"/>
                 <Cell title="起拍价格：" :extra="current.price_shoot"/>
                 <Row class="margin-top16 align-right">
-                  <Button type="primary" class="margin-left16" @click="dataedExam">审核通过</Button>
+                  <Button type="primary" class="margin-left16" @click="dataedExam">复核通过</Button>
                 </Row>
               </CellGroup>
             </TabPane>
@@ -204,11 +204,11 @@
                 }
                 this.$.posts('/dataed/exam', {uid: row.uid})
                     .then(res => {
-                        // 审核
+                        // 复核
                         xcon.arrsDel(this.ajaxs, 'uid', row.uid);
 
                         this.current = null;
-                        this.$Message.success(res + '条“标的”数据已审核！');
+                        this.$Message.success(res + '条“标的”数据已复核！');
                     })
                     .catch(error => {
                         this.$Message.error(error);

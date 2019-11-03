@@ -6,6 +6,7 @@ import 'iview/dist/styles/iview.css'
 import router from './router'
 import store from './store'
 import axios from './libs/axios'
+
 import devArticle from './components/dev-article.vue'
 
 import xcon from './libs/xcon'
