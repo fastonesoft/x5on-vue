@@ -19,7 +19,7 @@
               <Page
                 :total="ajax_datas.length"
                 :page-size="pageSize"
-                :page-size-opts="[10, 20, 50, 100]"
+                :page-size-opts="[5, 10]"
                 show-sizer
                 transfer
                 @on-change="pageChange"
@@ -112,7 +112,7 @@
                 tableLoading: true,
 
                 pageIndex: 1,
-                pageSize: 10,
+                pageSize: 5,
                 cols: [
                     {
                         width: 50,

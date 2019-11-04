@@ -1,6 +1,6 @@
 <template>
     <dev-article>
-        <Row :gutter="16">
+        <Row :gutter="6">
             <i-col span="5">
                 <Card title="标的清单">
                     <Tag color="green" slot="extra">的</Tag>
@@ -40,7 +40,7 @@
                 </Card>
             </i-col>
         </Row>
-        <Row class="margin-top16">
+        <Row class="margin-top6">
             <Card>
                 <Tabs value="table">
                     <TabPane label="标的清单" name="table">

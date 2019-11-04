@@ -1,6 +1,6 @@
 <template>
     <dev-article>
-        <div id="roleSplit">
+        <div id="Split">
             <Split v-model="split1" class="split" min="300" max="150">
                 <div slot="left" class="slot-left">
                     <Tabs value="menus">
@@ -126,15 +126,7 @@
                 });
         },
         mounted() {
-            const that = this;
-            window.onresize = function () {
-                if (that.$route.path !== '/vrole') return;
 
-                // 分割条高度计算
-                let height = document.body.clientHeight - 60 - 36;
-                document.getElementById('roleSplit').style.height = height + 'px';
-            };
-            window.onresize();
         },
     }
 </script>

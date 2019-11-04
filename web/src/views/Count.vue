@@ -1,6 +1,6 @@
 <template>
     <dev-article>
-        <Row :gutter="16">
+        <Row :gutter="6">
             <i-col span="6">
                 <Card title="标的清单">
                     <Tag color="green" slot="extra">的</Tag>
@@ -533,15 +533,7 @@
                 });
         },
         mounted() {
-            // const that = this;
-            // window.onresize = function () {
-            //     if (that.$route.path !== '/vcount') return;
 
-            //     // 分割条高度计算
-            //     let height = document.body.clientHeight - 64 - 32 - 175 - 20;
-            //     document.getElementById('Split').style.height = height + 'px';
-            // };
-            // window.onresize();
         },
     }
 </script>
@@ -550,7 +542,7 @@
 
     #Split {
         position: absolute;
-        top: 191px;
+        top: 181px;
         left: 0;
         right: 0;
         bottom: 0;

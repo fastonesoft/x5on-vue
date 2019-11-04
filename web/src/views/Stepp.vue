@@ -216,19 +216,12 @@
                 });
         },
         mounted() {
-            const that = this;
-            window.onresize = function () {
-                if (that.$route.path !== '/vstep') return;
 
-                // 分割条高度计算
-                let height = document.body.clientHeight - 64 - 32;
-                document.getElementById('Split').style.height = height + 'px';
-            };
-            window.onresize();
         },
     }
 </script>
 
 <style scoped>
+
 
 </style>

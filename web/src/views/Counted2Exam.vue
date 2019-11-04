@@ -298,15 +298,15 @@
                 });
         },
         mounted() {
-            const that = this;
-            window.onresize = function () {
-                if (that.$route.path !== '/vcounted2exam') return;
+            // const that = this;
+            // window.onresize = function () {
+            //     if (that.$route.path !== '/vcounted2exam') return;
 
-                // 分割条高度计算
-                let height = document.body.clientHeight - 60 - 36;
-                document.getElementById('Split').style.height = height + 'px';
-            };
-            window.onresize();
+            //     // 分割条高度计算
+            //     let height = document.body.clientHeight - 60 - 36;
+            //     document.getElementById('Split').style.height = height + 'px';
+            // };
+            // window.onresize();
         },
     }
 </script>
