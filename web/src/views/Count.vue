@@ -533,19 +533,27 @@
                 });
         },
         mounted() {
-            const that = this;
-            window.onresize = function () {
-                if (that.$route.path !== '/vcount') return;
+            // const that = this;
+            // window.onresize = function () {
+            //     if (that.$route.path !== '/vcount') return;
 
-                // 分割条高度计算
-                let height = document.body.clientHeight - 64 - 32 - 175 - 20;
-                document.getElementById('Split').style.height = height + 'px';
-            };
-            window.onresize();
+            //     // 分割条高度计算
+            //     let height = document.body.clientHeight - 64 - 32 - 175 - 20;
+            //     document.getElementById('Split').style.height = height + 'px';
+            // };
+            // window.onresize();
         },
     }
 </script>
 
 <style scoped>
+
+    #Split {
+        position: absolute;
+        top: 191px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
 
 </style>

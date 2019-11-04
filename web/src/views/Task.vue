@@ -161,8 +161,6 @@
 
 <script>
     import xcon from '../libs/xcon'
-    import html2canvas from 'html2canvas';
-    import print from '../libs/print';
 
     const formConst = {
         id: '',
@@ -181,7 +179,7 @@
     };
 
     export default {
-        name: "Data",
+        name: "Task",
         data() {
             return {
                 imgData: null,
@@ -511,26 +509,6 @@
             },
 
             uptoExam() {
-
-                // 获取区域设置
-                // let ref = this.$refs['print'];
-                // let width = ref.width;
-                let height = 1024;
-
-
-                // 打印测试
-                html2canvas(document.getElementById('print'), {
-                    backgroundColor: null,
-                    height,
-                }).then(canvas => {
-                    let imgData = canvas.toDataURL("image/png")
-                    print.printImage('打印标题', imgData)
-
-
-
-                })
-
-return false;
                 let select = this.$refs.table.getSelection();
                 if (select.length === 0) {
                     this.$Message.error('先选择相应“标的”');

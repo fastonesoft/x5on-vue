@@ -89,7 +89,7 @@
     import xcon from '../libs/xcon'
 
     export default {
-        name: "Role",
+        name: "Backed",
         data() {
             return {
 

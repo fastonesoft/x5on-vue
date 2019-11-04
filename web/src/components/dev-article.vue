@@ -7,6 +7,7 @@
       :class="{'sider-hide': isCollaped}"
       collapsible
       breakpoint="xl"
+      @on-collapse="siderColla"
     >
       <Row>
         <i-col class="sider-logo-center">
@@ -17,6 +18,7 @@
         theme="dark"
         width="200"
         :active-name="activeName"
+        class="sider-menu"
       >
         <MenuGroup :title="type.type_name" v-for="type of types" v-bind:key="type.type_id">
           <MenuItem
@@ -36,7 +38,7 @@
         </MenuGroup>
       </Menu>
     </Sider>
-    <Layout>
+    <Layout class="content-right">
       <Header class="header">
         <Row>
           <i-col span="19" class="header-title">
@@ -63,12 +65,10 @@
           </i-col>
         </Row>
       </Header>
-      <Content class="content">
+      <Content class="content-main">
         <slot></slot>
       </Content>
     </Layout>
-
-
   </Layout>
 </template>
 
@@ -101,6 +101,11 @@
         },
 
         methods: {
+
+          siderColla(value) {
+            if 
+          },
+
             downMenuClick(name) {
                 switch (name) {
                     case 'logout': {
@@ -133,7 +138,12 @@
 <style>
 
   .content-body {
+    width: 100%;
     height: 100%;
+  }
+
+  .content-right {
+    position: relative;
   }
 
   /*侧边菜单设置*/
@@ -154,6 +164,10 @@
   .sider-hide .sider-logo {
     width: 35px;
     height: 35px;
+  }
+
+  .sider-menu {
+    padding-bottom: 60px;
   }
 
   .ivu-badge-count {
@@ -182,18 +196,37 @@
 
   /*顶部菜单设置*/
   .header {
+    position: fixed;
+    top: 0;
+    left: 0px;
+    right: 0;
+    height: 60px;
+    z-index: 2;
+
     background: #fff;
-    box-shadow: 0 2px 2px rgba(0, 0, 0, .05);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, .05);
   }
 
   .header-title {
+    padding-left: 200px;
     font-size: 24px;
     white-space: nowrap;
     cursor: default;
   }
 
-  .content {
-    padding: 16px;
+  .sider-hide .header-title {
+    padding-left: 0;
+  }
+
+  .content-main {
+    position: absolute;
+    top: 62px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+
+    margin: 16px;
     transition: all .5s ease-in-out;
   }
 

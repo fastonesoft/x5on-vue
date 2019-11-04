@@ -1,7 +1,7 @@
 <template>
     <dev-article>
         <div id="Split">
-            <Split v-model="split1" class="split" min="600" max="300">
+            <Split v-model="split1" class="split" min="600" max="300" @on-move-end="splitMoved">
                 <div slot="left" class="slot-left">
                     <Tabs value="table">
                         <TabPane label="测算标的" name="table">
@@ -84,13 +84,14 @@
 
 <script>
     import xcon from '../libs/xcon'
+    import print from '../libs/print';
 
     export default {
-        name: "Counted",
+        name: "Counted2Exam",
         data() {
             return {
                 // split
-                split1: 0.7,
+                split1: 0.5,
 
                 // date
                 dateType: 'day',
@@ -122,30 +123,6 @@
                     {
                         title: '所属地区',
                         key: 'area_name',
-                    },
-                    {
-                        title: '建筑面积',
-                        key: 'area_build',
-                    },
-                    {
-                        title: '土地面积',
-                        key: 'area_soil',
-                    },
-                    {
-                        title: '使用年限',
-                        key: 'use_year',
-                    },
-                    {
-                        title: '初始价格',
-                        key: 'price_begin',
-                    },
-                    {
-                        title: '评价价格',
-                        key: 'price_ass',
-                    },
-                    {
-                        title: '起拍价格',
-                        key: 'price_shoot',
                     },
                 ],
                 ajaxs: [],
@@ -290,6 +267,12 @@
                         this.$Message.error(error);
                     })
             },
+
+            // 分隔拖动
+            splitMoved() {
+                let width = document.getElementById('Split').clientWidth;
+                 window.console.log(this.split1)
+            }
         },
         computed: {
             datas() {
@@ -317,7 +300,7 @@
         mounted() {
             const that = this;
             window.onresize = function () {
-                if (that.$route.path !== '/vcounted') return;
+                if (that.$route.path !== '/vcounted2exam') return;
 
                 // 分割条高度计算
                 let height = document.body.clientHeight - 60 - 36;

@@ -117,7 +117,7 @@
     };
 
     export default {
-        name: "Count",
+        name: "Back",
         data() {
             return {
                 // split
