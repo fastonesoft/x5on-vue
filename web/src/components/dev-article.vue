@@ -1,5 +1,8 @@
 <template>
   <Layout class="content-body">
+
+
+<GeminiScrollbar class="scroll-bar">
     <Sider
       class="sider"
       v-model="isCollaped"
@@ -37,6 +40,8 @@
         </MenuGroup>
       </Menu>
     </Sider>
+</GeminiScrollbar>
+
     <Layout class="content-right">
       <Header class="header">
         <Row>
@@ -192,6 +197,18 @@
     white-space: nowrap;
     cursor: default;
   }
+
+  /* 滚动条 */
+  .scroll-bar {
+    z-index: 10;
+    width: 200px;
+  }
+
+  .sider-hide .scroll-bar {
+    z-index: 10;
+    width: 64px;
+  }
+
 
   /*侧边菜单设置*/
   .sider {
