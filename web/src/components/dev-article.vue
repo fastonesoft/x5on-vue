@@ -162,9 +162,11 @@
     bottom: 0;
     right: 0;
     height: 60px;
+    line-height: 60px;
     z-index: 2;
 
     text-align: right;
+    padding: 0;
     padding-right: 16px;
 
     background: #fff;
