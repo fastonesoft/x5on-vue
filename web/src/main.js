@@ -6,6 +6,7 @@ import 'view-design/dist/styles/iview.css'
 import router from './router'
 import store from './store'
 import axios from './libs/axios'
+import GeminiScrollbar from 'vue-gemini-scrollbar'
 
 import devArticle from './components/dev-article.vue'
 
@@ -13,6 +14,9 @@ import xcon from './libs/xcon'
 
 // 启用iview
 Vue.use(ViewUI)
+
+// 启用滚动条
+Vue.use(GeminiScrollbar)
 
 // 跨域
 Vue.prototype.$ = axios.ajax;

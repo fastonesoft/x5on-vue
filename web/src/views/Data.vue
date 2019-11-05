@@ -83,7 +83,7 @@
                             <DatePicker
                                     v-model="countDate"
                                     type="daterange"
-                                    style="width: 180px"
+                                    class="data-picker"
                                     @on-change="dateChange"
                                     transfer>
                             </DatePicker>
@@ -100,7 +100,7 @@
                 :loading="formLoading"
                 @on-ok="formOk('form')"
                 @on-cancel="formCancel('form')"
-                width="550"
+                width="630"
         >
             <Form ref="form" :model="form" :rules="rule" label-position="top" inline>
                 <FormItem prop="id" label="编号">
@@ -110,7 +110,7 @@
                     <Input v-model="form.name" placeholder="输入标的名称相关说明" :maxlength="20" :disabled="inputDisable"/>
                 </FormItem>
                 <FormItem prop="sell_type" label="涉税类型">
-                    <Select v-model="form.sell_type" placeholder="涉税类型选择..." style="width: 162px;" transfer>
+                    <Select v-model="form.sell_type" placeholder="涉税类型选择..." class="form-select" transfer>
                         <Option value="拍卖" key="拍卖">拍卖</Option>
                         <Option value="变卖" key="变卖">变卖</Option>
                     </Select>
@@ -119,7 +119,7 @@
                     <Input v-model="form.owner" placeholder="输入产权人姓名" :maxlength="30"/>
                 </FormItem>
                 <FormItem prop="area_type" label="产权性质">
-                    <Select v-model="form.area_type" placeholder="产权性质选择..." style="width: 162px;" transfer>
+                    <Select v-model="form.area_type" placeholder="产权性质选择..." class="form-select" transfer>
                         <Option value="国有" key="国有">国有</Option>
                         <Option value="集体" key="集体">集体</Option>
                         <Option value="有限公司" key="有限公司">有限公司</Option>
@@ -127,7 +127,7 @@
                     </Select>
                 </FormItem>
                 <FormItem prop="area_id" label="所属地区">
-                    <Select v-model="form.area_id" placeholder="地区选择..." style="width: 162px;" transfer>
+                    <Select v-model="form.area_id" placeholder="地区选择..." class="form-select" transfer>
                         <Option :value="area.id" :key="area.id" v-for="area of areas">{{area.up_name}},{{area.name}}
                         </Option>
                     </Select>

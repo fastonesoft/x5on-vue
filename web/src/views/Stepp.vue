@@ -40,7 +40,7 @@
                                 <DatePicker
                                         v-model="countDate"
                                         type="daterange"
-                                        style="width: 180px"
+                                        class="data-picker"
                                         @on-change="dateChange"
                                         transfer>
                                 </DatePicker>

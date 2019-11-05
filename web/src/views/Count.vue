@@ -75,7 +75,7 @@
                                 <DatePicker
                                         v-model="countDate"
                                         type="daterange"
-                                        style="width: 180px"
+                                        class="data-picker"
                                         @on-change="dateChange"
                                         transfer>
                                 </DatePicker>
@@ -155,6 +155,7 @@
 
     const formConst = {
         tax_id: '',
+        tax_base: '',
         tax_percent: '',
         tax_amount: '',
     };

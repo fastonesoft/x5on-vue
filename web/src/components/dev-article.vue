@@ -143,16 +143,16 @@
   }
 
   .content-main {
-    position: absolute;
-    top: 60px;
-    left: 0;
-    bottom: 60px;
+    position: fixed;
+    top: 0;
+    left: 200px;
+    bottom: 0;
     right: 0;
     z-index: 1;
 
     overflow: auto;
 
-    margin: 8px;
+    margin: 68px 8px;
     transition: all .5s ease-in-out;
   }
 
@@ -196,7 +196,6 @@
   /*侧边菜单设置*/
   .sider {
     z-index: 999;
-    overflow: inherit;
   }
 
   .sider-logo-center {
@@ -240,6 +239,15 @@
 
   .sider-hide .ivu-menu-item span {
     display: none;
+  }
+
+  /* 选择器 */
+  .form-select {
+      width: 186px;
+  }
+
+  .data-picker {
+    width: 200px;
   }
 
   .data-collect {
