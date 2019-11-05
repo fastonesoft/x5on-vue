@@ -1,80 +1,73 @@
 <template>
-  <Layout class="content-body">
-
-
-<GeminiScrollbar class="scroll-bar">
-    <Sider
-      class="sider"
-      v-model="isCollaped"
-      width="200"
-      :class="{'sider-hide': isCollaped}"
-      collapsible
-      breakpoint="xl"
-    >
-      <Row class="sider-logo-fixed">
-        <i-col class="sider-logo-center">
-          <img src="../assets/logo.png" alt="" class="sider-logo" :class="{'sider-hide': isCollaped}">
-        </i-col>
-      </Row>
-      <Menu
-        theme="dark"
+  <div class="xcon-body">
+    <GeminiScrollbar class="xcon-left" >
+      <Sider
+        class="sider"
+        v-model="isCollaped"
         width="200"
-        :active-name="activeName"
-        class="sider-menu"
       >
-        <MenuGroup :title="type.type_name" v-for="type of types" v-bind:key="type.type_id">
-          <MenuItem
-            class="hidden-nowrap"
-            :name="menu.name"
-            :to="menu.name"
-            v-for="menu of menus.filter(menu => menu.type_id === type.type_id)"
-            v-bind:key="menu.id"
-            replace>
+        <Menu
+          theme="dark"
+          width="200"
+          :active-name="activeName"
+          class="sider-menu">
+          <MenuGroup :title="type.type_name" v-for="type of types" v-bind:key="type.type_id">
+            <MenuItem
+              class="hidden-nowrap"
+              :name="menu.name"
+              :to="menu.name"
+              v-for="menu of menus.filter(menu => menu.type_id === type.type_id)"
+              v-bind:key="menu.id"
+              replace>
 
-            <Tooltip :content="menu.title" placement="right" transfer>
+              <Tooltip :content="menu.title" placement="right" transfer>
                 <Icon :type="menu.icon"/>
                 <span class="margin-left8">{{menu.title}}</span>
-            </Tooltip>
+              </Tooltip>
 
-          </MenuItem>
-        </MenuGroup>
-      </Menu>
-    </Sider>
-</GeminiScrollbar>
+            </MenuItem>
+          </MenuGroup>
+        </Menu>
+      </Sider>
+    </GeminiScrollbar>
 
-    <Layout class="content-right">
-      <Header class="header">
-        <Row>
-          <i-col span="19" class="header-title">
-            税收合作 合作共赢（Tax Coperation）
-          </i-col>
-          <i-col span="5" class="hidden-nowrap" style="text-align: right;">
-            <Tooltip placement="left" transfer>
-              <Tag color="error" v-if="user && user.name">{{ user.name }}</Tag>
-              <div slot="content" v-if="user && user.group_name">{{ user.group_name }}</div>
-            </Tooltip>
-            <Dropdown @on-click="downMenuClick" class="margin-left16" transfer>
-              <Avatar style="background-color: #87d068" icon="ios-person"/>
-              <DropdownMenu slot="list">
-                <!--<DropdownItem name="set">-->
-                <!--设置-->
-                <!--<Badge status="error"></Badge>-->
-                <!--</DropdownItem>-->
-                <DropdownItem name="logout">退出登录</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-            <Badge :count="count" :offset="[20,4]" class="margin-left16 margin-right16">
-              <Icon type="md-notifications-outline" size="24"/>
-            </Badge>
-          </i-col>
-        </Row>
-      </Header>
-      <Content class="content-main">
+    <div class="xcon-logo" >
+      <div class="sider-logo-center">
+        <img src="../assets/logo.png" alt="" class="sider-logo" >
+      </div>
+    </div>
+
+    <Row class="xcon-header">
+      <i-col span="19" class="xcon-header-title">
+        税收合作 合作共赢（Tax Coperation）
+      </i-col>
+      <i-col span="5" class="hidden-nowrap" style="text-align: right;">
+        <Tooltip placement="left" transfer>
+          <Tag color="error" v-if="user && user.name">{{ user.name }}</Tag>
+          <div slot="content" v-if="user && user.group_name">{{ user.group_name }}</div>
+        </Tooltip>
+        <Dropdown @on-click="downMenuClick" class="margin-left16" transfer>
+          <Avatar style="background-color: #87d068" icon="ios-person"/>
+          <DropdownMenu slot="list">
+            <!--<DropdownItem name="set">-->
+            <!--设置-->
+            <!--<Badge status="error"></Badge>-->
+            <!--</DropdownItem>-->
+            <DropdownItem name="logout">退出登录</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+        <Badge :count="count" :offset="[20,4]" class="margin-left16 margin-right16">
+          <Icon type="md-notifications-outline" size="24"/>
+        </Badge>
+      </i-col>
+    </Row>
+    <Row class="xcon-footer">2019 &copy; Fastone</Row>
+    <div class="xcon-right">
+      <GeminiScrollbar>
         <slot></slot>
-      </Content>
-      <Footer class="content-footer">2019 &copy; Fastone</Footer>
-    </Layout>
-  </Layout>
+      </GeminiScrollbar>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -138,30 +131,24 @@
 
 <style>
 
-  .content-body {
-    width: 100%;
+  .xcon-body {
+      /** 不能删除 */
     height: 100%;
   }
 
-  .content-right {
-    position: relative;
-  }
-
-  .content-main {
-    position: absolute;
-    top: 0;
-    left: 0;
+  .xcon-right {
+    position: fixed;
+        top: 0;
+    left: 200px;
     bottom: 0;
     right: 0;
-    z-index: 1;
+    z-index: 100;
 
-    overflow: auto;
-
-    margin: 68px 8px;
-    transition: all .5s ease-in-out;
+    margin: 60px 0;
+    padding: 8px;
   }
 
-  .content-footer {
+  .xcon-footer {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -179,19 +166,21 @@
   }
 
   /*顶部菜单设置*/
-  .header {
+  .xcon-header {
     position: fixed;
     top: 0;
     left: 0px;
     right: 0;
     height: 60px;
+    line-height: 60px;
+    padding: 0 50px;
     z-index: 2;
 
     background: #fff;
     box-shadow: 0 2px 3px rgba(0, 0, 0, .05);
   }
 
-  .header-title {
+  .xcon-header-title {
     padding-left: 200px;
     font-size: 24px;
     white-space: nowrap;
@@ -199,20 +188,15 @@
   }
 
   /* 滚动条 */
-  .scroll-bar {
+  .xcon-left {
     z-index: 10;
     width: 200px;
+    background: #515a6e;
   }
-
-  .sider-hide .scroll-bar {
-    z-index: 10;
-    width: 64px;
-  }
-
 
   /*侧边菜单设置*/
   .sider {
-    z-index: 999;
+    z-index: 10;
   }
 
   .sider-logo-center {
@@ -225,13 +209,23 @@
     margin: 10px auto;
   }
 
+  .xcon-logo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 80px;
+    z-index: 1000;
+    background: #515a6e;
+  }
+
   .sider-hide .sider-logo {
     width: 35px;
     height: 35px;
   }
 
   .sider-menu {
-    padding-bottom: 60px;
+    margin: 80px 0;
   }
 
   .ivu-badge-count {
@@ -260,7 +254,7 @@
 
   /* 选择器 */
   .form-select {
-      width: 186px;
+    width: 186px;
   }
 
   .data-picker {
@@ -310,7 +304,6 @@
     margin-top: 6px;
   }
 
-
   .margin-top8 {
     margin-top: 8px;
   }
@@ -352,12 +345,8 @@
   }
 
   /* 分隔条 */
-  #Split {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+  .xcon-split {
+    min-height: 500px;
   }
 
   .split {

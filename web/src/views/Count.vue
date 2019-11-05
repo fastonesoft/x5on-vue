@@ -35,7 +35,7 @@
             </i-col>
         </Row>
         <br>
-        <div id="Split">
+        <GeminiScrollbar class="xcon-split">
             <Split v-model="split1" class="split" min="600" max="300">
                 <div slot="left" class="slot-left">
                     <Tabs value="table">
@@ -119,7 +119,7 @@
                     </Tabs>
                 </div>
             </Split>
-        </div>
+        </GeminiScrollbar>
         <Modal
                 title="税种添加"
                 v-model="formModel"
@@ -541,7 +541,7 @@
 
 <style scoped>
 
-    #Split {
+    #Split1 {
         position: absolute;
         top: 181px;
         left: 0;

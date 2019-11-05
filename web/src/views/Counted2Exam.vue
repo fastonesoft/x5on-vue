@@ -1,6 +1,6 @@
 <template>
     <dev-article>
-        <div id="Split">
+        <GeminiScrollbar class="xcon-split">
             <Split v-model="split1" class="split" min="600" max="300" @on-move-end="splitMoved">
                 <div slot="left" class="slot-left">
                     <Tabs value="table">
@@ -78,7 +78,7 @@
                     </Tabs>
                 </div>
             </Split>
-        </div>
+        </GeminiScrollbar>
     </dev-article>
 </template>
 
