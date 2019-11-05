@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
-import iView from 'iview'
-import 'iview/dist/styles/iview.css'
+import ViewUI from 'view-design'
+import 'view-design/dist/styles/iview.css'
 
 import router from './router'
 import store from './store'
@@ -12,7 +12,7 @@ import devArticle from './components/dev-article.vue'
 import xcon from './libs/xcon'
 
 // 启用iview
-Vue.use(iView)
+Vue.use(ViewUI)
 
 // 跨域
 Vue.prototype.$ = axios.ajax;
@@ -28,7 +28,7 @@ Vue.component('dev-article', devArticle);
 // 全局路由守卫
 router.beforeEach((to, from, next) => {
     // 启用状态提示
-    iView.LoadingBar.start();
+    ViewUI.LoadingBar.start();
 
     // 本地信息
     store.replaceState(Object.assign({}, store.state, xcon.stateRead()));
@@ -56,7 +56,7 @@ router.beforeEach((to, from, next) => {
 
 // 关闭状态提示
 router.afterEach(() => {
-    iView.LoadingBar.finish();
+    ViewUI.LoadingBar.finish();
   });
 
 new Vue({
