@@ -138,14 +138,13 @@
 
   .xcon-right {
     position: fixed;
-        top: 0;
+    top: 0;
     left: 200px;
     bottom: 0;
     right: 0;
-    z-index: 100;
 
-    margin: 60px 0;
-    padding: 8px;
+    /* margin: 60px 0; */
+    padding: 68px 8px;
   }
 
   .xcon-footer {
@@ -173,7 +172,7 @@
     right: 0;
     height: 60px;
     line-height: 60px;
-    padding: 0 50px;
+    padding: 0 30px;
     z-index: 2;
 
     background: #fff;
@@ -346,7 +345,7 @@
 
   /* 分隔条 */
   .xcon-split {
-    min-height: 500px;
+    min-height: 200px;
   }
 
   .split {
@@ -362,10 +361,6 @@
     transition: all .2s ease-in-out;
   }
 
-  .split .ivu-split-pane {
-    overflow: auto;
-  }
-
   /* 分隔条左右两边样式 */
   .slot-left {
     padding: 16px;
@@ -373,6 +368,16 @@
 
   .slot-right {
     padding: 16px 16px 16px 20px;
+  }
+
+  /* 隐藏超过部分 */
+  .split .ivu-split-pane {
+    overflow: auto;
+  }
+
+  /* 权限树底部可见 */
+  .xcon-tree-bottom {
+    margin-bottom: 30px;
   }
 
 </style>

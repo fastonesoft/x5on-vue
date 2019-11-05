@@ -34,8 +34,7 @@
                 </Card>
             </i-col>
         </Row>
-        <br>
-        <GeminiScrollbar class="xcon-split">
+        <GeminiScrollbar class="xcon-split margin-top6">
             <Split v-model="split1" class="split" min="600" max="300">
                 <div slot="left" class="slot-left">
                     <Tabs value="table">
