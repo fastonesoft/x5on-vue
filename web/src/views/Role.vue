@@ -2,7 +2,7 @@
     <dev-article>
         <GeminiScrollbar class="xcon-split">
             <Split v-model="split1" class="split" min="300" max="150">
-                <GeminiScrollbar slot="left" class="slot-left">
+                <div slot="left" class="slot-left">
                     <Tabs value="menus">
                         <TabPane label="菜单鉴权" name="menus">
                             <Tree ref="menu" :data="menu_datas" show-checkbox @on-check-change="menuCheck"
@@ -11,7 +11,7 @@
                         <!--表头附加相关操作：-->
                         <template slot="extra">
                             <Row class="hidden-nowrap">
-                                <Select v-model="group_uid" placeholder="分组选择..." style="width:120px; margin-right:30px;"
+                                <Select v-model="group_uid" placeholder="分组选择..." style="width:120px;"
                                         @on-change="groupChange"
                                         transfer>
                                     <Option
@@ -23,15 +23,15 @@
                             </Row>
                         </template>
                     </Tabs>
-                </GeminiScrollbar>
-                <GeminiScrollbar slot="right" class="slot-right">
+                </div>
+                <div slot="right" class="slot-right">
                     <Tabs value="menus">
                         <TabPane label="模块鉴权" name="menus">
                             <Tree :data="action_datas" show-checkbox @on-check-change="actionCheck"
                                   @on-select-change="actionSelect"></Tree>
                         </TabPane>
                     </Tabs>
-                </GeminiScrollbar>
+                </div>
             </Split>
         </GeminiScrollbar>
     </dev-article>

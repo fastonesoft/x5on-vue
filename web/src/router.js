@@ -82,9 +82,9 @@ const router = new Router({
             component: () => import('./views/Counted.vue')
         },
         {
-            path: '/vcounted2exam',
-            name: '/vcounted2exam',
-            component: () => import('./views/Counted2Exam.vue')
+            path: '/vc2exam',
+            name: '/vc2exam',
+            component: () => import('./views/C2Exam.vue')
         },
         {
             path: '/vback',
