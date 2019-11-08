@@ -87,7 +87,7 @@
     import print from '../libs/print';
 
     export default {
-        name: "Counted2Exam",
+        name: "C2Exam",
         data() {
             return {
                 // split
