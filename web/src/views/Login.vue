@@ -203,7 +203,7 @@
   }
 
   .login-form-title {
-    height: 70px;
+    height: 60px;
     text-align: center;
     letter-spacing: 5px;
     text-shadow: 1px 1px 3px #666;

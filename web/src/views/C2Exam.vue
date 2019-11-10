@@ -91,7 +91,7 @@
         data() {
             return {
                 // split
-                split1: 0.5,
+                split1: 0.6,
 
                 // date
                 dateType: 'day',

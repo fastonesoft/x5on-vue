@@ -11,7 +11,7 @@
                         <!--表头附加相关操作：-->
                         <template slot="extra">
                             <Row class="hidden-nowrap">
-                                <Select v-model="group_uid" placeholder="分组选择..." style="width:120px;"
+                                <Select v-model="group_uid" placeholder="分组选择..." style="width:140px;"
                                         @on-change="groupChange"
                                         transfer>
                                     <Option
@@ -43,7 +43,7 @@
         data() {
             return {
 
-                split1: 0.3,
+                split1: 0.35,
 
                 groups: [],
                 group_uid: '',

@@ -4,10 +4,10 @@
             <Card title="任务流程" style="height:160px;">
                 <Tag color="geekblue" slot="extra">程</Tag>
                 <Steps :current="1">
-                    <Step title="已完成" content="这里是该步骤的描述信息"></Step>
-                    <Step title="进行中" content="这里是该步骤的描述信息"></Step>
-                    <Step title="待进行" content="这里是该步骤的描述信息"></Step>
-                    <Step title="待进行" content="这里是该步骤的描述信息"></Step>
+                    <Step title="税费测算" content="这里是该步骤的描述信息"></Step>
+                    <Step title="测算复核" content="这里是该步骤的描述信息"></Step>
+                    <Step title="复核送审" content="这里是该步骤的描述信息"></Step>
+                    <Step title="文书制作" content="这里是该步骤的描述信息"></Step>
                 </Steps>
             </Card>
             <Split v-model="split1" class="split margin-top8" min="600" max="300" @on-move-end="splitMoved">
@@ -100,7 +100,7 @@
         data() {
             return {
                 // split
-                split1: 0.5,
+                split1: 0.6,
 
                 // date
                 dateType: 'day',
