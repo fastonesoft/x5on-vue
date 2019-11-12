@@ -4,6 +4,7 @@
             <Card title="任务流程" style="height:160px;">
                 <Tag color="geekblue" slot="extra">程</Tag>
                 <Steps :current="1">
+                    <Step title="任务分配" content="这里是该步骤的描述信息"></Step>
                     <Step title="税费测算" content="这里是该步骤的描述信息"></Step>
                     <Step title="测算复核" content="这里是该步骤的描述信息"></Step>
                     <Step title="复核送审" content="这里是该步骤的描述信息"></Step>
