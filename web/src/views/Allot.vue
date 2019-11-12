@@ -3,12 +3,12 @@
         <GeminiScrollbar class="xcon-split">
             <Card title="任务流程" style="height:160px;">
                 <Tag color="geekblue" slot="extra">程</Tag>
-                <Steps :current="1">
-                    <Step title="任务分配" content="这里是该步骤的描述信息"></Step>
-                    <Step title="税费测算" content="这里是该步骤的描述信息"></Step>
-                    <Step title="测算复核" content="这里是该步骤的描述信息"></Step>
-                    <Step title="复核送审" content="这里是该步骤的描述信息"></Step>
-                    <Step title="文书制作" content="这里是该步骤的描述信息"></Step>
+                <Steps :current="0">
+                    <Step title="任务分配" content="案件测算工作分配"></Step>
+                    <Step title="税费测算" content="接受任务进行测算"></Step>
+                    <Step title="测算复核" content="测算结果二次复核"></Step>
+                    <Step title="案件审批" content="案件集体审议记录"></Step>
+                    <Step title="文书制作" content="出具涉税处理意见"></Step>
                 </Steps>
             </Card>
             <Split v-model="split1" class="split margin-top8" min="600" max="300" @on-move-end="splitMoved">
@@ -78,6 +78,10 @@
                                     <Button class="margin-left8" type="primary" size="small" @click="countExam">通过复核</Button>
                                 </Row>
                             </div>
+                            <div id="demo1" class="xm-select-demo" style="width: 200px;"></div>
+                            <br><br><br><br><br><br><br><br>
+                            <Button>测试</Button>
+
                         </TabPane>
                         <!--表头附加相关操作：-->
                         <template slot="extra">
@@ -307,11 +311,26 @@
                 });
         },
         mounted() {
-
+            var demo1 = xmSelect.render({
+                el: '#demo1',
+                // disabled: true,
+                theme: {
+                    color: '#2d8cf0',
+                },
+                data: [
+                    {name: '张三', value: 1, selected: true, disabled: true},
+                    {name: '李四', value: 2, selected: true},
+                    {name: '王五', value: 3},
+                ]
+            })
         },
     }
 </script>
 
 <style scoped>
-
+    .xcon-steps-content {
+        float: left;
+        width: 20%;
+        padding-left: 35px;
+    }
 </style>

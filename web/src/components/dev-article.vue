@@ -141,7 +141,7 @@
         right: 0;
         height: 60px;
         line-height: 60px;
-        z-index: 2;
+        z-index: 1;
 
         text-align: right;
         padding: 0;
@@ -160,7 +160,7 @@
         height: 60px;
         line-height: 60px;
         padding: 0 30px;
-        z-index: 2;
+        z-index: 1;
 
         background: #fff;
         box-shadow: 0 2px 3px rgba(0, 0, 0, .05);
@@ -175,14 +175,14 @@
 
     /* 滚动条 */
     .xcon-left {
-        z-index: 10;
+        z-index: 2;
         width: 200px;
         background: #515a6e;
     }
 
     /*侧边菜单设置*/
     .sider {
-        z-index: 10;
+        z-index: 2;
     }
 
     .sider-logo-center {
@@ -201,7 +201,7 @@
         left: 0;
         width: 200px;
         height: 80px;
-        z-index: 1000;
+        z-index: 3;
         background: #515a6e;
     }
 
@@ -390,4 +390,10 @@
     .ivu-split-pane::-webkit-scrollbar-track {
         background: transparent;
     }
+
+    /* 多选择控件修饰 */
+    /* .xm-select {
+        border-radius: 4px;
+        border: 1px solid #dcdee2;
+    } */
 </style>
