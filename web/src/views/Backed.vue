@@ -241,8 +241,4 @@
 
 <style scoped>
 
-  .ivu-cell {
-    border-bottom: dashed #dcdee2 1px;
-  }
-
 </style>

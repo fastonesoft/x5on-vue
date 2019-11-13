@@ -391,6 +391,11 @@
         background: transparent;
     }
 
+    /* 表格cell底边 */
+    .ivu-cell {
+        border-bottom: dashed #dcdee2 1px;
+    }
+
     /* 多选择控件修饰 */
     /* .xm-select {
         border-radius: 4px;

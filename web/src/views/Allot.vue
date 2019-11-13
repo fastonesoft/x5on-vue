@@ -63,30 +63,22 @@
                 <div slot="right" class="slot-right">
                     <Tabs value="table">
                         <TabPane label="任务分配" name="table">
-                            <div v-if="current">
-                                <Table
-                                        :columns="count_cols"
-                                        :data="counts"
-                                        :loading="countLoading"
-                                        ref="count_sec"
-                                        size="small"
-                                        border stripe>
-                                </Table>
-                                <br>
-                                <Row v-if="counts.length" class="hidden-nowrap">
-                                    <Tag color="success">测算合计：{{amounts}}</Tag>
-                                    <Button class="margin-left8" type="primary" size="small" @click="countExam">通过复核</Button>
-                                </Row>
-                            </div>
-                            <div id="demo1" class="xm-select-demo" style="width: 200px;"></div>
-                            <br><br><br><br><br><br><br><br>
-                            <Button>测试</Button>
+                            <CellGroup>
+                                <Cell title="编号：" extra="afdaf"/>
+                                <Cell title="标的名称：" extra="adfasdf"/>
 
+<div id="demo1" class="xcon-select"><div>测试的标题</div></div>
+
+
+                                <Row class="margin-top16 align-right">
+                                <Button type="primary" class="margin-left16" @click="backedExam">复核通过</Button>
+                                </Row>
+                            </CellGroup>
                         </TabPane>
                         <!--表头附加相关操作：-->
                         <template slot="extra">
                             <Row class="hidden-nowrap">
-                                <Button type="error" size="small" @click="countBack" v-if="current">退回修改</Button>
+                                <Button type="error" size="small" @click="countBack">退回修改</Button>
                             </Row>
                         </template>
                     </Tabs>
@@ -173,6 +165,13 @@
                     },
                 ],
                 counts: [],
+
+                // select.data
+                selectData: [
+                    {name: '张三', value: 1, selected: true, disabled: true},
+                    {name: '李四', value: 2, selected: true},
+                    {name: '王五', value: 3},
+                ]
             }
         },
         methods: {
@@ -313,24 +312,18 @@
         mounted() {
             var demo1 = xmSelect.render({
                 el: '#demo1',
-                // disabled: true,
+
                 theme: {
                     color: '#2d8cf0',
                 },
-                data: [
-                    {name: '张三', value: 1, selected: true, disabled: true},
-                    {name: '李四', value: 2, selected: true},
-                    {name: '王五', value: 3},
-                ]
+                data: this.selectData,
             })
         },
     }
 </script>
 
 <style scoped>
-    .xcon-steps-content {
-        float: left;
-        width: 20%;
-        padding-left: 35px;
+    .xcon-select {
+        width: 200px;
     }
 </style>
