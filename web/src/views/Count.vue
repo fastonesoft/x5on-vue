@@ -1,39 +1,5 @@
 <template>
     <dev-article>
-        <Row :gutter="6">
-            <i-col span="6">
-                <Card title="标的清单">
-                    <Tag color="green" slot="extra">的</Tag>
-                    <Row class="data-collect hidden-nowrap">总计：{{ dataCount.total }}</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Progress :percent="dataCount.data_per" stroke-color="#19be6b" hide-info></Progress>
-                </Card>
-            </i-col>
-            <i-col span="6">
-                <Card title="税率测算">
-                    <Tag color="red" slot="extra">算</Tag>
-                    <Row class="data-collect hidden-nowrap">测算：{{ dataCount.count }}</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Progress :percent="dataCount.count_per" stroke-color="#2db7f5" hide-info></Progress>
-                </Card>
-            </i-col>
-            <i-col span="6">
-                <Card title="测算反馈">
-                    <Tag color="geekblue" slot="extra">馈</Tag>
-                    <Row class="data-collect hidden-nowrap">反馈：{{ dataCount.back }}</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Progress :percent="dataCount.back_per" stroke-color="#ff9900" hide-info></Progress>
-                </Card>
-            </i-col>
-            <i-col span="6">
-                <Card title="协作成果">
-                    <Tag color="blue" slot="extra">果</Tag>
-                    <Row class="data-collect hidden-nowrap">完成：{{ dataCount.backed }}</Row>
-                    <Divider size="small" dashed></Divider>
-                    <Progress :percent="dataCount.result_per" stroke-color="#ed4014" hide-info></Progress>
-                </Card>
-            </i-col>
-        </Row>
         <GeminiScrollbar class="xcon-split margin-top6">
             <Split v-model="split1" class="split" min="600" max="300">
                 <div slot="left" class="slot-left">
@@ -470,44 +436,7 @@
             },
         },
         computed: {
-            dataCount() {
-                if (this.ajax_count === null) {
-                    return {
-                        total: 0,
-                        count: 0,
-                        counted: 0,
-                        back: 0,
-                        backed: 0,
-                        data_per: 0,
-                        count_per: 0,
-                        back_per: 0,
-                        result_per: 0,
-                    }
-                } else {
-                    let {total, dataed, count, counted, back, backed} = this.ajax_count;
-                    total = Number(total);
-                    dataed = Number(dataed);
-                    count = Number(count);
-                    counted = Number(counted);
-                    back = Number(back);
-                    backed = Number(backed);
-                    let data_per = total > 0 ? dataed / total * 100 : 0;
-                    let count_per = dataed ? counted / dataed * 100 : 0;
-                    let back_per = counted ? backed / counted * 100 : 0;
-                    let result_per = total ? backed / total * 100 : 0;
-                    return {
-                        total,
-                        count,
-                        counted,
-                        back,
-                        backed,
-                        data_per,
-                        count_per,
-                        back_per,
-                        result_per,
-                    };
-                }
-            },
+          
             datas() {
                 return xcon.pageData(this.ajaxs, this.pageIndex, this.pageSize)
             },
