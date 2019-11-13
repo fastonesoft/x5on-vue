@@ -63,15 +63,18 @@
                 <div slot="right" class="slot-right">
                     <Tabs value="table">
                         <TabPane label="任务分配" name="table">
-                            <CellGroup>
+                            <CellGroup style="height:500px;">
                                 <Cell title="编号：" extra="afdaf"/>
                                 <Cell title="标的名称：" extra="adfasdf"/>
 
-<div id="demo1" class="xcon-select"><div>测试的标题</div></div>
+<div id="demo1" class="xcon-select"><div>任务分配</div></div>
+<div id="demo2" class="xcon-select"><div>税费测算</div></div>
+<div id="demo3" class="xcon-select"><div>测算复核</div></div>
+<div id="demo4" class="xcon-select"><div>案件审批</div></div>
 
 
                                 <Row class="margin-top16 align-right">
-                                <Button type="primary" class="margin-left16" @click="backedExam">复核通过</Button>
+                                    <Button type="primary" class="margin-left16" @click="backedExam">复核通过</Button>
                                 </Row>
                             </CellGroup>
                         </TabPane>
@@ -312,7 +315,27 @@
         mounted() {
             var demo1 = xmSelect.render({
                 el: '#demo1',
-
+                theme: {
+                    color: '#2d8cf0',
+                },
+                data: this.selectData,
+            })
+            var demo2 = xmSelect.render({
+                el: '#demo2',
+                theme: {
+                    color: '#2d8cf0',
+                },
+                data: this.selectData,
+            })
+            var demo3 = xmSelect.render({
+                el: '#demo3',
+                theme: {
+                    color: '#2d8cf0',
+                },
+                data: this.selectData,
+            })
+            var demo4 = xmSelect.render({
+                el: '#demo4',
                 theme: {
                     color: '#2d8cf0',
                 },
