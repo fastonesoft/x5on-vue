@@ -205,8 +205,8 @@ export default {
 
       // select.data
       selectData: [
-        { name: "张三", value: 1, selected: true, disabled: true },
-        { name: "李四", value: 2, selected: true },
+        { name: "张三", value: 1 },
+        { name: "李四", value: 2 },
         { name: "王五", value: 3 }
       ]
     };
@@ -374,6 +374,17 @@ export default {
     }
   },
   created() {
+    this.$.gets("/count/index")
+      .then(res => {
+        this.ajaxs = res.datas;
+        this.taxs = res.taxs;
+        this.ajax_count = res.count;
+        this.tableLoading = false;
+      })
+      .catch(error => {
+        this.tableLoading = false;
+        this.$Message.error(error);
+      });
     this.$.gets("/counted/index")
       .then(res => {
         this.ajaxs = res;
@@ -389,6 +400,7 @@ export default {
       el: "#demo1",
       radio: true,
       clickClose: true,
+      tips: "测算人员选择",
       theme: {
         color: "#2d8cf0"
       },
@@ -398,6 +410,7 @@ export default {
       el: "#demo2",
       radio: true,
       clickClose: true,
+      tips: "复核人员选择",
       theme: {
         color: "#2d8cf0"
       },
@@ -405,6 +418,7 @@ export default {
     });
     var demo3 = xmSelect.render({
       el: "#demo3",
+      tips: "审批人员选择",
       theme: {
         color: "#2d8cf0"
       },
@@ -414,6 +428,7 @@ export default {
       el: "#demo4",
       radio: true,
       clickClose: true,
+      tips: "文书人员选择",
       theme: {
         color: "#2d8cf0"
       },
