@@ -1,6 +1,6 @@
 <template>
     <dev-article>
-        <GeminiScrollbar class="xcon-split margin-top6">
+        <GeminiScrollbar class="xcon-split">
             <Split v-model="split1" class="split" min="600" max="300">
                 <div slot="left" class="slot-left">
                     <Tabs value="table">

@@ -133,6 +133,9 @@ export default {
       // split
       split1: 0.6,
 
+      // count
+      ajax_count: null,
+
       // date
       dateType: "day",
       countDate: [new Date(), new Date()],
@@ -402,8 +405,6 @@ export default {
     });
     var demo3 = xmSelect.render({
       el: "#demo3",
-      radio: true,
-      clickClose: true,
       theme: {
         color: "#2d8cf0"
       },
@@ -411,6 +412,8 @@ export default {
     });
     var demo4 = xmSelect.render({
       el: "#demo4",
+      radio: true,
+      clickClose: true,
       theme: {
         color: "#2d8cf0"
       },
