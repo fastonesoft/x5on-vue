@@ -83,9 +83,14 @@ let arrsEdit = function (arrs, key, keyValue, value) {
     return arrs;
 };
 
+let eleById = function (domIdName) {
+    return document.getElementById(domIdName);
+}
+
 export default {
     dateFormat, pageData,
     stateClear, stateRead, stateWrite,
     arrsDel, arrsEdit,
-    md5, base64, isNotNull
+    md5, base64, isNotNull,
+    eleById
 };

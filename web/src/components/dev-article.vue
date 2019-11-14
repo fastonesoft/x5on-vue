@@ -27,7 +27,7 @@
 
         <Row class="xcon-header">
             <i-col span="19" class="xcon-header-title">
-                税收合作 合作共赢（Tax Coperation）
+                <!-- 税收合作 -->合作共赢（Tax Coperation） 
             </i-col>
             <i-col span="5" class="hidden-nowrap" style="text-align: right;">
                 <Tooltip placement="left" transfer>

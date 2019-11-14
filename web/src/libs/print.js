@@ -4,7 +4,7 @@ let printForm = function(title, imgData) {
 
     let printWin = window.open();
     printWin.document.write(`<head><title>${title}</title></head>`)
-    printWin.document.write(`<img src='${imgData}' style="width:100%; height:100%;" />`);
+    printWin.document.write(`<img src='${imgData}'/>`);
 
     setTimeout(function(){
         printWin.print();
@@ -13,12 +13,10 @@ let printForm = function(title, imgData) {
 
 }
 
-let printImage = function(domId, title, width, height) {
-
+let printImage = function(domIdName, title) {
+    let domId = document.getElementById(domIdName);
     html2canvas(domId, {
         backgroundColor: null,
-        width,
-        height,
     }).then(canvas => {
         let imgData = canvas.toDataURL("image/png")
         printForm(title, imgData)

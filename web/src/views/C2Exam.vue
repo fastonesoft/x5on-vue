@@ -53,7 +53,7 @@
                 <div slot="right" class="slot-right">
                     <Tabs value="table">
                         <TabPane label="税费清单" name="table">
-                            <div v-if="current">
+                            <div id="print">
                                 <Table
                                         :columns="count_cols"
                                         :data="counts"
@@ -72,7 +72,7 @@
                         <!--表头附加相关操作：-->
                         <template slot="extra">
                             <Row class="hidden-nowrap">
-                                <Button type="error" size="small" @click="countBack" v-if="current">退回修改</Button>
+                                <Button type="primary" size="small" @click="toPrint">打印</Button>
                             </Row>
                         </template>
                     </Tabs>
@@ -85,13 +85,14 @@
 <script>
     import xcon from '../libs/xcon'
     import print from '../libs/print';
+    import { on, off } from 'view-design/src/utils/dom';
 
     export default {
         name: "C2Exam",
         data() {
             return {
                 // split
-                split1: 0.6,
+                split1: 0.5,
 
                 // date
                 dateType: 'day',
@@ -161,6 +162,9 @@
                 counts: [],
             }
         },
+        beforeDestroy () {
+            off(window, 'resize', this.splitMoved);
+        },
         methods: {
             countDateClick() {
                 this.current = null;
@@ -226,24 +230,9 @@
                     });
             },
 
-            // 退回测算标的
-            countBack() {
-                let row = this.current;
-                if (row === null) {
-                    this.$Message.error('没有选择测算标的！');
-                    return
-                }
-                this.$.posts('/counted/back', {uid: row.uid})
-                    .then(res => {
-                        // 删除
-                        xcon.arrsDel(this.ajaxs, 'uid', row.uid);
-
-                        this.current = null;
-                        this.$Message.success(res + '条“标的”测算已退回！');
-                    })
-                    .catch(error => {
-                        this.$Message.error(error);
-                    });
+            // 打印送审
+            toPrint() {
+                print.printImage('print', '打印内容')
             },
             // 测算结束，提交复核
             countExam() {
@@ -270,7 +259,12 @@
 
             // 分隔拖动
             splitMoved() {
-                 window.console.log(this.split1)
+                let print_form = document.getElementById('print');
+                let height = print_form.clientWidth / 210 * 297;
+                print_form.style.height = `${height}px`;
+
+                window.console.log(print_form.clientWidth)
+                window.console.log(print_form.clientHeight)
             }
         },
         computed: {
@@ -297,7 +291,9 @@
                 });
         },
         mounted() {
-
+            on(window, 'resize', this.splitMoved);
+            // 打印内容高度初始化
+            // this.splitMoved();
         },
     }
 </script>
