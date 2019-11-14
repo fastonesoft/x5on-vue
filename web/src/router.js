@@ -57,9 +57,9 @@ const router = new Router({
             component: () => import('./views/Allot.vue')
         },
         {
-            path: '/vtask',
-            name: '/vtask',
-            component: () => import('./views/Task.vue')
+            path: '/vcexamed',
+            name: '/vcexamed',
+            component: () => import('./views/CExamed.vue')
         },
         {
             path: '/vdata',
@@ -85,6 +85,11 @@ const router = new Router({
             path: '/vc2exam',
             name: '/vc2exam',
             component: () => import('./views/C2Exam.vue')
+        },
+        {
+            path: '/vdocu',
+            name: '/vdocu',
+            component: () => import('./views/Docu.vue')
         },
         {
             path: '/vback',

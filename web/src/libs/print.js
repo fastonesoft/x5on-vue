@@ -4,7 +4,7 @@ let printForm = function(title, imgData) {
 
     let printWin = window.open();
     printWin.document.write(`<head><title>${title}</title></head>`)
-    printWin.document.write(`<img src='${imgData}'/>`);
+    printWin.document.write(`<div style="text-align: center;"><img src='${imgData}'/></div>`);
 
     setTimeout(function(){
         printWin.print();

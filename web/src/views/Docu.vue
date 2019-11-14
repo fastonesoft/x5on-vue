@@ -90,7 +90,7 @@ import print from "../libs/print";
 import { on, off } from "view-design/src/utils/dom";
 
 export default {
-  name: "C2Exam",
+  name: "Docu",
   data() {
     return {
       // split
