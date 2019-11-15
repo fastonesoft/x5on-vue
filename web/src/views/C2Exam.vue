@@ -294,6 +294,12 @@ export default {
   },
   mounted() {
     on(window, "resize", this.splitMoved);
+
+    // 初始化打印容器宽度
+    let xconSplit = document.getElementById("xconSplit");
+    const width = xcon.page.width96;
+    this.split1 = 1 - width / xconSplit.clientWidth;
+
     // 打印内容高度初始化
     this.splitMoved();
   }

@@ -87,10 +87,15 @@ let eleById = function (domIdName) {
     return document.getElementById(domIdName);
 }
 
+const page = {
+    width72: 535,
+    width96: 713
+}
+
 export default {
     dateFormat, pageData,
     stateClear, stateRead, stateWrite,
     arrsDel, arrsEdit,
     md5, base64, isNotNull,
-    eleById
+    eleById, page,
 };
