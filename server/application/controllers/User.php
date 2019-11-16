@@ -57,7 +57,7 @@ class User extends XC_Controller
             $uid = Xcon::array_key($params, 'uid');
             $name = Xcon::array_key($params, 'name');
             $group_id = Xcon::array_key($params, 'group_id');
-
+            
             // 检测帐号是否存
             Xcon::checkBy('xcUser', compact('id', 'uid'), '帐号不存在！');
 

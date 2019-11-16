@@ -371,7 +371,7 @@
         margin-left: 1px;
     }
 
-    /* 只对-webkit有效 */
+    /* 美化滚动框，只对-webkit有效 */
     .ivu-split-pane::-webkit-scrollbar {
         width: 6px;
     }
@@ -397,8 +397,14 @@
     }
 
     /* 多选择控件修饰 */
-    /* .xm-select {
-        border-radius: 4px;
-        border: 1px solid #dcdee2;
-    } */
+    .ivu-select-multiple .ivu-tag  {
+        background-color: #2b85e4;
+        border-color: #2b85e4;
+    }
+    .ivu-select-multiple .ivu-tag-text {
+        color: #fff;
+    }
+    .ivu-select-multiple .ivu-tag .ivu-icon-ios-close {
+        color: #fff;
+    }
 </style>
