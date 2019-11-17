@@ -84,11 +84,7 @@
                                 :key="item.id">{{ item.name }}
                         </Option>
                     </Select>
-
-                    
                 </FormItem>
-                <div id="selectGroup" name="group_id" v-model="editData.group_id">权限分组：</div>
-
             </Form>
         </Modal>
         <Modal

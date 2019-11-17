@@ -55,20 +55,17 @@
           <Tabs value="table">
             <TabPane label="税费清单" name="table">
               <div id="print">
-                <Table
-                  :columns="count_cols"
-                  :data="counts"
-                  :loading="countLoading"
-                  ref="count_sec"
-                  size="small"
-                  border
-                  stripe
-                ></Table>
-                <br />
-                <Row v-if="counts.length" class="hidden-nowrap">
-                  <Tag color="success">测算合计：{{amounts}}</Tag>
-                  <Button class="margin-left8" type="primary" size="small" @click="countExam">通过复核</Button>
-                </Row>
+                <h2 style="text-align: center;">涉税审议材料</h2>
+                <h3>案件名称：{{ '什么有限公司' }}</h3>
+                <br>
+                <h4>案件详情：</h4>
+                <p style="text-indent:20px;">
+                  花木成畦手自栽花木城花木成畦手自栽花木成畦手自栽花木成畦手自栽花木成畦手自栽花木成畦手自栽花木成畦手自栽花木成畦手自栽花木成畦手自栽
+
+                </p>
+                <br>
+                     <h4>税费测算：</h4>
+
               </div>
             </TabPane>
             <!--表头附加相关操作：-->
@@ -234,7 +231,7 @@ export default {
 
     // 打印送审
     toPrint() {
-      print.printImage("print", "打印内容");
+      print.printImage("print", "案件送审记录");
     },
     // 测算结束，提交复核
     countExam() {
@@ -307,5 +304,9 @@ export default {
 </script>
 
 <style scoped>
+
+  #print {
+    background: transparent;
+  }
 
 </style>

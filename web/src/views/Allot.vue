@@ -94,25 +94,76 @@
         <div slot="right" class="slot-right">
           <Tabs value="table">
             <TabPane label="任务分配" name="table">
-              <CellGroup style="height:500px;">
-                <div>
-                  <div id="demo1">税费测算：</div>
-                </div>
-                <div>
-                  <div id="demo2">测算复核：</div>
-                </div>
-                <div>
-                  <div id="demo3">案件审批：</div>
-                </div>
-                <div>
-                  <div id="demo4">文书制作：</div>
-                </div>
+              <h2 style="text-align: center;">税务案件任务分配</h2>
+
+              <CellGroup>
+                <Cell title="税费测算">
+                  <Select
+                    class="user-select"
+                    v-model="selectUser.count_user_id"
+                    placeholder="人员选择..."
+                    transfer
+                    slot="extra"
+                  >
+                    <Option
+                      v-for="item in selectData"
+                      :value="item.id"
+                      :key="item.id"
+                    >{{ item.name }}</Option>
+                  </Select>
+                </Cell>
+                <Cell title="测算复核">
+                  <Select
+                    class="user-select"
+                    v-model="selectUser.counted_user_id"
+                    placeholder="人员选择..."
+                    transfer
+                    slot="extra"
+                  >
+                    <Option
+                      v-for="item in selectData"
+                      :value="item.id"
+                      :key="item.id"
+                    >{{ item.name }}</Option>
+                  </Select>
+                </Cell>
+                <Cell title="文书制作">
+                  <Select
+                    class="user-select"
+                    v-model="selectUser.docu_user_id"
+                    placeholder="人员选择..."
+                    transfer
+                    slot="extra"
+                  >
+                    <Option
+                      v-for="item in selectData"
+                      :value="item.id"
+                      :key="item.id"
+                    >{{ item.name }}</Option>
+                  </Select>
+                </Cell>
+                <Cell title="案件审批">
+                  <Select
+                    class="user-select-multi"
+                    v-model="selectUser.exam_user_id"
+                    placeholder="人员选择..."
+                    multiple
+                    transfer
+                    slot="extra"
+                  >
+                    <Option
+                      v-for="item in selectData"
+                      :value="item.id"
+                      :key="item.id"
+                    >{{ item.name }}</Option>
+                  </Select>
+                </Cell>
               </CellGroup>
             </TabPane>
             <!--表头附加相关操作：-->
             <template slot="extra">
               <Row class="hidden-nowrap">
-                <Button type="error" size="small" @click="countBack">退回修改</Button>
+                <Button type="primary" size="small" @click="countBack">执行</Button>
               </Row>
             </template>
           </Tabs>
@@ -131,7 +182,7 @@ export default {
   data() {
     return {
       // split
-      split1: 0.6,
+      split1: 0.7,
 
       // count
       ajax_count: null,
@@ -205,10 +256,16 @@ export default {
 
       // select.data
       selectData: [
-        { name: "张三", value: 1 },
-        { name: "李四", value: 2 },
-        { name: "王五", value: 3 }
-      ]
+        { id: 1, name: "张三", value: 1 },
+        { id: 2, name: "李四", value: 2 },
+        { id: 3, name: "王五", value: 3 }
+      ],
+      selectUser: {
+        count_user_id: "",
+        counted_user_id: "",
+        exam_user_id: "",
+        docu_user_id: ""
+      }
     };
   },
   methods: {
@@ -395,48 +452,15 @@ export default {
         this.$Message.error(error);
       });
   },
-  mounted() {
-    var demo1 = xmSelect.render({
-      el: "#demo1",
-      radio: true,
-      clickClose: true,
-      tips: "测算人员选择",
-      theme: {
-        color: "#2d8cf0"
-      },
-      data: this.selectData
-    });
-    var demo2 = xmSelect.render({
-      el: "#demo2",
-      radio: true,
-      clickClose: true,
-      tips: "复核人员选择",
-      theme: {
-        color: "#2d8cf0"
-      },
-      data: this.selectData
-    });
-    var demo3 = xmSelect.render({
-      el: "#demo3",
-      tips: "审批人员选择",
-      theme: {
-        color: "#2d8cf0"
-      },
-      data: this.selectData
-    });
-    var demo4 = xmSelect.render({
-      el: "#demo4",
-      radio: true,
-      clickClose: true,
-      tips: "文书人员选择",
-      theme: {
-        color: "#2d8cf0"
-      },
-      data: this.selectData
-    });
-  }
+  mounted() {}
 };
 </script>
 
 <style scoped>
+.user-select {
+  width: 120px;
+}
+.user-select-multi {
+  width: 200px;
+}
 </style>

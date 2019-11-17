@@ -393,11 +393,11 @@
 
     /* 表格cell底边 */
     .ivu-cell {
-        border-bottom: dashed #dcdee2 1px;
+        /* border-bottom: dashed #dcdee2 1px; */
     }
 
     /* 多选择控件修饰 */
-    .ivu-select-multiple .ivu-tag  {
+    /* .ivu-select-multiple .ivu-tag  {
         background-color: #2b85e4;
         border-color: #2b85e4;
     }
@@ -406,5 +406,5 @@
     }
     .ivu-select-multiple .ivu-tag .ivu-icon-ios-close {
         color: #fff;
-    }
+    } */
 </style>
