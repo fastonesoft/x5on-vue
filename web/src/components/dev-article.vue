@@ -391,6 +391,10 @@
         background: transparent;
     }
 
+    .under-line {
+        text-decoration: underline;
+    }
+
     /* 表格cell底边 */
     .ivu-cell {
         /* border-bottom: dashed #dcdee2 1px; */

@@ -55,17 +55,53 @@
           <Tabs value="table">
             <TabPane label="税费清单" name="table">
               <div id="print">
-                <h2 style="text-align: center;">涉税审议材料</h2>
-                <h3>案件名称：{{ '什么有限公司' }}</h3>
-                <br>
-                <h4>案件详情：</h4>
-                <p style="text-indent:20px;">
-                  花木成畦手自栽花木城花木成畦手自栽花木成畦手自栽花木成畦手自栽花木成畦手自栽花木成畦手自栽花木成畦手自栽花木成畦手自栽花木成畦手自栽
-
+                <h2 style="text-align: center;">涉税集体审议材料</h2>
+                <br />
+                <Row class="h3">
+                  <iCol span="12">案件名称：{{ '什么有限公司' }}</iCol>
+                  <iCol span="12" class="align-right">编号：{{ '20190001' }}</iCol>
+                </Row>
+                <br />
+                <p style="text-indent:28px;">
+                  产权人
+                  <span class="under-line">{{ '王XXX' }}</span>，
+                  <span class="under-line">{{ '拍卖' }}</span>，
+                  <span class="under-line">{{ '三水街道' }}</span>的一处
+                  <span class="under-line">{{ '国有' }}</span>类房产，该房产建筑面积
+                  <span class="under-line">{{ '112' }}</span>M
+                  <sup>2</sup>，土地面积
+                  <span class="under-line">{{ '23' }}</span>M
+                  <sup>2</sup>，使用年限
+                  <span class="under-line">{{ '20' }}</span>年，初始价格
+                  <span class="under-line">{{ '1120000' }}</span>元，评价价格
+                  <span class="under-line">{{ '1000000' }}</span>元，起拍价格
+                  <span class="under-line">{{ '1100000' }}</span>元。
                 </p>
-                <br>
-                     <h4>税费测算：</h4>
-
+                <br />
+                <h4>经初步测算，须缴纳税款如下：</h4>
+                  <Table
+                    :columns="count_cols"
+                    :data="counts"
+                    :loading="countLoading"
+                    ref="count_sec"
+                    size="small"
+                    border
+                    stripe
+                    show-summary
+                  ></Table>
+                  <br>
+                  <h3>
+                    审议组成员：王东、李晓
+                  </h3>
+                  <br>
+                  <h3>
+                    审议组成员意见（签名）
+                  </h3>
+                <Row class="h4 bottom">
+                  <iCol span="8">税费测算：<span class="under-line">{{ '什么有限公司' }}</span></iCol>
+                  <iCol span="8" class="align-center">测算复核：<span class="under-line">{{ '20190001' }}</span></iCol>
+                  <iCol span="8" class="align-right">审议类型：<span class="under-line">{{ '集体审议' }}</span></iCol>
+                </Row>
               </div>
             </TabPane>
             <!--表头附加相关操作：-->
@@ -134,16 +170,11 @@ export default {
       countLoading: false,
       count_cols: [
         {
-          width: 50,
-          type: "index",
-          align: "center"
-        },
-        {
           title: "税种",
           key: "tax_name"
         },
         {
-          title: "依据",
+          title: "计税依据",
           key: "tax_base",
           align: "right"
         },
@@ -304,9 +335,20 @@ export default {
 </script>
 
 <style scoped>
-
-  #print {
-    background: transparent;
-  }
-
+#print {
+  background: transparent;
+  position: relative;
+}
+.h3 {
+  font-size: 1.17em; font-weight: bold;
+}
+.h4 {
+  font-weight: bold;
+}
+.bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 </style>
