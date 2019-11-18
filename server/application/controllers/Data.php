@@ -110,6 +110,8 @@ class Data extends XC_Controller
                 $user_id = $userinfor->id;
                 $exam_id = Xcon::EXAM_DATA;
                 $exam_time = date('Y-m-d H:i:s');
+                $examed = 1;
+				$team = 1;
 
                 // 检测标的是否存在
                 $data = Xcon::checkByUid('xcData', $uid);
@@ -120,7 +122,7 @@ class Data extends XC_Controller
 
                 // 提交
                 $uid = Xcon::uid();
-                Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time'));
+                Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time', 'examed', 'team'));
 
                 $result++;
             }

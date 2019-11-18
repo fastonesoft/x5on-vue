@@ -89,7 +89,7 @@ let eleById = function (domIdName) {
 
 const page = {
     width72: 535,
-    width96: 713
+    width96: 713,
 }
 
 export default {

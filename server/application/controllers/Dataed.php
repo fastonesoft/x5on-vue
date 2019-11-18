@@ -60,13 +60,15 @@ class Dataed extends XC_Controller
             $user_id = $userinfor->id;
             $exam_id = Xcon::EXAM_DATAED;
             $exam_time = date('Y-m-d H:i:s');
+			$examed = 1;
+			$team = 1;
 
             // 检测标的是否通过审核
             Xcon::existBy('xcDataExam', compact('data_id', 'exam_id'), '“标的”已经通过审核！');
 
             // 提交
             $uid = Xcon::uid();
-            $result = Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time'));
+            $result = Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time', 'examed', 'team'));
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });

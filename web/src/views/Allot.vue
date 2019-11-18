@@ -39,8 +39,7 @@
         v-model="split1"
         class="split margin-top8"
         min="600"
-        max="300"
-        @on-move-end="splitMoved"
+        max="350"
       >
         <div slot="left" class="slot-left">
           <Tabs value="table">
@@ -95,7 +94,7 @@
           <Tabs value="table">
             <TabPane label="任务分配" name="table">
               <h2 style="text-align: center;">税务案件任务分配</h2>
-
+              <br>
               <CellGroup>
                 <Cell title="税费测算">
                   <Select
@@ -106,7 +105,7 @@
                     slot="extra"
                   >
                     <Option
-                      v-for="item in selectData"
+                      v-for="item in users"
                       :value="item.id"
                       :key="item.id"
                     >{{ item.name }}</Option>
@@ -121,7 +120,7 @@
                     slot="extra"
                   >
                     <Option
-                      v-for="item in selectData"
+                      v-for="item in users"
                       :value="item.id"
                       :key="item.id"
                     >{{ item.name }}</Option>
@@ -136,7 +135,7 @@
                     slot="extra"
                   >
                     <Option
-                      v-for="item in selectData"
+                      v-for="item in users"
                       :value="item.id"
                       :key="item.id"
                     >{{ item.name }}</Option>
@@ -152,7 +151,7 @@
                     slot="extra"
                   >
                     <Option
-                      v-for="item in selectData"
+                      v-for="item in users"
                       :value="item.id"
                       :key="item.id"
                     >{{ item.name }}</Option>
@@ -254,12 +253,9 @@ export default {
       ],
       counts: [],
 
-      // select.data
-      selectData: [
-        { id: 1, name: "张三", value: 1 },
-        { id: 2, name: "李四", value: 2 },
-        { id: 3, name: "王五", value: 3 }
-      ],
+      // users->select
+      users: [],
+
       selectUser: {
         count_user_id: "",
         counted_user_id: "",
@@ -375,10 +371,6 @@ export default {
         });
     },
 
-    // 分隔拖动
-    splitMoved() {
-      window.console.log(this.split1);
-    }
   },
   computed: {
     dataCount() {
@@ -442,9 +434,9 @@ export default {
         this.tableLoading = false;
         this.$Message.error(error);
       });
-    this.$.gets("/counted/index")
+    this.$.gets("/allot/index")
       .then(res => {
-        this.ajaxs = res;
+        this.users = res;
         this.tableLoading = false;
       })
       .catch(error => {
@@ -461,6 +453,6 @@ export default {
   width: 120px;
 }
 .user-select-multi {
-  width: 200px;
+  width: 180px;
 }
 </style>
