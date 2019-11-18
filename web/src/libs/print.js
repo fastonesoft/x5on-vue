@@ -21,7 +21,7 @@ let printImage = function(domIdName, title) {
     let width = domId.clientWidth;
 
     html2canvas(domId, {
-        scale: 2,
+        scale: 3.2,
         backgroundColor: null,
     }).then(canvas => {
         let imgData = canvas.toDataURL("image/png")

@@ -336,7 +336,7 @@ export default {
 
 <style scoped>
 #print {
-  background: transparent;
+  background: #fff;
   position: relative;
 }
 .h3 {
