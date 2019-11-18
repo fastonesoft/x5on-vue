@@ -339,16 +339,4 @@ export default {
   background: #fff;
   position: relative;
 }
-.h3 {
-  font-size: 1.17em; font-weight: bold;
-}
-.h4 {
-  font-weight: bold;
-}
-.bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
 </style>
