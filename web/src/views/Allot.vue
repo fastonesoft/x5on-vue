@@ -99,10 +99,10 @@
                 <CellGroup>
                   <Cell title="税费测算">
                     <Select
-                      class="user-select"
+                      class="user-select-multi"
                       v-model="selectUser.count_user_id"
                       placeholder="人员选择..."
-                      :disabled="current.count"
+                      :disabled="current.count===1"
                       transfer
                       slot="extra"
                     >
@@ -115,26 +115,10 @@
                   </Cell>
                   <Cell title="测算复核">
                     <Select
-                      class="user-select"
+                      class="user-select-multi"
                       v-model="selectUser.counted_user_id"
                       placeholder="人员选择..."
-                      :disabled="current.counted"
-                      transfer
-                      slot="extra"
-                    >
-                      <Option
-                        v-for="item in users"
-                        :value="item.id"
-                        :key="item.id"
-                      >{{ item.name }}</Option>
-                    </Select>
-                  </Cell>
-                  <Cell title="文书制作">
-                    <Select
-                      class="user-select"
-                      v-model="selectUser.docu_user_id"
-                      placeholder="人员选择..."
-                      :disabled="current.docued"
+                      :disabled="current.counted===1"
                       transfer
                       slot="extra"
                     >
@@ -150,7 +134,7 @@
                       class="user-select-multi"
                       v-model="selectUser.exam_user_id"
                       placeholder="人员选择..."
-                      :disabled="current.teamed"
+                      :disabled="current.teamed===1"
                       multiple
                       transfer
                       slot="extra"
@@ -162,13 +146,31 @@
                       >{{ item.name }}</Option>
                     </Select>
                   </Cell>
+                  <Cell title="文书制作">
+                    <Select
+                      class="user-select-multi"
+                      v-model="selectUser.docu_user_id"
+                      placeholder="人员选择..."
+                      :disabled="current.docued===1"
+                      transfer
+                      slot="extra"
+                    >
+                      <Option
+                        v-for="item in users"
+                        :value="item.id"
+                        :key="item.id"
+                      >{{ item.name }}</Option>
+                    </Select>
+                  </Cell>
                 </CellGroup>
+                <Divider></Divider>
+                <h4 class="first-line">指定人员，则只能由被指定人员进行操作（要有对应岗位权限）；不指定人员，则由相关岗位人员执行操作。</h4>
               </div>
             </TabPane>
             <!--表头附加相关操作：-->
             <template slot="extra">
               <Row class="hidden-nowrap">
-                <Button type="primary" size="small" @click="countBack" v-if="current && !current.alloted">执行</Button>
+                <Button type="primary" size="small" @click="allotExe" v-if="current && !current.alloted">执行</Button>
               </Row>
             </template>
           </Tabs>
@@ -180,7 +182,6 @@
 
 <script>
 import xcon from "../libs/xcon";
-import print from "../libs/print";
 
 export default {
   name: "Allot",
@@ -392,7 +393,7 @@ export default {
     // 表格选择
     selectChange(row) {
       this.current = row;
-      window.console.log(row)
+
       this.countLoading = true;
       // 查询标的对应测算税种列表
       this.$.posts("/counted/tax", { data_id: row.id })
@@ -406,25 +407,28 @@ export default {
         });
     },
 
-    // 退回测算标的
-    countBack() {
+    // 标的任务分配
+    allotExe() {
       let row = this.current;
       if (row === null) {
-        this.$Message.error("没有选择测算标的！");
+        this.$Message.error("没有选择任务标的！");
         return;
       }
-      this.$.posts("/counted/back", { uid: row.uid })
+
+      this.$.posts("/allot/exec", { uid: row.uid })
         .then(res => {
-          // 删除
-          xcon.arrsDel(this.ajaxs, "uid", row.uid);
+          // 更新标的执行状态
+          xcon.arrsEdit(this.ajaxs, "uid", row.uid, res);
 
           this.current = null;
-          this.$Message.success(res + "条“标的”测算已退回！");
+          this.$Message.success("标的任务分配已执行");
         })
         .catch(error => {
           this.$Message.error(error);
         });
     },
+
+
     // 测算结束，提交复核
     countExam() {
       let row = this.current;
@@ -511,9 +515,6 @@ export default {
 </script>
 
 <style scoped>
-.user-select {
-  width: 120px;
-}
 .user-select-multi {
   width: 180px;
 }

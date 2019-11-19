@@ -16,12 +16,15 @@ class Xcon
     const TO_KEN = '#30ca5d5fd85b11e98f5870f395158687#';
 
     // EXAM-CODE
-    const EXAM_DATA = 1;
-    const EXAM_DATAED = 2;
-    const EXAM_COUNT = 4;
-    const EXAM_COUNTED = 8;
-    const EXAM_BACK = 16;
-    const EXAM_BACKED = 32;
+    const EXAM_DATA = 10;
+    const EXAM_DATAED = 20;
+    const EXAM_ALLOTED = 30;
+    const EXAM_COUNT = 40;
+    const EXAM_COUNTED = 50;
+    const EXAM_TEAMED = 60;
+    const EXAM_DOCUED = 70;
+    const EXAM_BACK = 80;
+    const EXAM_BACKED = 90;
 
 
     public static function cros()
@@ -274,36 +277,57 @@ class Xcon
         return $row;
     }
 
+	public static function checkBy_array($table, $where, $message = '“查询条件”对应记录不存在！')
+	{
+		$row = self::getBy_array($table, $where);
+		if ($row === null) {
+			self::error(self::ERROR_DB, $message);
+		}
+		return $row;
+	}
+
     public static function checkById($table, $id)
     {
         return self::checkBy($table, compact('id'), '“编号”不存在！');
     }
+
+	public static function checkById_array($table, $id)
+	{
+		return self::checkBy_array($table, compact('id'), '“编号”不存在！');
+	}
 
     public static function checkByUid($table, $uid)
     {
         return self::checkBy($table, compact('uid'), '“系统编号”不存在！');
     }
 
+	public static function checkByUid_array($table, $uid)
+	{
+		return self::checkBy_array($table, compact('uid'), '“系统编号”不存在！');
+	}
+
     /**
      * 返回字段值
      */
     public static function checkKeyBy($table, $where, $keyName)
     {
-        $row = self::checkBy($table, $where);
+        $row = self::checkBy_array($table, $where);
         return $row[$keyName];
     }
 
     public static function checkKeyById($table, $id, $keyName)
     {
-        $row = self::checkById($table, $id);
-        return $row[$keyName];
+        return self::checkKeyBy($table, compact('id'), $keyName);
     }
 
     public static function checkKeyByUid($table, $uid, $keyName)
     {
-        $row = self::checkByUid($table, $uid);
-        return $row[$keyName];
+		return self::checkKeyBy($table, compact('uid'), $keyName);
     }
+
+    public static function checkIdByUid($table, $uid) {
+		return self::checkKeyByUid($table, $uid, 'id');
+	}
 
 
     /**

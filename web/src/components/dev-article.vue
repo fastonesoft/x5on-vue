@@ -410,6 +410,9 @@ export default {
   left: 0;
   right: 0;
 }
+.first-line {
+  text-indent: 28px;
+}
 
 /* 表格cell底边 */
 .ivu-cell {

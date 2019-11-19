@@ -42,5 +42,40 @@ class Allot extends XC_Controller
 		});
 	}
 
+	public function exec()
+	{
+		Xcon::loginCheck(function ($userinfor) {
+			/**
+			 * 执行分配
+			 * 一、添加分配人员记录
+			 * 二、设置任务为已执行状态
+			 * 可能涉及的参数：
+			 * uid、data_id、exam_id、team、user_id
+			 */
+
+			$team = 1;
+			$exam_id = Xcon::EXAM_ALLOTED;
+			$user_id = $userinfor->id;
+			$examed = 1;
+
+			// 检测标的编号
+			$params = Xcon::params();
+			$uid = Xcon::array_key($params, 'uid');
+			$data_id = Xcon::checkIdByUid('xcData', $uid);
+
+			// 检测分配记录是否存在
+			Xcon::existBy('xcDataExam', compact('data_id', 'exam_id', 'team'), '任务已分配，无须重复');
+
+			// 添加执行记录
+			$uid = Xcon::uid();
+			Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'team', 'user_id', 'examed'));
+
+			// 返回添加的数据记录
+			$result = Xcon::getById('xvData', $data_id);
+
+			Xcon::json(Xcon::NO_ERROR, $result);
+		});
+	}
+
 
 }
