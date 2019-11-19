@@ -15,29 +15,30 @@ class Allot extends XC_Controller
 			$part_id = $user->part_id;
 			$users = Xcon::getsBy('xvUser', "part_id=$part_id and group_id<$group_id", 'group_id, id');
 
-			// 二、未分配任务清单
-			$datas = Xcon::getsBy('xvData', 'dataed=1 and alloted=0');
+			// 二、未分配任务清单（未完成期，全部可见）
+			$begin = date('Y-m-d');
+            $end = date('Y-m-d');
+			$datas = Xcon::getsBy('xvData', "dataed=1 and back=0 and create_time between '$begin' and '$end'");
 
 			// 三、系统案件统计
 			$count = Xcon::getBy('xvDataCount', null);
 
-			var_dump($count);
 			Xcon::json(Xcon::NO_ERROR, compact('datas', 'users', 'count'));
         });
     }
 
-	public function index1()
+	public function find()
 	{
 		Xcon::loginCheck(function ($userinfor) {
-			// 查询用户信息
-			$id = $userinfor->id;
-			$group_id = $userinfor->group_id;
-			// 查询部门
-			$user = Xcon::checkById('xvUser', $id);
-			// 返回用户列表
-			$part_id = $user->part_id;
-			$result = Xcon::getsBy('xvUser', "part_id=$part_id and group_id<$group_id", 'group_id, id');
-			Xcon::json(Xcon::NO_ERROR, $result);
+			// 获取查询日期
+			$params = Xcon::params();
+            $begin = Xcon::array_key($params, 'begin');
+			$end = Xcon::array_key($params, 'end');
+			
+			// 未分配任务清单（未完成期，全部可见）
+			$result = Xcon::getsBy('xvData', "dataed=1 and back=0 and create_time between '$begin' and '$end'");
+
+            Xcon::json(Xcon::NO_ERROR, $result);
 		});
 	}
 

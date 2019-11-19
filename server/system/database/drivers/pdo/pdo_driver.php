@@ -126,6 +126,11 @@ class CI_DB_pdo_driver extends CI_DB {
 	 */
 	public function db_connect($persistent = FALSE)
 	{
+		// 整型不以字符串输出（手动添加）
+		$this->options[PDO::ATTR_EMULATE_PREPARES] = false;
+		$this->options[PDO::ATTR_STRINGIFY_FETCHES] = false;
+
+		// 系统内置
 		if ($persistent === TRUE)
 		{
 			$this->options[PDO::ATTR_PERSISTENT] = TRUE;

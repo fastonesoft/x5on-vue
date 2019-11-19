@@ -102,6 +102,7 @@
                       class="user-select"
                       v-model="selectUser.count_user_id"
                       placeholder="人员选择..."
+                      :disabled="current.count"
                       transfer
                       slot="extra"
                     >
@@ -117,6 +118,7 @@
                       class="user-select"
                       v-model="selectUser.counted_user_id"
                       placeholder="人员选择..."
+                      :disabled="current.counted"
                       transfer
                       slot="extra"
                     >
@@ -132,6 +134,7 @@
                       class="user-select"
                       v-model="selectUser.docu_user_id"
                       placeholder="人员选择..."
+                      :disabled="current.docued"
                       transfer
                       slot="extra"
                     >
@@ -147,6 +150,7 @@
                       class="user-select-multi"
                       v-model="selectUser.exam_user_id"
                       placeholder="人员选择..."
+                      :disabled="current.teamed"
                       multiple
                       transfer
                       slot="extra"
@@ -218,7 +222,77 @@ export default {
         {
           title: "所属地区",
           key: "area_name"
-        }
+        },
+        {
+          title: "是否分配",
+          key: "allot",
+          align: "center",
+          render: (h, params) => {
+            if (params.row.alloted) return h('Icon', {
+                      props: {
+                          type: 'ios-checkmark-circle-outline',
+                          size: '24',
+                          color: '#2d8cf0'
+                      },
+                  });
+          }
+        },
+        {
+          title: "是否测算",
+          key: "count",
+          align: "center",
+          render: (h, params) => {
+            if (params.row.count) return h('Icon', {
+                      props: {
+                          type: 'ios-checkmark-circle-outline',
+                          size: '24',
+                          color: '#2d8cf0'
+                      },
+                  });
+          }
+        },
+        {
+          title: "是否复核",
+          key: "counted",
+          align: "center",
+          render: (h, params) => {
+            if (params.row.counted) return h('Icon', {
+                      props: {
+                          type: 'ios-checkmark-circle-outline',
+                          size: '24',
+                          color: '#2d8cf0'
+                      },
+                  });
+          }
+        },
+        {
+          title: "是否审批",
+          key: "teamed",
+          align: "center",
+          render: (h, params) => {
+            if (params.row.teamed) return h('Icon', {
+                      props: {
+                          type: 'ios-checkmark-circle-outline',
+                          size: '24',
+                          color: '#2d8cf0'
+                      },
+                  });
+          }
+        },
+        {
+          title: "文书制作",
+          key: "docued",
+          align: "center",
+          render: (h, params) => {
+            if (params.row.docued) return h('Icon', {
+                      props: {
+                          type: 'ios-checkmark-circle-outline',
+                          size: '24',
+                          color: '#2d8cf0'
+                      },
+                  });
+          }
+        },
       ],
       ajaxs: [],
       pageIndex: 1,
@@ -273,7 +347,7 @@ export default {
 
       let begin = xcon.dateFormat(this.countDate[0], "yyyy-MM-dd");
       let end = xcon.dateFormat(this.countDate[1], "yyyy-MM-dd");
-      this.$.posts("/counted/find", { begin, end })
+      this.$.posts("/allot/find", { begin, end })
         .then(res => {
           this.ajaxs = res;
           this.tableLoading = false;
@@ -391,12 +465,6 @@ export default {
         };
       } else {
         let { total, dataed, count, counted, back, backed } = this.ajax_count;
-        total = Number(total);
-        dataed = Number(dataed);
-        count = Number(count);
-        counted = Number(counted);
-        back = Number(back);
-        backed = Number(backed);
         let data_per = total > 0 ? (dataed / total) * 100 : 0;
         let count_per = dataed ? (counted / dataed) * 100 : 0;
         let back_per = counted ? (backed / counted) * 100 : 0;
