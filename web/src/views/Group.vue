@@ -80,7 +80,7 @@
                 pageSize: 10,
                 cols: [
                     {
-                        width: 50,
+                        width: 55,
                         type: 'index',
                         align: 'center',
                     },

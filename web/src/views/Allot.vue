@@ -100,7 +100,7 @@
                   <Cell title="税费测算">
                     <Select
                       class="user-select-multi"
-                      v-model="selectUser.count_user_id"
+                      v-model="examUser.count_user_id"
                       placeholder="人员选择..."
                       :disabled="current.count===1"
                       transfer
@@ -116,7 +116,7 @@
                   <Cell title="测算复核">
                     <Select
                       class="user-select-multi"
-                      v-model="selectUser.counted_user_id"
+                      v-model="examUser.counted_user_id"
                       placeholder="人员选择..."
                       :disabled="current.counted===1"
                       transfer
@@ -132,7 +132,7 @@
                   <Cell title="案件审批">
                     <Select
                       class="user-select-multi"
-                      v-model="selectUser.exam_user_id"
+                      v-model="examUser.teamed_user_id"
                       placeholder="人员选择..."
                       :disabled="current.teamed===1"
                       multiple
@@ -140,16 +140,17 @@
                       slot="extra"
                     >
                       <Option
-                        v-for="item in users"
+                        v-for="item in mulit_users"
                         :value="item.id"
                         :key="item.id"
+                        :disabled="item.disabled"
                       >{{ item.name }}</Option>
                     </Select>
                   </Cell>
                   <Cell title="文书制作">
                     <Select
                       class="user-select-multi"
-                      v-model="selectUser.docu_user_id"
+                      v-model="examUser.docued_user_id"
                       placeholder="人员选择..."
                       :disabled="current.docued===1"
                       transfer
@@ -200,7 +201,7 @@ export default {
       // table
       cols: [
         {
-          width: 50,
+          width: 55,
           type: "index",
           align: "center"
         },
@@ -304,7 +305,7 @@ export default {
       countLoading: false,
       count_cols: [
         {
-          width: 50,
+          width: 55,
           type: "index",
           align: "center"
         },
@@ -333,12 +334,7 @@ export default {
       // users->select
       users: [],
 
-      selectUser: {
-        count_user_id: "",
-        counted_user_id: "",
-        exam_user_id: "",
-        docu_user_id: ""
-      }
+      ajax_examUser: {},
     };
   },
   methods: {
@@ -390,15 +386,14 @@ export default {
       this.pageSize = size;
     },
 
-    // 表格选择
+    // 表格选择，查询分配用户
     selectChange(row) {
       this.current = row;
-
       this.countLoading = true;
-      // 查询标的对应测算税种列表
-      this.$.posts("/counted/tax", { data_id: row.id })
+      // 查询任务分配用户
+      this.$.posts("/allot/user", { uid: row.uid })
         .then(res => {
-          this.counts = res;
+          this.ajax_examUser = res;
           this.countLoading = false;
         })
         .catch(error => {
@@ -495,6 +490,43 @@ export default {
         total += parseFloat(item.tax_amount);
       });
       return total.toFixed(2);
+    },
+    examUser() {
+      // 分配任务的用户对象
+      if (xcon.isNotNull(this.ajax_examUser)) {
+        let user = Object.assign({}, this.ajax_examUser);
+        user.teamed_user_id = user.teamed_users.split(',');
+        return user
+      }
+      return {}
+    },
+    mulit_users() {
+      // 审批用户状态表
+      if (xcon.isNotNull(this.ajax_examUser)) {
+        let user_ids = this.ajax_examUser.teamed_users.split(',');
+        let exameds = this.ajax_examUser.teamed_examed.split(',');
+        // 复制一份用户数据
+        let users = this.users.concat();
+
+window.console.log(users)
+window.console.log(user_ids)
+window.console.log(exameds)
+
+        // 修改users列表状态
+        users.forEach(item => {
+          item.disabled = false;
+          for (let i=0; i<user_ids.length; i++) {
+            if (item.id === user_ids[i] && exameds[i]==='1') {
+              // 找到编号相同，并且有“审核”标志，则禁用，跳出
+              item.disabled = true;
+              break
+            }
+          }
+        })
+        window.console.log(users)
+        return users;
+      }
+      return {}
     }
   },
   created() {

@@ -187,12 +187,12 @@
                 // 表格加载
                 cols: [
                     {
-                        width: 50,
+                        width: 55,
                         type: 'selection',
                         align: 'center',
                     },
                     {
-                        width: 50,
+                        width: 55,
                         type: 'index',
                         align: 'center',
                     },

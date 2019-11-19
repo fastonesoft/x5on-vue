@@ -103,7 +103,7 @@ export default {
       // table
       cols: [
         {
-          width: 50,
+          width: 55,
           type: "index",
           align: "center"
         },
@@ -137,7 +137,7 @@ export default {
       countLoading: false,
       count_cols: [
         {
-          width: 50,
+          width: 55,
           type: "index",
           align: "center"
         },

@@ -30,14 +30,15 @@ class Allot extends XC_Controller
 	public function find()
 	{
 		Xcon::loginCheck(function ($userinfor) {
-			// 获取查询日期
+            /**
+             * 获取查询日期
+             * 未分配任务清单（未完成期，全部可见）
+             */
 			$params = Xcon::params();
             $begin = Xcon::array_key($params, 'begin');
 			$end = Xcon::array_key($params, 'end');
-			
-			// 未分配任务清单（未完成期，全部可见）
-			$result = Xcon::getsBy('xvData', "dataed=1 and back=0 and create_time between '$begin' and '$end'");
 
+			$result = Xcon::getsBy('xvData', "dataed=1 and back=0 and create_time between '$begin' and '$end'");
             Xcon::json(Xcon::NO_ERROR, $result);
 		});
 	}
@@ -76,6 +77,26 @@ class Allot extends XC_Controller
 			Xcon::json(Xcon::NO_ERROR, $result);
 		});
 	}
+
+    public function user()
+    {
+        Xcon::loginCheck(function ($userinfor) {
+            /**
+             * 根据标的编号，检测用户分配情况
+             * 涉及：
+             * 一、标的编号获取
+             * 二、查询用户分配情况
+             */
+
+            $params = Xcon::params();
+            $uid = Xcon::array_key($params, 'uid');
+
+            $result = Xcon::checkByUid('xvDataExamUserId', $uid);
+
+            Xcon::json(Xcon::NO_ERROR, $result);
+        });
+    }
+
 
 
 }
