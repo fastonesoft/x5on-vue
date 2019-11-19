@@ -93,76 +93,78 @@
         <div slot="right" class="slot-right">
           <Tabs value="table">
             <TabPane label="任务分配" name="table">
-              <h2 style="text-align: center;">税务案件任务分配</h2>
-              <br>
-              <CellGroup>
-                <Cell title="税费测算">
-                  <Select
-                    class="user-select"
-                    v-model="selectUser.count_user_id"
-                    placeholder="人员选择..."
-                    transfer
-                    slot="extra"
-                  >
-                    <Option
-                      v-for="item in users"
-                      :value="item.id"
-                      :key="item.id"
-                    >{{ item.name }}</Option>
-                  </Select>
-                </Cell>
-                <Cell title="测算复核">
-                  <Select
-                    class="user-select"
-                    v-model="selectUser.counted_user_id"
-                    placeholder="人员选择..."
-                    transfer
-                    slot="extra"
-                  >
-                    <Option
-                      v-for="item in users"
-                      :value="item.id"
-                      :key="item.id"
-                    >{{ item.name }}</Option>
-                  </Select>
-                </Cell>
-                <Cell title="文书制作">
-                  <Select
-                    class="user-select"
-                    v-model="selectUser.docu_user_id"
-                    placeholder="人员选择..."
-                    transfer
-                    slot="extra"
-                  >
-                    <Option
-                      v-for="item in users"
-                      :value="item.id"
-                      :key="item.id"
-                    >{{ item.name }}</Option>
-                  </Select>
-                </Cell>
-                <Cell title="案件审批">
-                  <Select
-                    class="user-select-multi"
-                    v-model="selectUser.exam_user_id"
-                    placeholder="人员选择..."
-                    multiple
-                    transfer
-                    slot="extra"
-                  >
-                    <Option
-                      v-for="item in users"
-                      :value="item.id"
-                      :key="item.id"
-                    >{{ item.name }}</Option>
-                  </Select>
-                </Cell>
-              </CellGroup>
+              <div v-if="current">
+                <h2 style="text-align: center;">税务案件任务分配</h2>
+                <br>
+                <CellGroup>
+                  <Cell title="税费测算">
+                    <Select
+                      class="user-select"
+                      v-model="selectUser.count_user_id"
+                      placeholder="人员选择..."
+                      transfer
+                      slot="extra"
+                    >
+                      <Option
+                        v-for="item in users"
+                        :value="item.id"
+                        :key="item.id"
+                      >{{ item.name }}</Option>
+                    </Select>
+                  </Cell>
+                  <Cell title="测算复核">
+                    <Select
+                      class="user-select"
+                      v-model="selectUser.counted_user_id"
+                      placeholder="人员选择..."
+                      transfer
+                      slot="extra"
+                    >
+                      <Option
+                        v-for="item in users"
+                        :value="item.id"
+                        :key="item.id"
+                      >{{ item.name }}</Option>
+                    </Select>
+                  </Cell>
+                  <Cell title="文书制作">
+                    <Select
+                      class="user-select"
+                      v-model="selectUser.docu_user_id"
+                      placeholder="人员选择..."
+                      transfer
+                      slot="extra"
+                    >
+                      <Option
+                        v-for="item in users"
+                        :value="item.id"
+                        :key="item.id"
+                      >{{ item.name }}</Option>
+                    </Select>
+                  </Cell>
+                  <Cell title="案件审批">
+                    <Select
+                      class="user-select-multi"
+                      v-model="selectUser.exam_user_id"
+                      placeholder="人员选择..."
+                      multiple
+                      transfer
+                      slot="extra"
+                    >
+                      <Option
+                        v-for="item in users"
+                        :value="item.id"
+                        :key="item.id"
+                      >{{ item.name }}</Option>
+                    </Select>
+                  </Cell>
+                </CellGroup>
+              </div>
             </TabPane>
             <!--表头附加相关操作：-->
             <template slot="extra">
               <Row class="hidden-nowrap">
-                <Button type="primary" size="small" @click="countBack">执行</Button>
+                <Button type="primary" size="small" @click="countBack" v-if="current && !current.alloted">执行</Button>
               </Row>
             </template>
           </Tabs>
@@ -316,6 +318,7 @@ export default {
     // 表格选择
     selectChange(row) {
       this.current = row;
+      window.console.log(row)
       this.countLoading = true;
       // 查询标的对应测算税种列表
       this.$.posts("/counted/tax", { data_id: row.id })
@@ -423,20 +426,11 @@ export default {
     }
   },
   created() {
-    this.$.gets("/count/index")
-      .then(res => {
-        this.ajaxs = res.datas;
-        this.taxs = res.taxs;
-        this.ajax_count = res.count;
-        this.tableLoading = false;
-      })
-      .catch(error => {
-        this.tableLoading = false;
-        this.$Message.error(error);
-      });
     this.$.gets("/allot/index")
       .then(res => {
-        this.users = res;
+        this.ajaxs = res.datas;
+        this.users = res.users;
+        this.ajax_count = res.count;
         this.tableLoading = false;
       })
       .catch(error => {
