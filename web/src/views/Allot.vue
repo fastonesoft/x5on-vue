@@ -99,7 +99,7 @@
                 <CellGroup>
                   <Cell title="税费测算">
                     <Select
-                      class="user-select-multi"
+                      class="multi-select"
                       v-model="examUser.count_user_id"
                       placeholder="人员选择..."
                       :disabled="current.count===1"
@@ -115,7 +115,7 @@
                   </Cell>
                   <Cell title="测算复核">
                     <Select
-                      class="user-select-multi"
+                      class="multi-select"
                       v-model="examUser.counted_user_id"
                       placeholder="人员选择..."
                       :disabled="current.counted===1"
@@ -129,27 +129,10 @@
                       >{{ item.name }}</Option>
                     </Select>
                   </Cell>
-                  <Cell title="案件审批">
-                    <Select
-                      class="user-select-multi"
-                      v-model="examUser.teamed_user_id"
-                      placeholder="人员选择..."
-                      :disabled="current.teamed===1"
-                      multiple
-                      transfer
-                      slot="extra"
-                    >
-                      <Option
-                        v-for="item in mulit_users"
-                        :value="item.id"
-                        :key="item.id"
-                        :disabled="item.disabled"
-                      >{{ item.name }}</Option>
-                    </Select>
-                  </Cell>
+                                    <div id="teamDom" class="mult-select multi-select-padding">案件审批</div>
                   <Cell title="文书制作">
                     <Select
-                      class="user-select-multi"
+                      class="multi-select"
                       v-model="examUser.docued_user_id"
                       placeholder="人员选择..."
                       :disabled="current.docued===1"
@@ -163,6 +146,7 @@
                       >{{ item.name }}</Option>
                     </Select>
                   </Cell>
+
                 </CellGroup>
                 <Divider></Divider>
                 <h4 class="first-line">指定人员，则只能由被指定人员进行操作（要有对应岗位权限）；不指定人员，则由相关岗位人员执行操作。</h4>
@@ -335,6 +319,8 @@ export default {
       users: [],
 
       ajax_examUser: {},
+
+      teamDom: null,
     };
   },
   methods: {
@@ -395,6 +381,43 @@ export default {
         .then(res => {
           this.ajax_examUser = res;
           this.countLoading = false;
+
+          // 多选设置
+          let users = this.users.concat();
+          // 审批用户状态表
+          if (xcon.isNotNull(res)) {
+            // let user_ids = !res.teamed_users ? [] : res.teamed_users.split(',');
+			// let exameds = !res.teamed_examed ? [] : res.teamed_examed.split(',');
+			
+            let user_ids = res.teamed_users || [];
+            user_ids = user_ids.length>0?user_ids.split(','):user_ids;
+
+            let exameds = res.teamed_examed || [];
+            exameds = exameds.length>0?exameds.split(','):exameds;
+
+
+            window.console.log(user_ids)
+            window.console.log(exameds)
+
+            // 修改users列表状态
+            users.forEach(item => {
+              item.disabled = false;
+              item.selected = false;
+              item.value = item.id;
+              for (let i=0; i<user_ids.length; i++) {
+                if (item.id === user_ids[i]) {
+                  item.selected = true;
+                  item.disabled = exameds[i]==='1';
+                  break;
+                }
+              }
+            })
+          }
+          window.console.log(users)
+
+          this.teamDom.update({
+            data: users
+          })
         })
         .catch(error => {
           this.countLoading = false;
@@ -500,34 +523,6 @@ export default {
       }
       return {}
     },
-    mulit_users() {
-      // 审批用户状态表
-      if (xcon.isNotNull(this.ajax_examUser)) {
-        let user_ids = this.ajax_examUser.teamed_users.split(',');
-        let exameds = this.ajax_examUser.teamed_examed.split(',');
-        // 复制一份用户数据
-        let users = this.users.concat();
-
-window.console.log(users)
-window.console.log(user_ids)
-window.console.log(exameds)
-
-        // 修改users列表状态
-        users.forEach(item => {
-          item.disabled = false;
-          for (let i=0; i<user_ids.length; i++) {
-            if (item.id === user_ids[i] && exameds[i]==='1') {
-              // 找到编号相同，并且有“审核”标志，则禁用，跳出
-              item.disabled = true;
-              break
-            }
-          }
-        })
-        window.console.log(users)
-        return users;
-      }
-      return {}
-    }
   },
   created() {
     this.$.gets("/allot/index")
@@ -542,12 +537,27 @@ window.console.log(exameds)
         this.$Message.error(error);
       });
   },
-  mounted() {}
+  mounted() {
+      // 渲染多选
+      this.teamDom = xmSelect.render({
+        el: '#teamDom',
+        theme: {
+          color: '#2d8cf0'
+        },
+        data: []
+      })
+  }
 };
 </script>
 
 <style scoped>
-.user-select-multi {
+.multi-select {
   width: 180px;
+}
+.multi-select-padding {
+  padding: 7px 16px;
+}
+.multi-select-margin {
+  margin-bottom: 100px;
 }
 </style>
