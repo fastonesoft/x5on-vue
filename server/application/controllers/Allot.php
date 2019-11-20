@@ -97,6 +97,61 @@ class Allot extends XC_Controller
         });
     }
 
+	public function exam()
+	{
+		Xcon::loginCheck(function ($userinfor) {
+			/**
+			 * 任务分配单人员添加
+			 * 涉及：
+			 * data_id, exam_id, user_id, team, examed = 0,
+			 * data_id, exam_id,
+			 * 需要注意的是：已经执行过的，不可修改
+			 */
+			$params = Xcon::params();
+			$uid = Xcon::array_key($params, 'uid');
+			$exam_id = Xcon::array_key($params, 'exam_id');
+			$user_id = Xcon::array_key($params, 'user_id');
+			$team = 1;
+
+			$data_id = Xcon::checkIdByUid('xcData', $uid);
+			// 如果当前任务已通过审核，则不能修改
+			$examed = 1;
+			Xcon::existBy('xcDataExam', compact('data_id', 'exam_id', 'team', 'examed'));
+
+			// 没有通过审核，删除当前记录，添加用户记录
+			Xcon::delBy('xcDataExam', compact('data_id', 'exam_id'));
+			// add
+			$uid = Xcon::uid();
+			$exam_time = Xcon::datetime();
+			$examed = 0;
+			$result = Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time', 'examed'));
+
+			Xcon::json(Xcon::NO_ERROR, $result);
+		});
+	}
+
+	public function team()
+	{
+		Xcon::loginCheck(function ($userinfor) {
+			/**
+			 * 任务分配多人员添加
+			 * 涉及：
+			 * data_id, exam_id, user_id, team, examed = 0,
+			 * data_id, exam_id,
+			 * 需要注意的是：已经执行过的，不可修改
+			 */
+
+			$params = Xcon::params();
+			$data_uid = Xcon::array_key($params, 'data_uid');
+			$exam_id = Xcon::array_key($params, 'exam_id');
+			$team = 1;
+
+			$result = Xcon::checkByUid('xvDataExamUserId', $data_uid);
+
+			Xcon::json(Xcon::NO_ERROR, $result);
+		});
+	}
+
 
 
 }

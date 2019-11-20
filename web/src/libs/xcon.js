@@ -92,10 +92,22 @@ const page = {
     width96: 713,
 }
 
+const exam = {
+    data: 10,
+    dataed: 20,
+    alloted: 30,
+    count: 40,
+    counted: 50,
+    teamed: 60,
+    docued: 70,
+    back: 80,
+    backed: 90,
+}
+
 export default {
     dateFormat, pageData,
     stateClear, stateRead, stateWrite,
     arrsDel, arrsEdit,
     md5, base64, isNotNull,
-    eleById, page,
+    eleById, page, exam,
 };

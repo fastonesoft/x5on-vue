@@ -88,7 +88,7 @@
         <div slot="right" class="slot-right">
           <Tabs value="table">
             <TabPane label="任务分配" name="table">
-              <div v-if="current">
+              <div>
                 <h2 style="text-align: center;">税务案件任务分配</h2>
                 <br />
                 <CellGroup>
@@ -97,8 +97,8 @@
                       class="multi-select"
                       v-model="examUser.count_user_id"
                       placeholder="人员选择..."
-                      :disabled="current.count===1"
-					  @on-change="userChange(11)"
+                      :disabled="current && current.count===1"
+                      @on-change="countChange"
                       transfer
                       slot="extra"
                     >
@@ -110,7 +110,8 @@
                       class="multi-select"
                       v-model="examUser.counted_user_id"
                       placeholder="人员选择..."
-                      :disabled="current.counted===1"
+                      :disabled="current && current.counted===1"
+                      @on-change="countedChange"
                       transfer
                       slot="extra"
                     >
@@ -123,7 +124,8 @@
                       class="multi-select"
                       v-model="examUser.docued_user_id"
                       placeholder="人员选择..."
-                      :disabled="current.docued===1"
+                      :disabled="current && current.docued===1"
+                      @on-change="docuedChange"
                       transfer
                       slot="extra"
                     >
@@ -309,8 +311,7 @@ export default {
       counts: [],
 
       // users->select
-      users: [],
-
+      ajax_users: [],
       ajax_examUser: {},
 
       teamDom: null
@@ -318,7 +319,10 @@ export default {
   },
   methods: {
     countDateClick() {
+      // 清除设置
       this.current = null;
+      // 清除用户选择
+      this.ajax_examUser = {};
       this.tableLoading = true;
 
       let begin = xcon.dateFormat(this.countDate[0], "yyyy-MM-dd");
@@ -411,14 +415,47 @@ export default {
           this.countLoading = false;
           this.$Message.error(error);
         });
-	},
-	
-	// 用户选择
-	userChange(value) {
+    },
 
-		window.console.log(value)
-window.console.log(dd)
-	},
+    // 测算用户选择
+    countChange(value) {
+      const exam_id = xcon.exam.count;
+      let { uid } = this.current;
+
+      this.$.posts("/allot/exam", { uid, exam_id, user_id: value })
+        .then(res => {
+          this.$Message.success("标的任务分配已执行");
+        })
+        .catch(error => {
+          this.$Message.error(error);
+        });
+    },
+    // 复核用户选择
+    countedChange(value) {
+      const exam_id = xcon.exam.counted;
+      let { uid } = this.current;
+
+      this.$.posts("/allot/exam", { uid, exam_id, user_id: value })
+        .then(res => {
+          this.$Message.success("标的任务分配已执行");
+        })
+        .catch(error => {
+          this.$Message.error(error);
+        });
+    },
+    // 文书用户选择
+    docuedChange(value) {
+      const exam_id = xcon.exam.docued;
+      let { uid } = this.current;
+
+      this.$.posts("/allot/exam", { uid, exam_id, user_id: value })
+        .then(res => {
+          this.$Message.success("标的任务分配已执行");
+        })
+        .catch(error => {
+          this.$Message.error(error);
+        });
+    },
 
     // 标的任务分配
     allotExe() {
@@ -500,15 +537,8 @@ window.console.log(dd)
     datas() {
       return xcon.pageData(this.ajaxs, this.pageIndex, this.pageSize);
     },
-    amounts() {
-      let total = 0.0;
-      this.counts.forEach(item => {
-        total += parseFloat(item.tax_amount);
-      });
-      return total.toFixed(2);
-    },
     examUser() {
-      // 分配任务的用户对象
+	  // 分配任务的用户对象
       if (xcon.isNotNull(this.ajax_examUser)) {
         let user = Object.assign({}, this.ajax_examUser);
         user.teamed_user_id = user.teamed_users
@@ -517,13 +547,16 @@ window.console.log(dd)
         return user;
       }
       return {};
+    },
+    users() {
+      return this.current ? this.ajax_users : [];
     }
   },
   created() {
     this.$.gets("/allot/index")
       .then(res => {
         this.ajaxs = res.datas;
-        this.users = res.users;
+        this.ajax_users = res.users;
         this.ajax_count = res.count;
         this.tableLoading = false;
       })
@@ -547,6 +580,17 @@ window.console.log(dd)
       hide() {
         let value = that.teamDom.getValue("valueStr");
         window.console.log(value);
+
+        // const exam_id = xcon.exam.counted;
+        // let {uid} = this.current;
+
+        // this.$.posts("/allot/exam", { uid, exam_id, user_id: value })
+        // 	.then(res => {
+        // 	this.$Message.success("标的任务分配已执行");
+        // 	})
+        // 	.catch(error => {
+        // 	this.$Message.error(error);
+        // 	});
       }
     });
   }
