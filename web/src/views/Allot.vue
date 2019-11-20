@@ -370,10 +370,16 @@ export default {
     },
     sizeChange(size) {
       this.pageSize = size;
-    },
+	},
+	
+	// 多选取值
+	selectValues() {
+		return this.teamDom.getValue('valueStr')
+	},
 
     // 表格选择，查询分配用户
     selectChange(row) {
+		this.selectValues();
       this.current = row;
       this.countLoading = true;
       // 查询任务分配用户
@@ -386,24 +392,13 @@ export default {
           let users = this.users.concat();
           // 审批用户状态表
           if (xcon.isNotNull(res)) {
-            // let user_ids = !res.teamed_users ? [] : res.teamed_users.split(',');
-			// let exameds = !res.teamed_examed ? [] : res.teamed_examed.split(',');
-			
-            let user_ids = res.teamed_users || [];
-            user_ids = user_ids.length>0?user_ids.split(','):user_ids;
-
-            let exameds = res.teamed_examed || [];
-            exameds = exameds.length>0?exameds.split(','):exameds;
-
-
-            window.console.log(user_ids)
-            window.console.log(exameds)
+            let user_ids = res.teamed_users ? res.teamed_users.split(',') : [];
+			let exameds = res.teamed_examed ? res.teamed_examed.split(',') : [];
 
             // 修改users列表状态
             users.forEach(item => {
               item.disabled = false;
               item.selected = false;
-              item.value = item.id;
               for (let i=0; i<user_ids.length; i++) {
                 if (item.id === user_ids[i]) {
                   item.selected = true;
@@ -518,7 +513,7 @@ export default {
       // 分配任务的用户对象
       if (xcon.isNotNull(this.ajax_examUser)) {
         let user = Object.assign({}, this.ajax_examUser);
-        user.teamed_user_id = user.teamed_users.split(',');
+        user.teamed_user_id = user.teamed_users ? user.teamed_users.split(',') : [];
         return user
       }
       return {}
@@ -538,13 +533,21 @@ export default {
       });
   },
   mounted() {
+	  let that = this;
       // 渲染多选
       this.teamDom = xmSelect.render({
-        el: '#teamDom',
+		el: '#teamDom',
+		prop: {
+			value: 'id',
+		},
         theme: {
           color: '#2d8cf0'
         },
-        data: []
+		data: [],
+		hide() {
+			let dd = that.selectValues();
+			window.console.log(dd);
+		}
       })
   }
 };
