@@ -88,7 +88,7 @@
         <div slot="right" class="slot-right">
           <Tabs value="table">
             <TabPane label="任务分配" name="table">
-              <div>
+              <div v-if="current">
                 <h2 style="text-align: center;">税务案件任务分配</h2>
                 <br />
                 <CellGroup>
@@ -97,7 +97,7 @@
                       class="multi-select"
                       v-model="examUser.count_user_id"
                       placeholder="人员选择..."
-                      :disabled="current && current.count===1"
+                      :disabled="current.count===1"
                       @on-change="countChange"
                       transfer
                       slot="extra"
@@ -110,7 +110,7 @@
                       class="multi-select"
                       v-model="examUser.counted_user_id"
                       placeholder="人员选择..."
-                      :disabled="current && current.counted===1"
+                      :disabled="current.counted===1"
                       @on-change="countedChange"
                       transfer
                       slot="extra"
@@ -124,7 +124,7 @@
                       class="multi-select"
                       v-model="examUser.docued_user_id"
                       placeholder="人员选择..."
-                      :disabled="current && current.docued===1"
+                      :disabled="current.docued===1"
                       @on-change="docuedChange"
                       transfer
                       slot="extra"
@@ -312,7 +312,7 @@ export default {
 
       // users->select
       ajax_users: [],
-      ajax_examUser: {},
+      examUser: {},
 
       teamDom: null
     };
@@ -322,7 +322,7 @@ export default {
       // 清除设置
       this.current = null;
       // 清除用户选择
-      this.ajax_examUser = {};
+      this.examUser = {};
       this.tableLoading = true;
 
       let begin = xcon.dateFormat(this.countDate[0], "yyyy-MM-dd");
@@ -376,8 +376,10 @@ export default {
       // 查询任务分配用户
       this.$.posts("/allot/user", { uid: row.uid })
         .then(res => {
-          this.ajax_examUser = res;
-          this.countLoading = false;
+          this.examUser = res;
+		  this.countLoading = false;
+		  
+		  window.console.log(res)
 
           // 多选设置
           if (xcon.isNotNull(res)) {
@@ -419,9 +421,10 @@ export default {
 
     // 测算用户选择
     countChange(value) {
+      if (!value) return;
+
       const exam_id = xcon.exam.count;
       let { uid } = this.current;
-
       this.$.posts("/allot/exam", { uid, exam_id, user_id: value })
         .then(res => {
           this.$Message.success("标的任务分配已执行");
@@ -432,6 +435,8 @@ export default {
     },
     // 复核用户选择
     countedChange(value) {
+      if (!value) return;
+
       const exam_id = xcon.exam.counted;
       let { uid } = this.current;
 
@@ -445,6 +450,8 @@ export default {
     },
     // 文书用户选择
     docuedChange(value) {
+      if (!value) return;
+      
       const exam_id = xcon.exam.docued;
       let { uid } = this.current;
 
@@ -536,17 +543,6 @@ export default {
     },
     datas() {
       return xcon.pageData(this.ajaxs, this.pageIndex, this.pageSize);
-    },
-    examUser() {
-	  // 分配任务的用户对象
-      if (xcon.isNotNull(this.ajax_examUser)) {
-        let user = Object.assign({}, this.ajax_examUser);
-        user.teamed_user_id = user.teamed_users
-          ? user.teamed_users.split(",")
-          : [];
-        return user;
-      }
-      return {};
     },
     users() {
       return this.current ? this.ajax_users : [];
