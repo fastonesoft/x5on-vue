@@ -157,11 +157,6 @@
                 countLoading: false,
                 count_cols: [
                     {
-                        width: 55,
-                        type: 'index',
-                        align: 'center',
-                    },
-                    {
                         title: '税种',
                         key: 'tax_name',
                     },

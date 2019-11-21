@@ -136,22 +136,41 @@ class Allot extends XC_Controller
 			/**
 			 * 任务分配多人员添加
 			 * 涉及：
-			 * data_id, exam_id, user_id, team, examed = 0,
+			 * data_id, exam_id, user_id，is_add,
 			 * data_id, exam_id,
 			 * 需要注意的是：已经执行过的，不可修改
+			 * 根据is_add真假来确定是否增加、删除
 			 */
 
 			$params = Xcon::params();
-			$data_uid = Xcon::array_key($params, 'data_uid');
+			$uid = Xcon::array_key($params, 'uid');
 			$exam_id = Xcon::array_key($params, 'exam_id');
-			$team = 1;
+			$user_id = Xcon::array_key($params, 'user_id');
+			$is_add = Xcon::array_key($params, 'is_add');
 
-			$result = Xcon::checkByUid('xvDataExamUserId', $data_uid);
+			$data_id = Xcon::checkIdByUid('xcData', $uid);
+			if ($is_add) {
+				// 存在，给出错误提示
+				Xcon::existBy('xcDataExam', compact('data_id', 'exam_id', 'user_id'), '审批用户已设置');
+				// 不存在，添加
+				$team = Xcon::max('xcDataExam', 'team', compact('data_id', 'exam_id'))->max_value;
+				$team++;
+
+				$exam_time = Xcon::datetime();
+				$examed = 0;
+
+				$uid = Xcon::uid();
+				$result = Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'team', 'exam_time', 'examed'));
+			} else {
+				// 通过审核，不删除
+				$examed = 1;
+				Xcon::existBy('xcDataExam', compact('data_id', 'exam_id', 'user_id', 'examed'), '已确认审批，不能删除');
+				// 没有通过，删除
+				$result = Xcon::delBy('xcDataExam', compact('data_id', 'exam_id', 'user_id'));
+			}
 
 			Xcon::json(Xcon::NO_ERROR, $result);
 		});
 	}
-
-
 
 }

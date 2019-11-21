@@ -1,14 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Counted extends XC_Controller
+class C2Exam extends XC_Controller
 {
 
     public function index()
     {
         Xcon::loginCheck(function ($userinfor) {
             // 测算审核
-            $result = Xcon::getsBy('xvData', 'count=1 and counted=0');
+			$begin = Xcon::date();
+			$end = Xcon::date();
+			$result = Xcon::getsBy('xvData', "count=1 and counted=0 and create_time between '$begin' and '$end'");
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });

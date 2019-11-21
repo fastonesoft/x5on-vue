@@ -8,7 +8,9 @@ class Count extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             // 测算清单
-            $datas = Xcon::getsBy('xvData', 'dataed=1 and count=0');
+			$begin = Xcon::date();
+			$end = Xcon::date();
+            $datas = Xcon::getsBy('xvData', "dataed=1 and count=0 and create_time between '$begin' and '$end'");
             // 税种列表
             $taxs = Xcon::gets('xcTax');
             // 统计结果

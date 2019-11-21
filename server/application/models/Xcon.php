@@ -455,12 +455,14 @@ class Xcon
     }
 
     /**
-     * 分页数据查询
+     * 统计数据相关
      */
 
-    public static function page($table, $size, $index)
-    {
-
-    }
+    public static function max($table, $field, $where = null) {
+		$CI =& get_instance();
+		$CI->db->select_max($field, 'max_value');
+		$query = $CI->db->get_where($table, $where);
+		return $query->row();
+	}
 
 }

@@ -4,7 +4,7 @@
       <Split v-model="split1" class="split" min="300" max="300" @on-move-end="splitMoved">
         <div slot="left" class="slot-left">
           <Tabs value="table">
-            <TabPane label="测算标的" name="table">
+            <TabPane label="标的列表" name="table">
               <Table
                 :columns="cols"
                 :data="datas"
@@ -53,32 +53,34 @@
         </div>
         <div slot="right" class="slot-right">
           <Tabs value="table">
-            <TabPane label="税费清单" name="table">
+            <TabPane label="审议材料" name="table">
               <div id="print">
-                <h2 style="text-align: center;">涉税集体审议材料</h2>
-                <br />
-                <Row class="h3">
-                  <iCol span="12">案件名称：{{ '什么有限公司' }}</iCol>
-                  <iCol span="12" class="align-right">编号：{{ '20190001' }}</iCol>
-                </Row>
-                <br />
-                <p style="text-indent:28px;">
-                  产权人
-                  <span class="under-line">{{ '王XXX' }}</span>，
-                  <span class="under-line">{{ '拍卖' }}</span>，
-                  <span class="under-line">{{ '三水街道' }}</span>的一处
-                  <span class="under-line">{{ '国有' }}</span>类房产，该房产建筑面积
-                  <span class="under-line">{{ '112' }}</span>M
-                  <sup>2</sup>，土地面积
-                  <span class="under-line">{{ '23' }}</span>M
-                  <sup>2</sup>，使用年限
-                  <span class="under-line">{{ '20' }}</span>年，初始价格
-                  <span class="under-line">{{ '1120000' }}</span>元，评价价格
-                  <span class="under-line">{{ '1000000' }}</span>元，起拍价格
-                  <span class="under-line">{{ '1100000' }}</span>元。
-                </p>
-                <br />
-                <h4>经初步测算，须缴纳税款如下：</h4>
+                <div v-if="current">
+                  <h2 style="text-align: center;">涉税集体审议材料</h2>
+                  <br />
+                  <Row class="h3">
+                    <iCol span="12">案件名称：{{ current.name }}</iCol>
+                    <iCol span="12" class="align-right">编号：{{ current.id }}</iCol>
+                  </Row>
+                  <br />
+                  <h4>案件描述：</h4>
+                  <p style="text-indent:28px;">
+                    产权人
+                    <span class="under-line">{{ '　'+current.owner+'　' }}</span>，
+                    <span class="under-line">{{ '　'+current.sell_type+'　' }}</span>，
+                    <span class="under-line">{{ '　'+current.area_name+'　' }}</span>的一处
+                    <span class="under-line">{{ '　'+current.area_type+'　' }}</span>类房产，该房产建筑面积
+                    <span class="under-line">{{ '　'+current.area_build+'　' }}</span>M
+                    <sup>2</sup>，土地面积
+                    <span class="under-line">{{ '　'+current.area_soil+'　' }}</span>M
+                    <sup>2</sup>，使用年限
+                    <span class="under-line">{{ '　'+current.use_year+'　' }}</span>年，初始价格
+                    <span class="under-line">{{ '　'+current.price_begin+'　' }}</span>元，评价价格
+                    <span class="under-line">{{ '　'+current.price_ass+'　' }}</span>元，起拍价格
+                    <span class="under-line">{{ '　'+current.price_shoot+'　' }}</span>元。
+                  </p>
+                  <br />
+                  <h4>经初步测算，须缴纳税款如下：</h4>
                   <Table
                     :columns="count_cols"
                     :data="counts"
@@ -86,21 +88,27 @@
                     ref="count_sec"
                     size="small"
                     border
-                    stripe
                     show-summary
+                    :summary-method="taxSummary"
                   ></Table>
-                  <br>
-                  <h3>
-                    审议组成员：王东、李晓
-                  </h3>
-                  <br>
-                  <h3>
-                    审议组成员意见（签名）
-                  </h3>
-                <Row class="h4 bottom">
-                  <iCol span="8">税费测算：<span class="under-line">{{ '什么有限公司' }}</span></iCol>
-                  <iCol span="8" class="align-center">测算复核：<span class="under-line">{{ '20190001' }}</span></iCol>
-                  <iCol span="8" class="align-right">审议类型：<span class="under-line">{{ '集体审议' }}</span></iCol>
+                  <br />
+                  <h3>审议组成员：{{ exam_user.teamed_users }}</h3>
+                  <br />
+                  <h3>审议组成员意见（签名）</h3>
+                </div>
+                <Row class="h4 bottom" v-if="current">
+                  <iCol span="8">
+                    税费测算：
+                    <span class="under-line">{{ exam_user.count_user_name }}</span>
+                  </iCol>
+                  <iCol span="8" class="align-center">
+                    测算复核：
+                    <span class="under-line">{{ exam_user.counted_user_name }}</span>
+                  </iCol>
+                  <iCol span="8" class="align-right">
+                    审议类型：
+                    <span class="under-line">{{ '集体审议' }}</span>
+                  </iCol>
                 </Row>
               </div>
             </TabPane>
@@ -176,12 +184,14 @@ export default {
         {
           title: "计税依据",
           key: "tax_base",
-          align: "right"
+          align: "right",
+          notsum: true
         },
         {
           title: "税率",
           key: "tax_percent",
-          align: "right"
+          align: "right",
+          notsum: true
         },
         {
           title: "税额",
@@ -189,7 +199,8 @@ export default {
           align: "right"
         }
       ],
-      counts: []
+      counts: [],
+      exam_user: {},
     };
   },
   beforeDestroy() {
@@ -202,7 +213,7 @@ export default {
 
       let begin = xcon.dateFormat(this.countDate[0], "yyyy-MM-dd");
       let end = xcon.dateFormat(this.countDate[1], "yyyy-MM-dd");
-      this.$.posts("/counted/find", { begin, end })
+      this.$.posts("/c2exam/find", { begin, end })
         .then(res => {
           this.ajaxs = res;
           this.tableLoading = false;
@@ -249,9 +260,10 @@ export default {
       this.current = row;
       this.countLoading = true;
       // 查询标的对应测算税种列表
-      this.$.posts("/counted/tax", { data_id: row.id })
+      this.$.posts("/c2exam/tax", { data_id: row.id })
         .then(res => {
-          this.counts = res;
+          this.counts = res.datas;
+          this.exam_user = res.exam_user;
           this.countLoading = false;
         })
         .catch(error => {
@@ -273,7 +285,7 @@ export default {
       }
       this.countLoading = true;
 
-      this.$.posts("/counted/exam", { uid: row.uid })
+      this.$.posts("/c2exam/exam", { uid: row.uid })
         .then(res => {
           this.current = null;
           this.countLoading = false;
@@ -295,6 +307,50 @@ export default {
       let height = ((xconSplit.clientWidth * (1 - this.split1)) / 210) * 297;
       let print_form = document.getElementById("print");
       print_form.style.height = `${height}px`;
+    },
+
+    // 统计合计数
+    taxSummary({ columns, data }) {
+      const sums = {};
+      columns.forEach((column, index) => {
+        const key = column.key;
+        if (index === 0) {
+          sums[key] = {
+            key,
+            value: "合计："
+          };
+          return;
+        }
+        if (column.notsum) {
+          sums[key] = {
+            key,
+            value: ""
+          };
+          return;
+        }
+        const values = data.map(item => Number(item[key]));
+        if (!values.every(value => isNaN(value))) {
+          const v = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+          sums[key] = {
+            key,
+            value: v.toFixed(2)
+          };
+        } else {
+          sums[key] = {
+            key,
+            value: ""
+          };
+        }
+      });
+
+      return sums;
     }
   },
   computed: {
@@ -310,7 +366,7 @@ export default {
     }
   },
   created() {
-    this.$.gets("/counted/index")
+    this.$.gets("/c2exam/index")
       .then(res => {
         this.ajaxs = res;
         this.tableLoading = false;

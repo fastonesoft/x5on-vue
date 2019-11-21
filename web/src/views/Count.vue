@@ -252,11 +252,6 @@ export default {
       countLoading: false,
       count_cols: [
         {
-          width: 55,
-          type: "index",
-          align: "center"
-        },
-        {
           title: "税种",
           key: "tax_name"
         },
@@ -460,7 +455,19 @@ export default {
       return total.toFixed(2);
     }
   },
-  created() {},
+  created() {
+    this.$.gets("/count/index")
+      .then(res => {
+        this.ajaxs = res.datas;
+        this.taxs = res.taxs;
+        this.ajax_count = res.count;
+        this.tableLoading = false;
+      })
+      .catch(error => {
+        this.tableLoading = false;
+        this.$Message.error(error);
+      });
+  },
   mounted() {}
 };
 </script>

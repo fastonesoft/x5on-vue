@@ -118,7 +118,7 @@
                       <Option v-for="item in users" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                   </Cell>
-                  <div id="teamDom" class="mult-select multi-select-padding">案件审批</div>
+                  <div ref="teamDom" id="teamDom" class="mult-select multi-select-padding">案件审批</div>
                   <Cell title="文书制作">
                     <Select
                       class="multi-select"
@@ -318,6 +318,10 @@ export default {
     };
   },
   methods: {
+    delClick() {
+	  //   this.teamDom = null;
+	  this.teamDom.setValue([])
+    },
     countDateClick() {
       // 清除设置
       this.current = null;
@@ -373,13 +377,12 @@ export default {
     selectChange(row) {
       this.current = row;
       this.countLoading = true;
+
       // 查询任务分配用户
       this.$.posts("/allot/user", { uid: row.uid })
         .then(res => {
           this.examUser = res;
-		  this.countLoading = false;
-		  
-		  window.console.log(res)
+          this.countLoading = false;
 
           // 多选设置
           if (xcon.isNotNull(res)) {
@@ -451,7 +454,7 @@ export default {
     // 文书用户选择
     docuedChange(value) {
       if (!value) return;
-      
+
       const exam_id = xcon.exam.docued;
       let { uid } = this.current;
 
@@ -562,9 +565,9 @@ export default {
       });
   },
   mounted() {
-    let that = this;
     // 渲染多选
-    this.teamDom = xmSelect.render({
+    let that = this;
+    that.teamDom = xmSelect.render({
       el: "#teamDom",
       prop: {
         value: "id"
@@ -573,20 +576,23 @@ export default {
         color: "#2d8cf0"
       },
       data: [],
-      hide() {
-        let value = that.teamDom.getValue("valueStr");
-        window.console.log(value);
+      on({ arr, change, isAdd }) {
+		if (arr.length==0 && change.length == 0 && isAdd) return;
 
-        // const exam_id = xcon.exam.counted;
-        // let {uid} = this.current;
-
-        // this.$.posts("/allot/exam", { uid, exam_id, user_id: value })
-        // 	.then(res => {
-        // 	this.$Message.success("标的任务分配已执行");
-        // 	})
-        // 	.catch(error => {
-        // 	this.$Message.error(error);
-        // 	});
+        const exam_id = xcon.exam.teamed;
+        let { uid } = that.current;
+        that.$.posts("/allot/team", {
+          uid,
+          exam_id,
+          user_id: change[0].id,
+          is_add: isAdd ? 1 : 0
+        })
+          .then(res => {
+            that.$Message.success(res + "个审批任务已分配");
+          })
+          .catch(error => {
+            that.$Message.error(error);
+          });
       }
     });
   }

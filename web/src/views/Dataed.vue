@@ -59,7 +59,7 @@
                 <Cell title="所属地区：" :extra="current.area_name"/>
                 <Cell title="建筑面积：" :extra="current.area_build"/>
                 <Cell title="土地面积：" :extra="current.area_soil"/>
-                <Cell title="使用年限：" :extra="current.use_year"/>
+                <Cell title="使用年限：" :extra="current.use_year.toString()"/>
                 <Cell title="初始价格：" :extra="current.price_begin"/>
                 <Cell title="评价价格：" :extra="current.price_ass"/>
                 <Cell title="起拍价格：" :extra="current.price_shoot"/>

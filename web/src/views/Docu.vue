@@ -55,19 +55,49 @@
           <Tabs value="table">
             <TabPane label="税费清单" name="table">
               <div id="print">
-                <Table
-                  :columns="count_cols"
-                  :data="counts"
-                  :loading="countLoading"
-                  ref="count_sec"
-                  size="small"
-                  border
-                  stripe
-                ></Table>
-                <br />
-                <Row v-if="counts.length" class="hidden-nowrap">
-                  <Tag color="success">测算合计：{{amounts}}</Tag>
-                  <Button class="margin-left8" type="primary" size="small" @click="countExam">通过复核</Button>
+                <div v-if="current">
+                  <h1 style="text-align: center;">涉税处理意见书</h1>
+                  <br />
+                  <Row class="h3">
+                    <iCol span="24" class="align-right">编号：{{ current.id }}</iCol>
+                  </Row>
+                  <br />
+                  <div style="font-size: 24px; font-family:Simsun">
+                    <p>
+                      <span class="under-line">　姜堰区　</span>人民法院：
+                    </p>
+                    <p style="text-indent:48px;">
+                      产权人
+                      <span class="under-line">{{ '　'+current.owner+' ' }}</span>，
+                      <span class="under-line">{{ ' '+current.sell_type+' ' }}</span>，
+                      <span class="under-line">{{ ' '+current.area_name+' ' }}</span>的一处
+                      <span class="under-line">{{ ' '+current.area_type+' ' }}</span>类房产，该房产建筑面积
+                      <span class="under-line">{{ ' '+current.area_build+' ' }}</span>M
+                      <sup>2</sup>，土地面积
+                      <span class="under-line">{{ ' '+current.area_soil+' ' }}</span>M
+                      <sup>2</sup>，使用年限
+                      <span class="under-line">{{ ' '+current.use_year+' ' }}</span>年，初始价格
+                      <span class="under-line">{{ ' '+current.price_begin+' ' }}</span>元，评价价格
+                      <span class="under-line">{{ ' '+current.price_ass+' ' }}</span>元，起拍价格
+                      <span class="under-line">{{ ' '+current.price_shoot+' ' }}</span>元。
+                    </p>
+                    <Table
+                      :columns="count_cols"
+                      :data="counts"
+                      :loading="countLoading"
+                      ref="count_sec"
+                      size="small"
+                      border
+                      show-summary
+                      :summary-method="taxSummary"
+                    ></Table>
+                  </div>
+                </div>
+                <Row class="h4 bottom" v-if="current">
+                  <iCol span="24" class="align-right">
+                    <p>国家税务总局泰州市姜堰区税务局第二税务局</p>
+                    <p style="margin-right: 50px;">{{ '2019 年 11 月 30 日' }}</p>
+                  </iCol>
                 </Row>
               </div>
             </TabPane>
@@ -136,11 +166,6 @@ export default {
 
       countLoading: false,
       count_cols: [
-        {
-          width: 55,
-          type: "index",
-          align: "center"
-        },
         {
           title: "税种",
           key: "tax_name"
@@ -306,5 +331,8 @@ export default {
 </script>
 
 <style scoped>
-
+#print {
+  background: #fff;
+  position: relative;
+}
 </style>
