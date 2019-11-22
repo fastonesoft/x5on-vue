@@ -66,18 +66,18 @@
                   <h4>案件描述：</h4>
                   <p style="text-indent:28px;">
                     产权人
-                    <span class="under-line">{{ '　'+current.owner+'　' }}</span>，
-                    <span class="under-line">{{ '　'+current.sell_type+'　' }}</span>，
-                    <span class="under-line">{{ '　'+current.area_name+'　' }}</span>的一处
-                    <span class="under-line">{{ '　'+current.area_type+'　' }}</span>类房产，该房产建筑面积
-                    <span class="under-line">{{ '　'+current.area_build+'　' }}</span>M
+                    <span class="under-line">&#12288;{{ current.owner }}&#12288;</span>，
+                    <span class="under-line">&#12288;{{ current.sell_type }}&#12288;</span>，
+                    <span class="under-line">&#12288;{{ current.area_name }}&#12288;</span>的一处
+                    <span class="under-line">&#12288;{{ current.area_type }}&#12288;</span>类房产，该房产建筑面积
+                    <span class="under-line">&#12288;{{ current.area_build }}&#12288;</span>M
                     <sup>2</sup>，土地面积
-                    <span class="under-line">{{ '　'+current.area_soil+'　' }}</span>M
+                    <span class="under-line">&#12288;{{ current.area_soil }}&#12288;</span>M
                     <sup>2</sup>，使用年限
-                    <span class="under-line">{{ '　'+current.use_year+'　' }}</span>年，初始价格
-                    <span class="under-line">{{ '　'+current.price_begin+'　' }}</span>元，评价价格
-                    <span class="under-line">{{ '　'+current.price_ass+'　' }}</span>元，起拍价格
-                    <span class="under-line">{{ '　'+current.price_shoot+'　' }}</span>元。
+                    <span class="under-line">&#12288;{{ current.use_year }}&#12288;</span>年，初始价格
+                    <span class="under-line">&#12288;{{ current.price_begin }}&#12288;</span>元，评价价格
+                    <span class="under-line">&#12288;{{ current.price_ass }}&#12288;</span>元，起拍价格
+                    <span class="under-line">&#12288;{{ current.price_shoot }}&#12288;</span>元。
                   </p>
                   <br />
                   <h4>经初步测算，须缴纳税款如下：</h4>
@@ -92,18 +92,18 @@
                     :summary-method="taxSummary"
                   ></Table>
                   <br />
-                  <h3>审议组成员：{{ exam_user.teamed_users }}</h3>
+                  <h3>审议组成员：{{ current.teamed_user_names }}</h3>
                   <br />
                   <h3>审议组成员意见（签名）</h3>
                 </div>
                 <Row class="h4 bottom" v-if="current">
                   <iCol span="8">
                     税费测算：
-                    <span class="under-line">{{ exam_user.count_user_name }}</span>
+                    <span class="under-line">{{ current.count_user_name }}</span>
                   </iCol>
                   <iCol span="8" class="align-center">
                     测算复核：
-                    <span class="under-line">{{ exam_user.counted_user_name }}</span>
+                    <span class="under-line">{{ current.counted_user_name }}</span>
                   </iCol>
                   <iCol span="8" class="align-right">
                     审议类型：
@@ -199,8 +199,7 @@ export default {
           align: "right"
         }
       ],
-      counts: [],
-      exam_user: {},
+      counts: []
     };
   },
   beforeDestroy() {
@@ -262,8 +261,7 @@ export default {
       // 查询标的对应测算税种列表
       this.$.posts("/c2exam/tax", { data_id: row.id })
         .then(res => {
-          this.counts = res.datas;
-          this.exam_user = res.exam_user;
+          this.counts = res;
           this.countLoading = false;
         })
         .catch(error => {

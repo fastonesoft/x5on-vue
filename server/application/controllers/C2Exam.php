@@ -37,9 +37,8 @@ class C2Exam extends XC_Controller
             $params = Xcon::params();
             $data_id = Xcon::array_key($params, 'data_id');
 
-            $datas = Xcon::getsBy('xvDataTax', compact('data_id'));
-            $exam_user = Xcon::getById('xvDataExamUserName', $data_id);
-            Xcon::json(Xcon::NO_ERROR, compact('datas', 'exam_user'));
+            $result = Xcon::getsBy('xvDataTax', compact('data_id'));
+            Xcon::json(Xcon::NO_ERROR, $result);
         });
     }
 

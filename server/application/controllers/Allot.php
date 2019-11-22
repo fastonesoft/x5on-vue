@@ -124,8 +124,9 @@ class Allot extends XC_Controller
 			$uid = Xcon::uid();
 			$exam_time = Xcon::datetime();
 			$examed = 0;
-			$result = Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time', 'examed'));
+			Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time', 'examed'));
 
+			$result = Xcon::getById('xvData', $data_id);
 			Xcon::json(Xcon::NO_ERROR, $result);
 		});
 	}
@@ -160,13 +161,15 @@ class Allot extends XC_Controller
 				$examed = 0;
 
 				$uid = Xcon::uid();
-				$result = Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'team', 'exam_time', 'examed'));
+				Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'team', 'exam_time', 'examed'));
+				$result = Xcon::getById('xvData', $data_id);
 			} else {
 				// 通过审核，不删除
 				$examed = 1;
 				Xcon::existBy('xcDataExam', compact('data_id', 'exam_id', 'user_id', 'examed'), '已确认审批，不能删除');
 				// 没有通过，删除
-				$result = Xcon::delBy('xcDataExam', compact('data_id', 'exam_id', 'user_id'));
+				Xcon::delBy('xcDataExam', compact('data_id', 'exam_id', 'user_id'));
+				$result = Xcon::getById('xvData', $data_id);
 			}
 
 			Xcon::json(Xcon::NO_ERROR, $result);

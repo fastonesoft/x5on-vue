@@ -275,7 +275,7 @@
                     ],
                     group_id: [
                         {
-                            required: true, message: '请选择相应的权限用户', trigger: 'change'
+                            required: true, type: 'number',message: '请选择相应的权限用户', trigger: 'change'
                         }
                     ],
                 },
@@ -300,7 +300,7 @@
                     ],
                     group_id: [
                         {
-                            required: true, message: '请选择相应的权限用户', trigger: 'change'
+                            required: true, type: 'number', message: '请选择相应的权限用户', trigger: 'change'
                         }
                     ],
                 },

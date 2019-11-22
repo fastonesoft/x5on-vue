@@ -64,11 +64,11 @@
                   <br />
                   <div style="font-size: 24px; font-family:Simsun">
                     <p>
-                      <span class="under-line">　姜堰区　</span>人民法院：
+                      <span class="under-line">&#12288;姜堰区&#12288;</span>人民法院：
                     </p>
                     <p style="text-indent:48px;">
                       产权人
-                      <span class="under-line">{{ '　'+current.owner+' ' }}</span>，
+                      <span class="under-line">{{ ' '+current.owner+' ' }}</span>，
                       <span class="under-line">{{ ' '+current.sell_type+' ' }}</span>，
                       <span class="under-line">{{ ' '+current.area_name+' ' }}</span>的一处
                       <span class="under-line">{{ ' '+current.area_type+' ' }}</span>类房产，该房产建筑面积

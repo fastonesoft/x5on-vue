@@ -83,6 +83,17 @@ let arrsEdit = function (arrs, key, keyValue, value) {
     return arrs;
 };
 
+let arrsIndex = function (arrs, key, keyValue) {
+    let index = -1;
+    for(let i=0; i<arrs.length; i++) {
+        if(arrs[i][key] === keyValue) {
+            index = i;
+            break;
+        }
+    }
+    return index;
+};
+
 let eleById = function (domIdName) {
     return document.getElementById(domIdName);
 }
@@ -107,7 +118,7 @@ const exam = {
 export default {
     dateFormat, pageData,
     stateClear, stateRead, stateWrite,
-    arrsDel, arrsEdit,
+    arrsDel, arrsEdit, arrsIndex,
     md5, base64, isNotNull,
     eleById, page, exam,
 };

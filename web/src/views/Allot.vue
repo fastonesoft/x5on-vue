@@ -88,16 +88,16 @@
         <div slot="right" class="slot-right">
           <Tabs value="table">
             <TabPane label="任务分配" name="table">
-              <div v-if="current">
-                <h2 style="text-align: center;">税务案件任务分配</h2>
+              <div>
+                <h2 style="text-align: center;">{{ current ? current.name :'税务案件任务分配'}}</h2>
                 <br />
                 <CellGroup>
                   <Cell title="税费测算">
                     <Select
                       class="multi-select"
-                      v-model="examUser.count_user_id"
+                      v-model="examForm.count_user_id"
                       placeholder="人员选择..."
-                      :disabled="current.count===1"
+                      :disabled="examForm.count_dis"
                       @on-change="countChange"
                       transfer
                       slot="extra"
@@ -108,9 +108,9 @@
                   <Cell title="测算复核">
                     <Select
                       class="multi-select"
-                      v-model="examUser.counted_user_id"
+                      v-model="examForm.counted_user_id"
                       placeholder="人员选择..."
-                      :disabled="current.counted===1"
+                      :disabled="examForm.counted_dis"
                       @on-change="countedChange"
                       transfer
                       slot="extra"
@@ -118,13 +118,15 @@
                       <Option v-for="item in users" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                   </Cell>
-                  <div ref="teamDom" id="teamDom" class="mult-select multi-select-padding">案件审批</div>
+
+                  <div ref="teamdom" id="teamDom" class="mult-select multi-select-padding">案件审批</div>
+
                   <Cell title="文书制作">
                     <Select
                       class="multi-select"
-                      v-model="examUser.docued_user_id"
+                      v-model="examForm.docued_user_id"
                       placeholder="人员选择..."
-                      :disabled="current.docued===1"
+                      :disabled="examForm.docued_dis"
                       @on-change="docuedChange"
                       transfer
                       slot="extra"
@@ -134,7 +136,7 @@
                   </Cell>
                 </CellGroup>
                 <Divider></Divider>
-                <h4 class="first-line">指定人员，则只能由被指定人员进行操作（要有对应岗位权限）；不指定人员，则由相关岗位人员执行操作。</h4>
+                <h4 class="first-line" style="margin-bottom: 100px;">指定人员，则只能由被指定人员进行操作（要有对应岗位权限）；不指定人员，则由相关岗位人员执行操作。</h4>
               </div>
             </TabPane>
             <!--表头附加相关操作：-->
@@ -157,6 +159,9 @@
 
 <script>
 import xcon from "../libs/xcon";
+
+let teamDom = null;
+let xSelect = window.xmSelect;
 
 export default {
   name: "Allot",
@@ -312,21 +317,16 @@ export default {
 
       // users->select
       ajax_users: [],
-      examUser: {},
-
-      teamDom: null
+      teamDom: null,
+      showed: false
     };
   },
   methods: {
-    delClick() {
-	  //   this.teamDom = null;
-	  this.teamDom.setValue([])
-    },
     countDateClick() {
       // 清除设置
+      teamDom.reset();
+      teamDom.update({ data: [] });
       this.current = null;
-      // 清除用户选择
-      this.examUser = {};
       this.tableLoading = true;
 
       let begin = xcon.dateFormat(this.countDate[0], "yyyy-MM-dd");
@@ -376,50 +376,10 @@ export default {
     // 表格选择，查询分配用户
     selectChange(row) {
       this.current = row;
-      this.countLoading = true;
-
-      // 查询任务分配用户
-      this.$.posts("/allot/user", { uid: row.uid })
-        .then(res => {
-          this.examUser = res;
-          this.countLoading = false;
-
-          // 多选设置
-          if (xcon.isNotNull(res)) {
-            let user_ids = res.teamed_users ? res.teamed_users.split(",") : [];
-            let exameds = res.teamed_examed ? res.teamed_examed.split(",") : [];
-
-            let users = this.users.concat();
-            // 修改users列表状态
-            users.forEach(item => {
-              item.disabled = false;
-              item.selected = false;
-              for (let i = 0; i < user_ids.length; i++) {
-                if (item.id === user_ids[i]) {
-                  item.selected = true;
-                  item.disabled = exameds[i] === "1";
-                  break;
-                }
-              }
-            });
-            // 清空，数据
-            this.teamDom.update({
-              data: []
-            });
-            // 重新加载，不然不渲染
-            this.teamDom.update({
-              data: users
-            });
-          } else {
-            this.teamDom.update({
-              data: []
-            });
-          }
-        })
-        .catch(error => {
-          this.countLoading = false;
-          this.$Message.error(error);
-        });
+      // 必须要关闭下拉框，不然会触发数据侦听
+      teamDom.closed();
+      teamDom.reset();
+      teamDom.update({ data: this.examForm.teamed_users });
     },
 
     // 测算用户选择
@@ -430,7 +390,10 @@ export default {
       let { uid } = this.current;
       this.$.posts("/allot/exam", { uid, exam_id, user_id: value })
         .then(res => {
-          this.$Message.success("标的任务分配已执行");
+          xcon.arrsEdit(this.ajaxs, "uid", uid, res);
+
+          this.current = res;
+          this.$Message.success("测算任务已分配");
         })
         .catch(error => {
           this.$Message.error(error);
@@ -442,10 +405,12 @@ export default {
 
       const exam_id = xcon.exam.counted;
       let { uid } = this.current;
-
       this.$.posts("/allot/exam", { uid, exam_id, user_id: value })
         .then(res => {
-          this.$Message.success("标的任务分配已执行");
+          xcon.arrsEdit(this.ajaxs, "uid", uid, res);
+
+          this.current = res;
+          this.$Message.success("复核任务已分配");
         })
         .catch(error => {
           this.$Message.error(error);
@@ -457,10 +422,12 @@ export default {
 
       const exam_id = xcon.exam.docued;
       let { uid } = this.current;
-
       this.$.posts("/allot/exam", { uid, exam_id, user_id: value })
         .then(res => {
-          this.$Message.success("标的任务分配已执行");
+          xcon.arrsEdit(this.ajaxs, "uid", uid, res);
+
+          this.current = res;
+          this.$Message.success("文书任务已分配");
         })
         .catch(error => {
           this.$Message.error(error);
@@ -480,33 +447,10 @@ export default {
           // 更新标的执行状态
           xcon.arrsEdit(this.ajaxs, "uid", row.uid, res);
 
-          this.current = null;
+          this.current = res;
           this.$Message.success("标的任务分配已执行");
         })
         .catch(error => {
-          this.$Message.error(error);
-        });
-    },
-
-    // 测算结束，提交复核
-    countExam() {
-      let row = this.current;
-      if (row === null) {
-        this.$Message.error("没有选择测算标的！");
-        return;
-      }
-      this.countLoading = true;
-
-      this.$.posts("/counted/exam", { uid: row.uid })
-        .then(res => {
-          this.current = null;
-          this.countLoading = false;
-
-          xcon.arrsDel(this.ajaxs, "uid", row.uid);
-          this.$Message.success(res + "条测算标的复核通过！");
-        })
-        .catch(error => {
-          this.countLoading = false;
           this.$Message.error(error);
         });
     }
@@ -544,6 +488,61 @@ export default {
         };
       }
     },
+
+    examForm() {
+      // 计算点击标对应的用户审核记录
+      let examConst = {
+        count_user_id: "",
+        counted_user_id: "",
+        docued_user_id: "",
+        teamed_users: [],
+        count_dis: false,
+        counted_dis: false,
+        docued_dis: false
+      };
+
+      let row = this.current;
+      if (row) {
+        let count_dis = row.count === 1;
+        let counted_dis = row.counted === 1;
+        let docued_dis = row.docued === 1;
+
+        let {
+          count_user_id,
+          counted_user_id,
+          docued_user_id,
+          teamed_user_ids,
+          teamed_examed
+        } = row;
+        let user_ids = teamed_user_ids ? teamed_user_ids.split(",") : [];
+        let exameds = teamed_examed ? teamed_examed.split(",") : [];
+
+        // 修改列表状态
+        let teamed_users = this.ajax_users.concat();
+        teamed_users.forEach(item => {
+          item.disabled = false;
+          item.selected = false;
+          for (let i = 0; i < user_ids.length; i++) {
+            if (item.id === user_ids[i]) {
+              item.selected = true;
+              item.disabled = exameds[i] === "1";
+              break;
+            }
+          }
+        });
+        return {
+          count_user_id,
+          counted_user_id,
+          docued_user_id,
+          teamed_users,
+          count_dis,
+          counted_dis,
+          docued_dis
+        };
+      } else {
+        return examConst;
+      }
+    },
     datas() {
       return xcon.pageData(this.ajaxs, this.pageIndex, this.pageSize);
     },
@@ -565,9 +564,8 @@ export default {
       });
   },
   mounted() {
-    // 渲染多选
     let that = this;
-    that.teamDom = xmSelect.render({
+    teamDom = xSelect.render({
       el: "#teamDom",
       prop: {
         value: "id"
@@ -576,8 +574,20 @@ export default {
         color: "#2d8cf0"
       },
       data: [],
+      model: {
+        label: {
+          // type: "block",
+          block: {
+            //是否显示删除图标
+            showIcon: false
+          }
+        }
+      },
       on({ arr, change, isAdd }) {
-		if (arr.length==0 && change.length == 0 && isAdd) return;
+        // 过滤掉重置数据
+        if (arr.length === 0 && change.length === 0 && isAdd) return;
+        // 没有打开，不发送数据
+        if (!that.showed) return;
 
         const exam_id = xcon.exam.teamed;
         let { uid } = that.current;
@@ -588,11 +598,20 @@ export default {
           is_add: isAdd ? 1 : 0
         })
           .then(res => {
-            that.$Message.success(res + "个审批任务已分配");
+            xcon.arrsEdit(that.ajaxs, "uid", uid, res);
+
+            that.current = res;
+            that.$Message.success("审批任务已分配");
           })
           .catch(error => {
             that.$Message.error(error);
           });
+      },
+      hide() {
+        that.showed = false;
+      },
+      show() {
+        that.showed = true;
       }
     });
   }
