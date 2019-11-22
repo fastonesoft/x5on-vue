@@ -7,10 +7,13 @@ class Count extends XC_Controller
     public function index()
     {
         Xcon::loginCheck(function ($userinfor) {
+            // 获取用户信息
+            $count_user_id = $userinfor->id;
+
             // 测算清单
 			$begin = Xcon::date();
 			$end = Xcon::date();
-            $datas = Xcon::getsBy('xvData', "dataed=1 and count=0 and create_time between '$begin' and '$end'");
+            $datas = Xcon::getsBy('xvData', "alloted=1 and count=0 and (count_user_id='$count_user_id' or count_user_id is null) and create_time between '$begin' and '$end'");
             // 税种列表
             $taxs = Xcon::gets('xcTax');
             // 统计结果
@@ -22,12 +25,15 @@ class Count extends XC_Controller
     public function find()
     {
         Xcon::loginCheck(function ($userinfor) {
+            // 获取用户信息
+            $count_user_id = $userinfor->id;
+
             // 测算标的查询
             $params = Xcon::params();
             $begin = Xcon::array_key($params, 'begin');
             $end = Xcon::array_key($params, 'end');
 
-            $result = Xcon::getsBy('xvData', "dataed=1 and count=0 and create_time between '$begin' and '$end'");
+            $result = Xcon::getsBy('xvData', "alloted=1 and count=0 and (count_user_id='$count_user_id' or count_user_id is null) and create_time between '$begin' and '$end'");
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });

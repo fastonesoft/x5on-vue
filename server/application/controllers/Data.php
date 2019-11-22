@@ -15,7 +15,10 @@ class Data extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             // 标的清单
-            $datas = Xcon::getsBy('xvData', 'data=0');
+            $end = Xcon::date();
+            $begin = Xcon::date();
+            $datas = Xcon::getsBy('xvData', "data=0 and create_time between '$begin' and '$end'");
+
             // 地区列表
             $areas = Xcon::gets('xvAreaTown');
             // 统计结果
@@ -33,10 +36,10 @@ class Data extends XC_Controller
             // 增加 uid
             $uid = Xcon::uid();
             $params['uid'] = $uid;
-            $params['create_time'] = date('Y-m-d');
+            $params['create_time'] = Xcon::date();
 
             // 重复编号检测
-            $id = $params['id'];
+            $id = Xcon::array_key($params, 'id');
             $name = Xcon::array_key($params, 'name');
             Xcon::existById('xcData', $id);
             Xcon::existBy('xcData', compact('name'), '“标的名称”重复！');
@@ -109,7 +112,7 @@ class Data extends XC_Controller
             foreach ($uids as $uid) {
                 $user_id = $userinfor->id;
                 $exam_id = Xcon::EXAM_DATA;
-                $exam_time = date('Y-m-d H:i:s');
+                $exam_time = Xcon::datetime();
                 $examed = 1;
 				$team = 1;
 

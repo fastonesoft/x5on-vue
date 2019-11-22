@@ -8,7 +8,9 @@ class Dataed extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             // 标的清单
-            $result = Xcon::getsBy('xvData', 'data=1 and dataed=0');
+            $end = Xcon::date();
+            $begin = Xcon::date();
+            $result = Xcon::getsBy('xvData', "data=1 and dataed=0 and create_time between '$begin' and '$end'");
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
@@ -21,7 +23,6 @@ class Dataed extends XC_Controller
             $params = Xcon::params();
             $begin = Xcon::array_key($params, 'begin');
             $end = Xcon::array_key($params, 'end');
-
             $result = Xcon::getsBy('xvData', "data=1 and dataed=0 and create_time between '$begin' and '$end'");
 
             Xcon::json(Xcon::NO_ERROR, $result);
@@ -59,7 +60,7 @@ class Dataed extends XC_Controller
             // 审核，提交测算
             $user_id = $userinfor->id;
             $exam_id = Xcon::EXAM_DATAED;
-            $exam_time = date('Y-m-d H:i:s');
+            $exam_time = Xcon::datetime();
 			$examed = 1;
 			$team = 1;
 

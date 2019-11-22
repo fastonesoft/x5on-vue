@@ -136,7 +136,8 @@
                   </Cell>
                 </CellGroup>
                 <Divider></Divider>
-                <h4 class="first-line" style="margin-bottom: 100px;">指定人员，则只能由被指定人员进行操作（要有对应岗位权限）；不指定人员，则由相关岗位人员执行操作。</h4>
+                <h4 class="first-line" style="margin-bottom: 10px;">指定人员，则只能由被指定人员进行操作（要有对应岗位权限）；不指定人员，则由相关岗位人员执行操作。</h4>
+                <h4 class="first-line" style="margin-bottom: 200px;">已完成的任务，不可变更操作人员信息。</h4>
               </div>
             </TabPane>
             <!--表头附加相关操作：-->
@@ -573,6 +574,7 @@ export default {
       theme: {
         color: "#2d8cf0"
       },
+      direction: 'down',
       data: [],
       model: {
         label: {
