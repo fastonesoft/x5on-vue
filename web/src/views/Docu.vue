@@ -56,20 +56,19 @@
             <TabPane label="税费清单" name="table">
               <div id="print">
                 <div v-if="current">
-                  <h2 style="text-align: center;">涉税处理意见书</h2>
+                  <h2 style="text-align: center; letter-spacing: 5px;">涉税处理意见书</h2>
                   <br />
                   <Row class="h3">
                     <iCol span="24" class="align-right">编号：{{ current.id }}</iCol>
                   </Row>
                   <br />
-                  <div class="docu-body">
-                    <p>
+                  <div class="docu-fang-song">
+                    <p class="margin-bottom16">
                       <span class="under-line">&nbsp;姜堰区&nbsp;</span>人民法院：
                     </p>
-                    <p style="text-indent:36px;">
-                      <span
-                        class="under-line"
-                      >&nbsp;{{ current.name }}，{{ current.sell_type }}&nbsp;</span>一案，经我局审核研究，现提出以下涉税处理意见，请协助执行。涉案当事人
+                    <p style="text-indent:36px;" class="margin-bottom8">
+                      <span class="under-line">&nbsp;{{ current.name }}&nbsp;</span>，
+                      <span class="under-line">&nbsp;{{ current.sell_type }}&nbsp;</span>一案，经我局审核研究，现提出以下涉税处理意见，请协助执行。涉案当事人
                       <span
                         class="under-line"
                       >&nbsp;{{ current.owner }}&nbsp;</span>应申报缴纳的税款如下：
@@ -79,20 +78,17 @@
                       :data="counts"
                       :loading="countLoading"
                       ref="count_sec"
-                      size="small"
+                      size="large"
+                      class="docu-fang-song"
                       border
                       show-summary
                       :summary-method="taxSummary"
                     ></Table>
                   </div>
                 </div>
-                <Row class="h4 bottom" v-if="current">
-                  <iCol span="24" class="align-right docu-body">
-                    <div style="width: 300px; text-align: center;">
-                    <h3>泰州市姜堰区税务局第二税务分局</h3>
-                    <h3 style="margin-right: 50px;">{{ '2019 年 11 月 30 日' }}</h3>
-                    </div>
-                  </iCol>
+                <Row class="bottom-right docu-fang-song" v-if="current">
+                  <p class="margin-bottom16">泰州市姜堰区税务局第二税务分局</p>
+                  <p>{{ '2019 年 11 月 9 日' }}</p>
                 </Row>
               </div>
             </TabPane>
@@ -168,12 +164,14 @@ export default {
         {
           title: "依据",
           key: "tax_base",
-          align: "right"
+          align: "right",
+          notsum: true,
         },
         {
           title: "税率",
           key: "tax_percent",
-          align: "right"
+          align: "right",
+          notsum: true,
         },
         {
           title: "税额",
@@ -287,6 +285,50 @@ export default {
       let height = ((xconSplit.clientWidth * (1 - this.split1)) / 210) * 297;
       let print_form = document.getElementById("print");
       print_form.style.height = `${height}px`;
+    },
+
+        // 统计合计数
+    taxSummary({ columns, data }) {
+      const sums = {};
+      columns.forEach((column, index) => {
+        const key = column.key;
+        if (index === 0) {
+          sums[key] = {
+            key,
+            value: "合计："
+          };
+          return;
+        }
+        if (column.notsum) {
+          sums[key] = {
+            key,
+            value: ""
+          };
+          return;
+        }
+        const values = data.map(item => Number(item[key]));
+        if (!values.every(value => isNaN(value))) {
+          const v = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+          sums[key] = {
+            key,
+            value: v.toFixed(2)
+          };
+        } else {
+          sums[key] = {
+            key,
+            value: ""
+          };
+        }
+      });
+
+      return sums;
     }
   },
   computed: {
@@ -330,8 +372,8 @@ export default {
   background: #fff;
   position: relative;
 }
-.docu-body {
+.docu-fang-song {
   font-size: 18px;
-  font-family: Simsun;
+  font-family: "FangSong", "STFangsong", "FangSong_GB2312";
 }
 </style>

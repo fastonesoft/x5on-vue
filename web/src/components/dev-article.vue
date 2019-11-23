@@ -410,13 +410,15 @@ export default {
   left: 0;
   right: 0;
 }
+.bottom-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 300px;
+  text-align: center;
+}
 .first-line {
   text-indent: 28px;
-}
-
-/* 表格cell底边 */
-.ivu-cell {
-  /* border-bottom: dashed #dcdee2 1px; */
 }
 
 </style>

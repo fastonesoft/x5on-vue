@@ -128,7 +128,7 @@
                   type="error"
                   size="small"
                   @click="toPass"
-                  v-if="current"
+                  v-if="current && !current.teamed"
                   class="margin-left8"
                 >通过审批</Button>
               </Row>

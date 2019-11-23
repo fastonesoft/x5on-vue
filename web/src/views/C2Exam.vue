@@ -64,7 +64,7 @@
             <TabPane label="审议材料" name="table">
               <div id="print">
                 <div v-if="current">
-                  <h2 style="text-align: center;">涉税审议材料</h2>
+                  <h2 style="text-align: center;letter-spacing: 5px;">涉税审议材料</h2>
                   <br />
                   <Row class="h3">
                     <iCol span="12">案件名称：{{ current.name }}</iCol>
