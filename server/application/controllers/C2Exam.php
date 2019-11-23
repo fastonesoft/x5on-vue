@@ -47,37 +47,5 @@ class C2Exam extends XC_Controller
             Xcon::json(Xcon::NO_ERROR, $result);
         });
     }
-    
-    public function exam()
-    {
-        Xcon::loginCheck(function ($userinfor) {
-            $params = Xcon::params();
-            $uid = Xcon::array_key($params, 'uid');
-
-            // 检测测算审核是否存在
-            $data = Xcon::checkByUid('xcData', $uid);
-            $data_id = $data->id;
-
-            // 测算，提交审核
-            $user_id = $userinfor->id;
-            $exam_id = Xcon::EXAM_COUNTED;
-            $exam_time = Xcon::datetime();
-			$examed = 1;
-			$team = 1;
-
-            // 检测标的是否指定复核人员
-            $data_exam = Xcon::getBy('xcDataExam', compact('data_id', 'exam_id'));
-            if ($data_exam === null) {
-				// 没有指定复核人员，提单复核信息
-				$uid = Xcon::uid();
-				$result = Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time', 'examed', 'team'));
-			} else {
-            	// 指定复核人员，修改复核状态
-				$result = Xcon::setByUid('xcDataExam', compact('exam_time', 'examed'), $data_exam->uid);
-			}
-
-            Xcon::json(Xcon::NO_ERROR, $result);
-        });
-    }
 
 }
