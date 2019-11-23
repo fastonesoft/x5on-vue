@@ -95,7 +95,7 @@
                 </div>
                 <Row class="h4 bottom" v-if="current">
                   <iCol span="24" class="align-right">
-                    <p>国家税务总局泰州市姜堰区税务局第二税务局</p>
+                    <p>国家税务总局泰州市姜堰区税务局第二税务分局</p>
                     <p style="margin-right: 50px;">{{ '2019 年 11 月 30 日' }}</p>
                   </iCol>
                 </Row>

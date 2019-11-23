@@ -53,7 +53,7 @@
         </Badge>
       </i-col>
     </Row>
-    <Row class="xcon-footer">2019 &copy; Fastone</Row>
+    <Row class="xcon-footer">2019 &copy; 泰州市姜堰区税务局</Row>
     <div class="xcon-right">
       <GeminiScrollbar>
         <slot></slot>

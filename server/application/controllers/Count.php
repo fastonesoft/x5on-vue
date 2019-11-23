@@ -8,12 +8,12 @@ class Count extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             // 获取用户信息
-            $count_user_id = $userinfor->id;
+			$user_id = $userinfor->id;
 
             // 测算清单
 			$begin = Xcon::date();
 			$end = Xcon::date();
-            $datas = Xcon::getsBy('xvData', "alloted=1 and count=0 and (count_user_id='$count_user_id' or count_user_id is null) and create_time between '$begin' and '$end'");
+            $datas = Xcon::getsBy('xvData', "alloted=1 and count=0 and (count_user_id='$user_id' or count_user_id is null) and create_time between '$begin' and '$end'");
             // 税种列表
             $taxs = Xcon::gets('xcTax');
             // 统计结果
@@ -26,14 +26,14 @@ class Count extends XC_Controller
     {
         Xcon::loginCheck(function ($userinfor) {
             // 获取用户信息
-            $count_user_id = $userinfor->id;
+			$user_id = $userinfor->id;
 
             // 测算标的查询
             $params = Xcon::params();
             $begin = Xcon::array_key($params, 'begin');
             $end = Xcon::array_key($params, 'end');
 
-            $result = Xcon::getsBy('xvData', "alloted=1 and count=0 and (count_user_id='$count_user_id' or count_user_id is null) and create_time between '$begin' and '$end'");
+            $result = Xcon::getsBy('xvData', "alloted=1 and count=0 and (count_user_id='$user_id' or count_user_id is null) and create_time between '$begin' and '$end'");
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
@@ -99,16 +99,20 @@ class Count extends XC_Controller
             // 测算，提交审核
             $user_id = $userinfor->id;
             $exam_id = Xcon::EXAM_COUNT;
-            $exam_time = date('Y-m-d H:i:s');
+            $exam_time = Xcon::datetime();
             $examed = 1;
 			$team = 1;
 
-            // 检测标的是否通过测算
-            Xcon::existBy('xcDataExam', compact('data_id', 'exam_id'), '“标的”已经通过测算！');
-
-            // 提交
-            $uid = Xcon::uid();
-            $result = Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time', 'examed', 'team'));
+            // 检测标的是否指定测算人员
+            $data_exam = Xcon::getBy('xcDataExam', compact('data_id', 'exam_id'));
+            if ($data_exam === null) {
+				// 没有指定人员，提交测算信息
+				$uid = Xcon::uid();
+				$result = Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time', 'examed', 'team'));
+			} else {
+            	// 指定人员，则修改测算状态
+				$result = Xcon::setByUid('xcDataExam', compact('exam_time', 'examed'), $data_exam->uid);
+			}
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });

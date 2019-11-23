@@ -578,7 +578,7 @@ export default {
       data: [],
       model: {
         label: {
-          // type: "block",
+          type: "block",
           block: {
             //是否显示删除图标
             showIcon: false

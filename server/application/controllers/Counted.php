@@ -7,10 +7,13 @@ class Counted extends XC_Controller
     public function index()
     {
         Xcon::loginCheck(function ($userinfor) {
-            // 测算审核
+			// 获取用户信息
+			$user_id = $userinfor->id;
+
+			// 测算审核
 			$begin = Xcon::date();
 			$end = Xcon::date();
-            $result = Xcon::getsBy('xvData', "count=1 and counted=0 and create_time between '$begin' and '$end'");
+            $result = Xcon::getsBy('xvData', "count=1 and counted=0 and (counted_user_id='$user_id' or counted_user_id is null) and create_time between '$begin' and '$end'");
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
@@ -19,12 +22,14 @@ class Counted extends XC_Controller
     public function find()
     {
         Xcon::loginCheck(function ($userinfor) {
+			// 获取用户信息
+			$user_id = $userinfor->id;
+
             // 测算审核查询
             $params = Xcon::params();
             $begin = Xcon::array_key($params, 'begin');
             $end = Xcon::array_key($params, 'end');
-
-            $result = Xcon::getsBy('xvData', "count=1 and counted=0 and create_time between '$begin' and '$end'");
+            $result = Xcon::getsBy('xvData', "count=1 and counted=0 and (counted_user_id='$user_id' or counted_user_id is null) and create_time between '$begin' and '$end'");
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
@@ -54,7 +59,9 @@ class Counted extends XC_Controller
             $data_id = $data->id;
             $exam_id = Xcon::EXAM_COUNT;
 
-            $result = Xcon::delBy('xcDataExam', compact('data_id', 'exam_id'));
+            $examed = 0;
+            // 撤消测算状态
+            $result = Xcon::setBy('xcDataExam', compact('examed'), compact('data_id', 'exam_id'));
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
@@ -73,14 +80,20 @@ class Counted extends XC_Controller
             // 测算，提交审核
             $user_id = $userinfor->id;
             $exam_id = Xcon::EXAM_COUNTED;
-            $exam_time = date('Y-m-d H:i:s');
+            $exam_time = Xcon::datetime();
+			$examed = 1;
+			$team = 1;
 
-            // 检测标的是否通过审核
-            Xcon::existBy('xcDataExam', compact('data_id', 'exam_id'), '“标的”已经通过测算审核！');
-
-            // 提交
-            $uid = Xcon::uid();
-            $result = Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time'));
+            // 检测标的是否指定复核人员
+            $data_exam = Xcon::getBy('xcDataExam', compact('data_id', 'exam_id'));
+            if ($data_exam === null) {
+				// 没有指定复核人员，提单复核信息
+				$uid = Xcon::uid();
+				$result = Xcon::add('xcDataExam', compact('uid', 'data_id', 'exam_id', 'user_id', 'exam_time', 'examed', 'team'));
+			} else {
+            	// 指定复核人员，修改复核状态
+				$result = Xcon::setByUid('xcDataExam', compact('exam_time', 'examed'), $data_exam->uid);
+			}
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });

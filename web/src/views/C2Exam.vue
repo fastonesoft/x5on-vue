@@ -46,7 +46,15 @@
                   @on-change="dateChange"
                   transfer
                 ></DatePicker>
-                <Button class="margin-left8" type="primary" size="small" @click="countDateClick">查询</Button>
+                <Dropdown class="margin-left8" @on-click="countDateClick" transfer>
+                  <Button type="primary" size="small">
+                    <Icon type="ios-arrow-down"></Icon>
+                  </Button>
+                  <DropdownMenu slot="list">
+                    <DropdownItem name="0">未审批</DropdownItem>
+                    <DropdownItem name="1">已审批</DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               </Row>
             </template>
           </Tabs>
@@ -56,7 +64,7 @@
             <TabPane label="审议材料" name="table">
               <div id="print">
                 <div v-if="current">
-                  <h2 style="text-align: center;">涉税集体审议材料</h2>
+                  <h2 style="text-align: center;">涉税审议材料</h2>
                   <br />
                   <Row class="h3">
                     <iCol span="12">案件名称：{{ current.name }}</iCol>
@@ -68,7 +76,7 @@
                     产权人
                     <span class="under-line">&#12288;{{ current.owner }}&#12288;</span>，
                     <span class="under-line">&#12288;{{ current.sell_type }}&#12288;</span>，
-                    <span class="under-line">&#12288;{{ current.area_name }}&#12288;</span>的一处
+                    <span class="under-line">&#12288;{{ current.area_name }}&#12288;</span>一处
                     <span class="under-line">&#12288;{{ current.area_type }}&#12288;</span>类房产，该房产建筑面积
                     <span class="under-line">&#12288;{{ current.area_build }}&#12288;</span>M
                     <sup>2</sup>，土地面积
@@ -99,15 +107,15 @@
                 <Row class="h4 bottom" v-if="current">
                   <iCol span="8">
                     税费测算：
-                    <span class="under-line">{{ current.count_user_name }}</span>
+                    <span class="under-line">&#12288;{{ current.count_user_name }}&#12288;</span>
                   </iCol>
                   <iCol span="8" class="align-center">
                     测算复核：
-                    <span class="under-line">{{ current.counted_user_name }}</span>
+                    <span class="under-line">&#12288;{{ current.counted_user_name }}&#12288;</span>
                   </iCol>
                   <iCol span="8" class="align-right">
-                    审议类型：
-                    <span class="under-line">{{ '集体审议' }}</span>
+                    审批类型：
+                    <span class="under-line">&#12288;{{ 1?'单独审批':'集体审议' }}&#12288;</span>
                   </iCol>
                 </Row>
               </div>
@@ -167,7 +175,22 @@ export default {
         {
           title: "所属地区",
           key: "area_name"
-        }
+        },
+        {
+          title: "是否审批",
+          key: "teamed",
+          align: "center",
+          render: (h, params) => {
+            if (params.row.teamed)
+              return h("Icon", {
+                props: {
+                  type: "ios-checkmark-circle-outline",
+                  size: "24",
+                  color: "#2d8cf0"
+                }
+              });
+          }
+        },
       ],
       ajaxs: [],
       pageIndex: 1,
@@ -206,13 +229,13 @@ export default {
     off(window, "resize", this.splitMoved);
   },
   methods: {
-    countDateClick() {
+    countDateClick(name) {
       this.current = null;
       this.tableLoading = true;
 
       let begin = xcon.dateFormat(this.countDate[0], "yyyy-MM-dd");
       let end = xcon.dateFormat(this.countDate[1], "yyyy-MM-dd");
-      this.$.posts("/c2exam/find", { begin, end })
+      this.$.posts("/c2exam/find", { begin, end, teamed: name })
         .then(res => {
           this.ajaxs = res;
           this.tableLoading = false;
@@ -273,28 +296,6 @@ export default {
     // 打印送审
     toPrint() {
       print.printImage("print", "案件送审记录");
-    },
-    // 测算结束，提交复核
-    countExam() {
-      let row = this.current;
-      if (row === null) {
-        this.$Message.error("没有选择测算标的！");
-        return;
-      }
-      this.countLoading = true;
-
-      this.$.posts("/c2exam/exam", { uid: row.uid })
-        .then(res => {
-          this.current = null;
-          this.countLoading = false;
-
-          xcon.arrsDel(this.ajaxs, "uid", row.uid);
-          this.$Message.success(res + "条测算标的复核通过！");
-        })
-        .catch(error => {
-          this.countLoading = false;
-          this.$Message.error(error);
-        });
     },
 
     // 分隔拖动
