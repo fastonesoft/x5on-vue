@@ -56,30 +56,23 @@
             <TabPane label="税费清单" name="table">
               <div id="print">
                 <div v-if="current">
-                  <h1 style="text-align: center;">涉税处理意见书</h1>
+                  <h2 style="text-align: center;">涉税处理意见书</h2>
                   <br />
                   <Row class="h3">
                     <iCol span="24" class="align-right">编号：{{ current.id }}</iCol>
                   </Row>
                   <br />
-                  <div style="font-size: 24px; font-family:Simsun">
+                  <div class="docu-body">
                     <p>
-                      <span class="under-line">&#12288;姜堰区&#12288;</span>人民法院：
+                      <span class="under-line">&nbsp;姜堰区&nbsp;</span>人民法院：
                     </p>
-                    <p style="text-indent:48px;">
-                      产权人
-                      <span class="under-line">{{ ' '+current.owner+' ' }}</span>，
-                      <span class="under-line">{{ ' '+current.sell_type+' ' }}</span>，
-                      <span class="under-line">{{ ' '+current.area_name+' ' }}</span>的一处
-                      <span class="under-line">{{ ' '+current.area_type+' ' }}</span>类房产，该房产建筑面积
-                      <span class="under-line">{{ ' '+current.area_build+' ' }}</span>M
-                      <sup>2</sup>，土地面积
-                      <span class="under-line">{{ ' '+current.area_soil+' ' }}</span>M
-                      <sup>2</sup>，使用年限
-                      <span class="under-line">{{ ' '+current.use_year+' ' }}</span>年，初始价格
-                      <span class="under-line">{{ ' '+current.price_begin+' ' }}</span>元，评价价格
-                      <span class="under-line">{{ ' '+current.price_ass+' ' }}</span>元，起拍价格
-                      <span class="under-line">{{ ' '+current.price_shoot+' ' }}</span>元。
+                    <p style="text-indent:36px;">
+                      <span
+                        class="under-line"
+                      >&nbsp;{{ current.name }}，{{ current.sell_type }}&nbsp;</span>一案，经我局审核研究，现提出以下涉税处理意见，请协助执行。涉案当事人
+                      <span
+                        class="under-line"
+                      >&nbsp;{{ current.owner }}&nbsp;</span>应申报缴纳的税款如下：
                     </p>
                     <Table
                       :columns="count_cols"
@@ -94,9 +87,11 @@
                   </div>
                 </div>
                 <Row class="h4 bottom" v-if="current">
-                  <iCol span="24" class="align-right">
-                    <p>国家税务总局泰州市姜堰区税务局第二税务分局</p>
-                    <p style="margin-right: 50px;">{{ '2019 年 11 月 30 日' }}</p>
+                  <iCol span="24" class="align-right docu-body">
+                    <div style="width: 300px; text-align: center;">
+                    <h3>泰州市姜堰区税务局第二税务分局</h3>
+                    <h3 style="margin-right: 50px;">{{ '2019 年 11 月 30 日' }}</h3>
+                    </div>
                   </iCol>
                 </Row>
               </div>
@@ -199,7 +194,7 @@ export default {
 
       let begin = xcon.dateFormat(this.countDate[0], "yyyy-MM-dd");
       let end = xcon.dateFormat(this.countDate[1], "yyyy-MM-dd");
-      this.$.posts("/counted/find", { begin, end })
+      this.$.posts("/docued/find", { begin, end })
         .then(res => {
           this.ajaxs = res;
           this.tableLoading = false;
@@ -246,7 +241,7 @@ export default {
       this.current = row;
       this.countLoading = true;
       // 查询标的对应测算税种列表
-      this.$.posts("/counted/tax", { data_id: row.id })
+      this.$.posts("/docued/tax", { data_id: row.id })
         .then(res => {
           this.counts = res;
           this.countLoading = false;
@@ -270,7 +265,7 @@ export default {
       }
       this.countLoading = true;
 
-      this.$.posts("/counted/exam", { uid: row.uid })
+      this.$.posts("/docued/exam", { uid: row.uid })
         .then(res => {
           this.current = null;
           this.countLoading = false;
@@ -307,7 +302,7 @@ export default {
     }
   },
   created() {
-    this.$.gets("/counted/index")
+    this.$.gets("/docued/index")
       .then(res => {
         this.ajaxs = res;
         this.tableLoading = false;
@@ -334,5 +329,9 @@ export default {
 #print {
   background: #fff;
   position: relative;
+}
+.docu-body {
+  font-size: 18px;
+  font-family: Simsun;
 }
 </style>

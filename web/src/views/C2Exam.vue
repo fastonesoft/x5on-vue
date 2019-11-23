@@ -100,7 +100,7 @@
                     :summary-method="taxSummary"
                   ></Table>
                   <br />
-                  <h3>审议组成员：{{ current.teamed_user_names }}</h3>
+                  <h3>审议组成员：{{ current.teamed_user_names ? current.teamed_user_names : '（未指定）' }}</h3>
                   <br />
                   <h3>审议组成员意见（签名）</h3>
                 </div>
@@ -115,7 +115,7 @@
                   </iCol>
                   <iCol span="8" class="align-right">
                     审批类型：
-                    <span class="under-line">&#12288;{{ 1?'单独审批':'集体审议' }}&#12288;</span>
+                    <span class="under-line">&#12288;{{ teamType }}&#12288;</span>
                   </iCol>
                 </Row>
               </div>
@@ -123,7 +123,7 @@
             <!--表头附加相关操作：-->
             <template slot="extra">
               <Row class="hidden-nowrap">
-                <Button type="primary" size="small" @click="toPrint">打印</Button>
+                <Button type="primary" size="small" @click="toPrint" v-if="current">打印</Button>
               </Row>
             </template>
           </Tabs>
@@ -190,7 +190,7 @@ export default {
                 }
               });
           }
-        },
+        }
       ],
       ajaxs: [],
       pageIndex: 1,
@@ -295,7 +295,7 @@ export default {
 
     // 打印送审
     toPrint() {
-      print.printImage("print", "案件送审记录");
+      print.printImage("print", "案件审议材料");
     },
 
     // 分隔拖动
@@ -362,6 +362,9 @@ export default {
         total += parseFloat(item.tax_amount);
       });
       return total.toFixed(2);
+    },
+    teamType() {
+      return this.current && this.current.teamed_type <= 1 ? "单独审批" : "集体审议";
     }
   },
   created() {

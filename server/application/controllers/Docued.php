@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Counted extends XC_Controller
+class Docued extends XC_Controller
 {
 
     public function index()
@@ -13,7 +13,7 @@ class Counted extends XC_Controller
 			// 测算审核
 			$begin = Xcon::date();
 			$end = Xcon::date();
-            $result = Xcon::getsBy('xvData', "count=1 and counted=0 and (counted_user_id='$user_id' or counted_user_id is null) and create_time between '$begin' and '$end'");
+            $result = Xcon::getsBy('xvData', "teamed=1 and docued=0 and (counted_user_id='$user_id' or counted_user_id is null) and create_time between '$begin' and '$end'");
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
@@ -29,7 +29,7 @@ class Counted extends XC_Controller
             $params = Xcon::params();
             $begin = Xcon::array_key($params, 'begin');
             $end = Xcon::array_key($params, 'end');
-            $result = Xcon::getsBy('xvData', "count=1 and counted=0 and (counted_user_id='$user_id' or counted_user_id is null) and create_time between '$begin' and '$end'");
+            $result = Xcon::getsBy('xvData', "teamed=1 and docued=0 and (counted_user_id='$user_id' or counted_user_id is null) and create_time between '$begin' and '$end'");
 
             Xcon::json(Xcon::NO_ERROR, $result);
         });
@@ -47,25 +47,6 @@ class Counted extends XC_Controller
         });
     }
 
-    public function back()
-    {
-        Xcon::loginCheck(function ($userinfor) {
-            // 测算标的退回
-            $params = Xcon::params();
-            $uid = Xcon::array_key($params, 'uid');
-
-            // 查询测算标的
-            $data = Xcon::checkByUid('xvData', $uid);
-            $data_id = $data->id;
-            $exam_id = Xcon::EXAM_COUNT;
-
-            $examed = 0;
-            // 撤消测算状态
-            $result = Xcon::setBy('xcDataExam', compact('examed'), compact('data_id', 'exam_id'));
-
-            Xcon::json(Xcon::NO_ERROR, $result);
-        });
-    }
 
     public function exam()
     {
